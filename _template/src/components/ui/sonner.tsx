@@ -1,9 +1,57 @@
+import * as React from "react"
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
+import { squircleObserver, SQUIRCLE_RADIUS } from "@/components/squircle"
+
+function useToastSquircles() {
+  React.useEffect(() => {
+    const cleanups = new Map<Element, () => void>()
+
+    const attach = (el: Element) => {
+      if (cleanups.has(el)) return
+      const observer = squircleObserver(el as HTMLElement, {
+        cornerRadius: SQUIRCLE_RADIUS.lg,
+      })
+      cleanups.set(el, () => observer.disconnect())
+    }
+
+    const scan = (root: ParentNode) => {
+      root.querySelectorAll("[data-sonner-toast]").forEach(attach)
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return
+          if (node.matches("[data-sonner-toast]")) attach(node)
+          scan(node)
+        })
+        m.removedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return
+          if (cleanups.has(node)) {
+            cleanups.get(node)!()
+            cleanups.delete(node)
+          }
+        })
+      }
+    })
+
+    observer.observe(document.body, { childList: true, subtree: true })
+    scan(document.body)
+
+    return () => {
+      observer.disconnect()
+      cleanups.forEach((fn) => fn())
+      cleanups.clear()
+    }
+  }, [])
+}
+
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
+  useToastSquircles()
 
   return (
     <Sonner

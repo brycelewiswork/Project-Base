@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 
 function Card({
   className,
@@ -8,7 +9,9 @@ function Card({
   ...props
 }: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
   return (
-    <div
+    <Squircle
+      as="div"
+      cornerRadius={SQUIRCLE_RADIUS.xl}
       data-slot="card"
       data-size={size}
       className={cn(

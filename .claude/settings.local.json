@@ -23,7 +23,20 @@
       "Bash(powershell.exe -Command \"Remove-Item -Recurse -Force 'e:\\\\Dropbox\\\\_Projects\\\\Sandbox\\\\Project-Base\\\\_template\\\\dist'\")",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Initial project-base scaffold *)"
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Initial project-base scaffold *)",
+      "Bash(rm -f new-project.ps1.tmp.*)",
+      "Bash(git rm *)",
+      "Bash(git -c user.email=hello@brycelewis.work -c user.name=\"Bryce Lewis\" commit --amend --no-edit)",
+      "Bash(git -c user.email=hello@brycelewis.work -c user.name=\"Bryce Lewis\" commit -m \"Ignore editor temp/swap files\")",
+      "Bash(grep -q \"Local:\" \"C:/Users/Bryce/AppData/Local/Temp/claude/e--Dropbox--Projects-Sandbox-Project-Base/8015b587-e79d-47da-856d-90f997b0d9b4/tasks/b14ot5y6e.output\")",
+      "Bash(break)",
+      "Bash(sleep 2)",
+      "Bash(cat \"C:/Users/Bryce/AppData/Local/Temp/claude/e--Dropbox--Projects-Sandbox-Project-Base/8015b587-e79d-47da-856d-90f997b0d9b4/tasks/b14ot5y6e.output\")",
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:bundlephobia.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
