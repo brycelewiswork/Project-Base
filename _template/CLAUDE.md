@@ -38,7 +38,29 @@ Every shadcn component must render its root through `<Squircle as={…}>` or `us
 
 `SQUIRCLE_RADIUS` mirrors the `--radius-*` Tailwind tokens: `{ sm: 6, md: 8, lg: 10, xl: 14, '2xl': 18, '3xl': 22, '4xl': 26 }`. For pill shapes (Badge), pass `cornerRadius: 999`.
 
-Note: `clip-path` clips outline and box-shadow, so focus rings follow the squircle outline. This usually looks tighter — accept it. Avoid animating `border-radius` directly; it fights the clip-path.
+#### Shadows with squircles (the parent-filter pattern)
+
+`clip-path: path()` and `filter: drop-shadow()` **can't visibly coexist on the same element** in Chrome — the drop-shadow doesn't render outside the clipped silhouette. The fix is to split them across two elements:
+
+- **Outer element:** carries `filter: drop-shadow(...)`. No clip-path.
+- **Inner element:** carries `clip-path: path(...)`. No filter.
+
+The outer filter then renders a drop-shadow from the inner element's clipped alpha mask, so the shadow follows the squircle outline exactly.
+
+**How to use it in this template:**
+
+- `<Squircle shadow="md">…</Squircle>` — the wrapper renders the outer/inner pair automatically. Acceptable values: `true` (= md), `'sm' | 'md' | 'lg'` (presets in `SQUIRCLE_SHADOW`), or any custom `filter` string.
+- `<Card shadow="md">` and `<Button shadow="lg">` — both accept the same prop and route it through.
+- `<SquircleShadow shadow="md">…</SquircleShadow>` — standalone wrapper for cases where you can't pass `shadow` directly (third-party render-prop components, foreign children).
+- For Sonner: a `MutationObserver` in `sonner.tsx` applies the squircle to each `<li data-sonner-toast>` and sets `filter: drop-shadow(...)` on the `<ol data-sonner-toaster>` parent. The toaster's drop-shadow is generated from the toasts' clipped silhouettes.
+
+**When adding a new shadcn component via `npx shadcn@latest add`:** decide if it needs elevation. If yes, surface a `shadow` prop that forwards to `<Squircle shadow={...}>` (or wrap externally with `<SquircleShadow>`). The squircle stays in either case.
+
+#### Other notes
+
+- Outset Tailwind `ring-*` is implemented as `box-shadow: 0 0 0 1px` and will be clipped away by the squircle. Use `inset-ring-*` instead — inset shadows render inside the box and survive the clip. Card already does this.
+- Focus rings (`focus-visible:ring-*`) are clipped the same way. Acceptable since the ring follows the squircle outline tightly; if a component needs an unclipped focus ring, wrap it in `<SquircleShadow>` (or any non-clipped outer) and let the ring sit on the wrapper.
+- Avoid animating `border-radius` directly on a squircled element; it fights the clip-path.
 
 ## Commands
 

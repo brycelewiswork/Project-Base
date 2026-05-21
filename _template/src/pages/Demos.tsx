@@ -105,6 +105,30 @@ function SquircleDemo() {
           <div className="h-12 rounded-md bg-foreground/5" />
         </CardContent>
       </Card>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card shadow="sm">
+          <CardHeader>
+            <CardTitle>shadow=&quot;sm&quot;</CardTitle>
+            <CardDescription>Hairline elevation.</CardDescription>
+          </CardHeader>
+        </Card>
+        <Card shadow="md">
+          <CardHeader>
+            <CardTitle>shadow=&quot;md&quot;</CardTitle>
+            <CardDescription>Default lift.</CardDescription>
+          </CardHeader>
+        </Card>
+        <Card shadow="lg">
+          <CardHeader>
+            <CardTitle>shadow=&quot;lg&quot;</CardTitle>
+            <CardDescription>Modal-ish elevation.</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button shadow="md">Button shadow=md</Button>
+        <Button shadow="lg" variant="secondary">shadow=lg</Button>
+      </div>
     </DemoSection>
   )
 }
@@ -209,8 +233,10 @@ function SonnerDemo() {
   return (
     <DemoSection title="Sonner" lib="sonner">
       <p className="text-sm text-muted-foreground">
-        Stacked toasts mounted in <code>main.tsx</code>. Toast corners are squircled via a scoped
-        MutationObserver in <code>sonner.tsx</code>.
+        Stacked toasts mounted in <code>main.tsx</code>. Toast corners are squircled; elevation
+        is restored by applying <code>filter: drop-shadow</code> to the toaster parent so the
+        shadow renders from each toast&apos;s clipped silhouette. Same pattern is available on
+        Card &amp; Button via the <code>shadow</code> prop.
       </p>
       <div className="flex flex-wrap gap-2">
         <Button size="sm" onClick={() => toast("Hello, sketcher")}>Toast</Button>

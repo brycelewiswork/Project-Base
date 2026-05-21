@@ -36,7 +36,15 @@
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:bundlephobia.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(grep -q \"Local:\" \"C:/Users/Bryce/AppData/Local/Temp/claude/e--Dropbox--Projects-Sandbox-Project-Base/8015b587-e79d-47da-856d-90f997b0d9b4/tasks/ba77ynt6i.output\")",
+      "Bash(sleep 1)",
+      "Bash(grep \"Local:\" \"C:/Users/Bryce/AppData/Local/Temp/claude/e--Dropbox--Projects-Sandbox-Project-Base/8015b587-e79d-47da-856d-90f997b0d9b4/tasks/ba77ynt6i.output\")",
+      "mcp__plugin_compound-engineering_pw__browser_navigate",
+      "mcp__plugin_compound-engineering_pw__browser_evaluate",
+      "mcp__plugin_compound-engineering_pw__browser_take_screenshot",
+      "Bash(powershell.exe -Command \"Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue\")",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Fix shadow clipping on squircled components via parent-filter pattern *)"
     ]
   }
 }

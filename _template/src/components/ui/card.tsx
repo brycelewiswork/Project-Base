@@ -1,21 +1,31 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
+import {
+  Squircle,
+  SQUIRCLE_RADIUS,
+  type SquircleShadowKey,
+} from "@/components/squircle"
 
 function Card({
   className,
   size = "default",
+  shadow,
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> & {
+  size?: "default" | "sm"
+  shadow?: boolean | SquircleShadowKey | string
+}) {
   return (
     <Squircle
       as="div"
       cornerRadius={SQUIRCLE_RADIUS.xl}
+      shadow={shadow}
+      shadowClassName="block w-full"
       data-slot="card"
       data-size={size}
       className={cn(
-        "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground inset-ring-1 inset-ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         className
       )}
       {...props}

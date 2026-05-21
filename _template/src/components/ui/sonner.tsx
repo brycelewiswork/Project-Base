@@ -3,15 +3,48 @@ import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
-import { squircleObserver, SQUIRCLE_RADIUS } from "@/components/squircle"
+import {
+  squircleObserver,
+  SQUIRCLE_RADIUS,
+  SQUIRCLE_SHADOW,
+} from "@/components/squircle"
 
-function useToastSquircles() {
+// Sonner renders <li data-sonner-toast> elements into the <ol data-sonner-toaster>
+// portal. We can't add a wrapper around each toast without breaking Sonner's
+// internals (positioning, swipe gestures, stack offsets), so we apply the
+// parent/child shadow pattern at the toaster level:
+//
+//   - filter: drop-shadow(...) goes on the toaster (parent, no clip)
+//   - clip-path squircle goes on each toast (child)
+//
+// The toaster's drop-shadow generates from the alpha mask of its visible
+// children — i.e. the squircled toasts — so the shadow follows the squircle
+// outline. Sonner's own box-shadow is removed since it would just be clipped.
+function useSquircledToasts() {
   React.useEffect(() => {
     const cleanups = new Map<Element, () => void>()
 
+    const ensureToasterFilter = () => {
+      const toaster = document.querySelector(
+        "[data-sonner-toaster]",
+      ) as HTMLElement | null
+      if (!toaster) return
+      if (!toaster.style.filter.includes("drop-shadow")) {
+        toaster.style.setProperty("filter", SQUIRCLE_SHADOW.lg, "important")
+        // Filter creates a stacking context; explicit overflow:visible keeps
+        // the shadow from being clipped by the toaster's own box.
+        toaster.style.setProperty("overflow", "visible", "important")
+      }
+    }
+
     const attach = (el: Element) => {
       if (cleanups.has(el)) return
-      const observer = squircleObserver(el as HTMLElement, {
+      const htmlEl = el as HTMLElement
+      // Sonner sets box-shadow on each toast; clip-path would clip it. Strip
+      // it — elevation comes from the toaster's drop-shadow above.
+      htmlEl.style.setProperty("box-shadow", "none", "important")
+      ensureToasterFilter()
+      const observer = squircleObserver(htmlEl, {
         cornerRadius: SQUIRCLE_RADIUS.lg,
       })
       cleanups.set(el, () => observer.disconnect())
@@ -30,8 +63,9 @@ function useToastSquircles() {
         })
         m.removedNodes.forEach((node) => {
           if (!(node instanceof Element)) return
-          if (cleanups.has(node)) {
-            cleanups.get(node)!()
+          const cleanup = cleanups.get(node)
+          if (cleanup) {
+            cleanup()
             cleanups.delete(node)
           }
         })
@@ -51,7 +85,7 @@ function useToastSquircles() {
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
-  useToastSquircles()
+  useSquircledToasts()
 
   return (
     <Sonner
