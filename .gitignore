@@ -4,6 +4,9 @@ _template/.vite
 _template/.turbo
 _template/*.tsbuildinfo
 
+# editor temp/swap files
+*.tmp.*
+
 # OS / editor
 .DS_Store
 Thumbs.db
