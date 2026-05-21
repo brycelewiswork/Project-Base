@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { LinearBlur, RadialBlur } from "@/components/ui/progressive-blur"
 import { useCounterStore } from "@/store/useCounterStore"
 
 export function Demos() {
@@ -30,6 +31,7 @@ export function Demos() {
       </header>
 
       <SquircleDemo />
+      <ProgressiveBlurDemo />
       <MotionDemo />
       <GsapDemo />
       <RouterDemo />
@@ -37,6 +39,105 @@ export function Demos() {
       <SonnerDemo />
       <LucideDemo />
     </main>
+  )
+}
+
+function ProgressiveBlurDemo() {
+  const [strength, setStrength] = useState(48)
+  const [falloff, setFalloff] = useState(100)
+  return (
+    <DemoSection title="Progressive blur" lib="custom">
+      <p className="text-sm text-muted-foreground">
+        Hand-rolled in <code>@/components/ui/progressive-blur</code>. Stacks{" "}
+        <code>backdrop-filter: blur()</code> layers with mask gradients for a smooth ramp. Pass
+        <code> blurLevels</code> as an array for explicit multi-stop control, or{" "}
+        <code>strength</code> + <code>steps</code> for a computed geometric ramp.
+      </p>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <BlurStage label='<LinearBlur side="top" />'>
+          <LinearBlur side="top" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+        <BlurStage label='<LinearBlur side="bottom" />'>
+          <LinearBlur side="bottom" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+        <BlurStage label='<LinearBlur side="left" />'>
+          <LinearBlur side="left" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+        <BlurStage label='<LinearBlur side="right" />'>
+          <LinearBlur side="right" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+        <BlurStage label='<RadialBlur origin="edge" />'>
+          <RadialBlur origin="edge" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+        <BlurStage label='<RadialBlur origin="center" />'>
+          <RadialBlur origin="center" strength={strength} falloffPercentage={falloff} />
+        </BlurStage>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="flex items-center gap-3 text-sm">
+          <span className="w-20 text-muted-foreground">strength</span>
+          <input
+            type="range"
+            min={0}
+            max={128}
+            step={1}
+            value={strength}
+            onChange={(e) => setStrength(parseInt(e.target.value, 10))}
+            className="flex-1 accent-foreground"
+          />
+          <span className="w-12 text-right font-mono text-xs">{strength}px</span>
+        </label>
+        <label className="flex items-center gap-3 text-sm">
+          <span className="w-20 text-muted-foreground">falloff</span>
+          <input
+            type="range"
+            min={10}
+            max={100}
+            step={1}
+            value={falloff}
+            onChange={(e) => setFalloff(parseInt(e.target.value, 10))}
+            className="flex-1 accent-foreground"
+          />
+          <span className="w-12 text-right font-mono text-xs">{falloff}%</span>
+        </label>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">
+          Explicit multi-stop via <code>blurLevels=[1, 2, 4, 32]</code>
+        </span>
+        <BlurStage label="four explicit layers" tall>
+          <LinearBlur side="top" blurLevels={[1, 2, 4, 32]} falloffPercentage={80} />
+        </BlurStage>
+      </div>
+    </DemoSection>
+  )
+}
+
+function BlurStage({
+  label,
+  children,
+  tall,
+}: {
+  label: string
+  children: React.ReactNode
+  tall?: boolean
+}) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-lg ${tall ? "h-44" : "h-32"}`}
+      style={{
+        backgroundImage:
+          "repeating-linear-gradient(45deg, oklch(0.85 0.18 30) 0 14px, oklch(0.7 0.2 250) 14px 28px, oklch(0.85 0.18 130) 28px 42px)",
+      }}
+    >
+      {children}
+      <span className="pointer-events-none absolute bottom-1 left-2 font-mono text-[10px] text-foreground/60 mix-blend-difference">
+        {label}
+      </span>
+    </div>
   )
 }
 

@@ -44,7 +44,14 @@
       "mcp__plugin_compound-engineering_pw__browser_evaluate",
       "mcp__plugin_compound-engineering_pw__browser_take_screenshot",
       "Bash(powershell.exe -Command \"Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue\")",
-      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Fix shadow clipping on squircled components via parent-filter pattern *)"
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Fix shadow clipping on squircled components via parent-filter pattern *)",
+      "WebFetch(domain:magicui.design)",
+      "WebFetch(domain:motion-primitives.com)",
+      "Bash(npm view *)",
+      "Bash(gh api *)",
+      "Bash(npm search *)",
+      "Bash(npm uninstall *)",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add progressive blur primitives + images folder *)"
     ]
   }
 }
