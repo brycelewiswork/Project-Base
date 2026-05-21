@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"e:/Dropbox/_Projects/Sandbox/Project-Base\" 2>&1; echo \"---\"; ls \"e:/Dropbox/_Projects/Sandbox\" 2>&1)",
+      "Read(//e/Dropbox/_Projects/Sandbox/**)",
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "mcp__plugin_compound-engineering_context7__resolve-library-id",
+      "mcp__plugin_compound-engineering_context7__query-docs",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(npx --yes shadcn@latest init --yes --base-color neutral)",
+      "Bash(npx --yes shadcn@latest init --help)",
+      "Bash(npx --yes shadcn@latest init -b base --yes --force)",
+      "Bash(npx --yes shadcn@latest init -b base -p base-nova --yes --force)",
+      "Bash(npx --yes shadcn@latest init -b base -p nova --yes --force)",
+      "Bash(npx --yes shadcn@latest add button card sonner badge --yes)",
+      "Bash(rm -f src/App.css)",
+      "Bash(rm -rf src/assets)",
+      "Bash(rm -f README.md)",
+      "Bash(npm run *)",
+      "Bash(rm -rf dist)",
+      "Bash(powershell.exe -Command \"Remove-Item -Recurse -Force 'e:\\\\Dropbox\\\\_Projects\\\\Sandbox\\\\Project-Base\\\\_template\\\\dist'\")",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Initial project-base scaffold *)"
+    ]
+  }
+}

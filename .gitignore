@@ -1,0 +1,13 @@
+_template/node_modules
+_template/dist
+_template/.vite
+_template/.turbo
+_template/*.tsbuildinfo
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/

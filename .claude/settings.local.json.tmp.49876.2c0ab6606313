@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"e:/Dropbox/_Projects/Sandbox/Project-Base\" 2>&1; echo \"---\"; ls \"e:/Dropbox/_Projects/Sandbox\" 2>&1)",
+      "Read(//e/Dropbox/_Projects/Sandbox/**)",
+      "Bash(npm --version)",
+      "Bash(git --version)"
+    ]
+  }
+}
