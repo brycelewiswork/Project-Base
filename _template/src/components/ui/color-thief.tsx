@@ -89,26 +89,37 @@ export function useImagePalette(
       }
     }
 
+    const onLoad = () => {
+      // New image just finished loading — flag loading then extract.
+      if (!cancelled) setResult((r) => ({ ...r, loading: true }))
+      run()
+    }
+    const onError = () => {
+      if (cancelled) return
+      setResult({
+        dominant: null,
+        palette: null,
+        swatches: null,
+        loading: false,
+        error: new Error("Image failed to load"),
+      })
+    }
+
+    // Always listen so subsequent src changes re-trigger extraction. The
+    // browser fires `load` on every successful (re)load.
+    img.addEventListener("load", onLoad)
+    img.addEventListener("error", onError)
+
+    // If the image is already loaded by the time this effect runs, extract
+    // immediately — the load event won't fire again for this src.
     if (img.complete && img.naturalWidth > 0) {
       run()
-    } else {
-      const onLoad = () => run()
-      const onError = (e: Event) =>
-        setResult((r) => ({
-          ...r,
-          loading: false,
-          error: new Error(`Image failed to load: ${(e as ErrorEvent).message || "unknown"}`),
-        }))
-      img.addEventListener("load", onLoad)
-      img.addEventListener("error", onError)
-      return () => {
-        cancelled = true
-        img.removeEventListener("load", onLoad)
-        img.removeEventListener("error", onError)
-      }
     }
+
     return () => {
       cancelled = true
+      img.removeEventListener("load", onLoad)
+      img.removeEventListener("error", onError)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, enabled, optsKey])

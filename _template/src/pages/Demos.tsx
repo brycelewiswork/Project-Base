@@ -147,23 +147,28 @@ function BlurStage({
   )
 }
 
+const ALBUM_SAMPLES = [
+  { label: "Charli XCX — BRAT", src: "/images/album-art/12_charli-xcx_brat.jpg" },
+  { label: "Lana Del Rey — NFR", src: "/images/album-art/06_lana-del-rey_norman-fucking-rockwell.jpg" },
+  { label: "SZA — Ctrl", src: "/images/album-art/08_sza_ctrl.jpg" },
+  { label: "Tyler — Call Me If You Get Lost", src: "/images/album-art/21_tyler-the-creator_call-me-if-you-get-lost.jpg" },
+  { label: "Rosalía — Motomami", src: "/images/album-art/17_rosalia_motomami.jpg" },
+  { label: "Weyes Blood — Titanic Rising", src: "/images/album-art/41_weyes-blood_titanic-rising.jpg" },
+] as const
+
 function ColorFromImageDemo() {
   const imgRef = useRef<HTMLImageElement>(null)
-  const [src, setSrc] = useState("/images/sample-album.svg")
-  const [selectedHex, setSelectedHex] = useState<string | null>(null)
+  const [src, setSrc] = useState<string>(ALBUM_SAMPLES[0].src)
+  // User's explicit pick (set when they click a swatch). Cleared on src change
+  // so the active color falls back to the new image's dominant.
+  const [userPickedHex, setUserPickedHex] = useState<string | null>(null)
   const { dominant, palette, swatches, loading, error } = useImagePalette(imgRef, {
     colorCount: 6,
     colorSpace: "oklch",
   })
 
-  // When extraction completes, default the highlighted color to dominant.
   useEffect(() => {
-    if (dominant && !selectedHex) setSelectedHex(dominant.hex())
-  }, [dominant, selectedHex])
-
-  // Reset selection when a new image is loaded.
-  useEffect(() => {
-    setSelectedHex(null)
+    setUserPickedHex(null)
   }, [src])
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +177,7 @@ function ColorFromImageDemo() {
     setSrc(URL.createObjectURL(file))
   }
 
-  const activeHex = selectedHex ?? dominant?.hex() ?? "#222222"
+  const activeHex = userPickedHex ?? dominant?.hex() ?? "#222222"
   const harmoniesOfActive = harmonies(activeHex)
   const textOn = (hex: string): string => {
     // Quick relative-luminance test, mirrors colorthief's textColor heuristic.
@@ -189,6 +194,35 @@ function ColorFromImageDemo() {
         Extract dominant color, palette, and semantic swatches from any image. Pair with
         <code> &lt;LinearBlur tint=&hellip;&gt;</code> for the Apple Music-style blend.
       </p>
+
+      {/* Sample picker */}
+      <div className="flex flex-col gap-2">
+        <div className="text-xs font-medium text-muted-foreground">Try a sample</div>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {ALBUM_SAMPLES.map((sample) => {
+            const active = src === sample.src
+            return (
+              <button
+                key={sample.src}
+                type="button"
+                onClick={() => setSrc(sample.src)}
+                title={sample.label}
+                className={`relative aspect-square overflow-hidden rounded-md border transition-all ${
+                  active
+                    ? "border-foreground ring-2 ring-foreground/30"
+                    : "border-border/60 hover:border-foreground/40"
+                }`}
+              >
+                <img
+                  src={sample.src}
+                  alt={sample.label}
+                  className="h-full w-full object-cover"
+                />
+              </button>
+            )
+          })}
+        </div>
+      </div>
 
       {/* Sample + Apple Music-style blended card */}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -237,8 +271,8 @@ function ColorFromImageDemo() {
             <Swatch
               key={c.hex()}
               color={c}
-              active={selectedHex === c.hex()}
-              onClick={() => setSelectedHex(c.hex())}
+              active={activeHex === c.hex()}
+              onClick={() => setUserPickedHex(c.hex())}
             />
           ))}
         </div>
@@ -255,7 +289,7 @@ function ColorFromImageDemo() {
                 <button
                   key={role}
                   type="button"
-                  onClick={() => sw && setSelectedHex(sw.color.hex())}
+                  onClick={() => sw && setUserPickedHex(sw.color.hex())}
                   className="flex flex-col items-center gap-1 rounded-md border border-border/60 p-2 text-[10px] transition-colors hover:bg-muted/40 disabled:opacity-40"
                   disabled={!sw}
                 >

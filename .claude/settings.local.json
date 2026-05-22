@@ -61,7 +61,8 @@
       "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/fast-average-color/last-week\")",
       "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/extract-colors/last-week\")",
       "mcp__plugin_compound-engineering_pw__browser_console_messages",
-      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add colorthief + Color from image demo *)"
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add colorthief + Color from image demo *)",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Use album covers as color extraction samples + fix re-extraction on src change *)"
     ]
   }
 }
