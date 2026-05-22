@@ -17,6 +17,11 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { LinearBlur, RadialBlur } from "@/components/ui/progressive-blur"
+import {
+  useImagePalette,
+  harmonies,
+  type Color,
+} from "@/components/ui/color-thief"
 import { useCounterStore } from "@/store/useCounterStore"
 
 export function Demos() {
@@ -32,6 +37,7 @@ export function Demos() {
 
       <SquircleDemo />
       <ProgressiveBlurDemo />
+      <ColorFromImageDemo />
       <MotionDemo />
       <GsapDemo />
       <RouterDemo />
@@ -137,6 +143,193 @@ function BlurStage({
       <span className="pointer-events-none absolute bottom-1 left-2 font-mono text-[10px] text-foreground/60 mix-blend-difference">
         {label}
       </span>
+    </div>
+  )
+}
+
+function ColorFromImageDemo() {
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [src, setSrc] = useState("/images/sample-album.svg")
+  const [selectedHex, setSelectedHex] = useState<string | null>(null)
+  const { dominant, palette, swatches, loading, error } = useImagePalette(imgRef, {
+    colorCount: 6,
+    colorSpace: "oklch",
+  })
+
+  // When extraction completes, default the highlighted color to dominant.
+  useEffect(() => {
+    if (dominant && !selectedHex) setSelectedHex(dominant.hex())
+  }, [dominant, selectedHex])
+
+  // Reset selection when a new image is loaded.
+  useEffect(() => {
+    setSelectedHex(null)
+  }, [src])
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setSrc(URL.createObjectURL(file))
+  }
+
+  const activeHex = selectedHex ?? dominant?.hex() ?? "#222222"
+  const harmoniesOfActive = harmonies(activeHex)
+  const textOn = (hex: string): string => {
+    // Quick relative-luminance test, mirrors colorthief's textColor heuristic.
+    const m = hex.replace("#", "").match(/.{1,2}/g)
+    if (!m) return "#fff"
+    const [r, g, b] = m.slice(0, 3).map((p) => parseInt(p, 16) / 255)
+    const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    return lum > 0.55 ? "#000" : "#fff"
+  }
+
+  return (
+    <DemoSection title="Color from image" lib="colorthief">
+      <p className="text-sm text-muted-foreground">
+        Extract dominant color, palette, and semantic swatches from any image. Pair with
+        <code> &lt;LinearBlur tint=&hellip;&gt;</code> for the Apple Music-style blend.
+      </p>
+
+      {/* Sample + Apple Music-style blended card */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="relative h-56 overflow-hidden rounded-xl bg-foreground/5">
+          <img
+            ref={imgRef}
+            src={src}
+            alt="Source"
+            crossOrigin="anonymous"
+            className="h-full w-full object-cover"
+          />
+          {dominant ? (
+            <LinearBlur
+              side="bottom"
+              strength={28}
+              falloffPercentage={70}
+              tint={dominant.hex()}
+            />
+          ) : null}
+        </div>
+        <div
+          className="relative flex flex-col gap-2 overflow-hidden rounded-xl p-4 transition-colors duration-300"
+          style={{
+            backgroundColor: activeHex,
+            color: textOn(activeHex),
+          }}
+        >
+          <div className="font-mono text-xs opacity-70">selected color</div>
+          <div className="font-mono text-2xl">{activeHex.toUpperCase()}</div>
+          <div className="mt-auto flex flex-col gap-1 text-xs">
+            <div>
+              dominant: <span className="font-mono">{dominant?.hex() ?? "—"}</span>
+            </div>
+            <div>
+              isDark: <span className="font-mono">{String(dominant?.isDark ?? "—")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Palette */}
+      <div className="flex flex-col gap-2">
+        <div className="text-xs font-medium text-muted-foreground">Palette ({palette?.length ?? 0})</div>
+        <div className="flex flex-wrap gap-2">
+          {(palette ?? []).map((c) => (
+            <Swatch
+              key={c.hex()}
+              color={c}
+              active={selectedHex === c.hex()}
+              onClick={() => setSelectedHex(c.hex())}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Semantic swatches */}
+      <div className="flex flex-col gap-2">
+        <div className="text-xs font-medium text-muted-foreground">Semantic swatches</div>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {(["Vibrant", "Muted", "DarkVibrant", "DarkMuted", "LightVibrant", "LightMuted"] as const).map(
+            (role) => {
+              const sw = swatches?.[role]
+              return (
+                <button
+                  key={role}
+                  type="button"
+                  onClick={() => sw && setSelectedHex(sw.color.hex())}
+                  className="flex flex-col items-center gap-1 rounded-md border border-border/60 p-2 text-[10px] transition-colors hover:bg-muted/40 disabled:opacity-40"
+                  disabled={!sw}
+                >
+                  <div
+                    className="size-10 rounded-md"
+                    style={{ backgroundColor: sw?.color.hex() ?? "transparent" }}
+                  />
+                  <span className="font-mono">{role}</span>
+                </button>
+              )
+            },
+          )}
+        </div>
+      </div>
+
+      {/* Harmonies */}
+      <div className="flex flex-col gap-2">
+        <div className="text-xs font-medium text-muted-foreground">
+          Harmonies from <span className="font-mono">{activeHex}</span>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-4">
+          <HarmonyChip label="complementary" hex={harmoniesOfActive.complementary} />
+          <HarmonyChip label="analogous" hex={harmoniesOfActive.analogous[0]} />
+          <HarmonyChip label="analogous" hex={harmoniesOfActive.analogous[1]} />
+          <HarmonyChip label="triadic" hex={harmoniesOfActive.triadic[0]} />
+        </div>
+      </div>
+
+      {/* File picker */}
+      <div className="flex items-center gap-3 text-sm">
+        <label className="cursor-pointer underline">
+          Drop your own image
+          <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
+        </label>
+        <span className="text-xs text-muted-foreground">
+          {loading ? "extracting…" : error ? `error: ${error.message}` : "ready"}
+        </span>
+      </div>
+    </DemoSection>
+  )
+}
+
+function Swatch({
+  color,
+  active,
+  onClick,
+}: {
+  color: Color
+  active: boolean
+  onClick: () => void
+}) {
+  const hex = color.hex()
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center gap-2 rounded-md border px-2 py-1 text-xs transition-colors ${
+        active ? "border-foreground" : "border-border/60 hover:border-foreground/40"
+      }`}
+    >
+      <span className="size-4 rounded-sm" style={{ backgroundColor: hex }} />
+      <span className="font-mono">{hex}</span>
+    </button>
+  )
+}
+
+function HarmonyChip({ label, hex }: { label: string; hex: string }) {
+  return (
+    <div className="flex items-center gap-2 rounded-md border border-border/60 p-2 text-xs">
+      <span className="size-6 rounded-sm" style={{ backgroundColor: hex }} />
+      <div className="flex flex-col">
+        <span className="text-[10px] text-muted-foreground">{label}</span>
+        <span className="font-mono">{hex}</span>
+      </div>
     </div>
   )
 }

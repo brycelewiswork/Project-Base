@@ -51,7 +51,17 @@
       "Bash(gh api *)",
       "Bash(npm search *)",
       "Bash(npm uninstall *)",
-      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add progressive blur primitives + images folder *)"
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add progressive blur primitives + images folder *)",
+      "Bash(curl -s \"https://bundlephobia.com/api/size?package=colorthief@3.3.1\")",
+      "Bash(curl -s \"https://bundlephobia.com/api/size?package=node-vibrant@4.0.4\")",
+      "Bash(curl -s \"https://bundlephobia.com/api/size?package=fast-average-color@9.5.2\")",
+      "Bash(npm info *)",
+      "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/colorthief/last-week\")",
+      "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/node-vibrant/last-week\")",
+      "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/fast-average-color/last-week\")",
+      "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/extract-colors/last-week\")",
+      "mcp__plugin_compound-engineering_pw__browser_console_messages",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add colorthief + Color from image demo *)"
     ]
   }
 }
