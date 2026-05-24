@@ -36,12 +36,42 @@ import { useCounterStore } from "@/store/useCounterStore"
 export function Demos() {
   return (
     <main className="mx-auto flex max-w-4xl flex-col gap-10 px-6 py-16">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-4xl font-medium tracking-tight">Installed</h1>
-        <p className="text-muted-foreground">
-          Every library bundled into <code className="font-mono text-sm">project-base</code> is
-          demonstrated below. If it isn't on this page, it shouldn't be in the template.
-        </p>
+      <header className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-4xl font-medium tracking-tight">Installed</h1>
+          <p className="text-muted-foreground">
+            Every library bundled into <code className="font-mono text-sm">project-base</code> is
+            demonstrated below. If it isn't on this page, it shouldn't be in the template.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 rounded-xl bg-foreground/3 p-4">
+          <div className="text-xs font-medium text-muted-foreground">Stack at a glance</div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+            {[
+              ["Vite 8", "bundler"],
+              ["React 19", "ui"],
+              ["TypeScript", "types"],
+              ["Tailwind v4", "css"],
+              ["shadcn/ui", "components"],
+              ["motion", "animation"],
+              ["GSAP", "timelines"],
+              ["corner-smoothing", "squircles"],
+              ["progressive-blur", "blur fx"],
+              ["colorthief", "color extraction"],
+              ["motion-primitives", "32 effects"],
+              ["React Router", "routing"],
+              ["Zustand", "state"],
+              ["Sonner", "toasts"],
+              ["lucide-react", "icons"],
+            ].map(([lib, role]) => (
+              <div key={lib} className="flex items-baseline gap-2">
+                <span className="font-medium">{lib}</span>
+                <span className="text-xs text-muted-foreground">{role}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </header>
 
       <SquircleDemo />
