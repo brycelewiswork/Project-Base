@@ -1,14 +1,5 @@
-import * as React from "react"
-
-// Custom progressive blur primitives. Stacks N absolutely-positioned divs,
-// each with its own `backdrop-filter: blur()` and a mask gradient that
-// controls where its layer is visible. The result is a smooth blur ramp
-// where the lightest layer covers the whole region and progressively
-// heavier layers cover smaller regions closer to the focal edge/point.
-//
-// No dependencies. Works under the squircle convention as long as the
-// blur isn't nested inside a clip-path'd element (clip-path on a parent
-// breaks `backdrop-filter`'s access to the backdrop).
+import { motion, type HTMLMotionProps } from "motion/react"
+import { cn } from "@/lib/utils"
 
 type LinearBlurSide = "top" | "bottom" | "left" | "right"
 
@@ -27,16 +18,12 @@ type CommonProps = {
   falloffPercentage?: number
   /** Optional color overlay applied on top of the blur. */
   tint?: string
-  className?: string
-  style?: React.CSSProperties
 }
 
 const DEFAULT_STRENGTH = 64
 const DEFAULT_STEPS = 8
 
 function computeBlurLevels(strength: number, steps: number): number[] {
-  // Geometric ramp ending at `strength` — each layer doubles the previous.
-  // For strength=64, steps=8 → [0.5, 1, 2, 4, 8, 16, 32, 64].
   return Array.from({ length: steps }, (_, i) =>
     strength * Math.pow(0.5, steps - 1 - i),
   )
@@ -55,10 +42,11 @@ const SIDE_TO_GRADIENT_DIRECTION: Record<LinearBlurSide, string> = {
 
 // ---------------------------------------------------------------------------
 
-export interface LinearBlurProps extends CommonProps {
-  /** Which edge is the focal point of the heaviest blur. */
-  side?: LinearBlurSide
-}
+export type LinearBlurProps = CommonProps &
+  Omit<HTMLMotionProps<"div">, "children"> & {
+    /** Which edge is the focal point of the heaviest blur. */
+    side?: LinearBlurSide
+  }
 
 export function LinearBlur({
   side = "top",
@@ -69,20 +57,17 @@ export function LinearBlur({
   tint = "transparent",
   className,
   style,
+  ...motionProps
 }: LinearBlurProps) {
   const levels = blurLevels ?? computeBlurLevels(strength, steps)
   const direction = SIDE_TO_GRADIENT_DIRECTION[side]
   return (
-    <div
+    <motion.div
       data-progressive-blur="linear"
       data-side={side}
-      className={className}
-      style={{
-        position: "absolute",
-        inset: 0,
-        pointerEvents: "none",
-        ...style,
-      }}
+      className={cn("pointer-events-none absolute inset-0", className)}
+      style={style}
+      {...motionProps}
     >
       {levels.map((blur, i) => {
         const end = ((i + 1) / levels.length) * falloffPercentage
@@ -91,9 +76,8 @@ export function LinearBlur({
         return (
           <div
             key={i}
+            className="pointer-events-none absolute inset-0 rounded-[inherit]"
             style={{
-              position: "absolute",
-              inset: 0,
               backdropFilter: `blur(${blur}px)`,
               WebkitBackdropFilter: `blur(${blur}px)`,
               maskImage: gradient,
@@ -103,20 +87,21 @@ export function LinearBlur({
           />
         )
       })}
-    </div>
+    </motion.div>
   )
 }
 
 // ---------------------------------------------------------------------------
 
-export interface RadialBlurProps extends CommonProps {
-  /**
-   * Where the heaviest blur sits.
-   * - `'edge'` (default): blur is heaviest at the perimeter, sharp at center — vignette-style focus.
-   * - `'center'`: blur is heaviest at the center, sharp at the edges — focal-point blur.
-   */
-  origin?: "edge" | "center"
-}
+export type RadialBlurProps = CommonProps &
+  Omit<HTMLMotionProps<"div">, "children"> & {
+    /**
+     * Where the heaviest blur sits.
+     * - `'edge'` (default): blur is heaviest at the perimeter, sharp at center.
+     * - `'center'`: blur is heaviest at the center, sharp at the edges.
+     */
+    origin?: "edge" | "center"
+  }
 
 export function RadialBlur({
   origin = "edge",
@@ -127,19 +112,16 @@ export function RadialBlur({
   tint = "transparent",
   className,
   style,
+  ...motionProps
 }: RadialBlurProps) {
   const levels = blurLevels ?? computeBlurLevels(strength, steps)
   return (
-    <div
+    <motion.div
       data-progressive-blur="radial"
       data-origin={origin}
-      className={className}
-      style={{
-        position: "absolute",
-        inset: 0,
-        pointerEvents: "none",
-        ...style,
-      }}
+      className={cn("pointer-events-none absolute inset-0", className)}
+      style={style}
+      {...motionProps}
     >
       {levels.map((blur, i) => {
         const end = ((i + 1) / levels.length) * falloffPercentage
@@ -151,9 +133,8 @@ export function RadialBlur({
         return (
           <div
             key={i}
+            className="pointer-events-none absolute inset-0 rounded-[inherit]"
             style={{
-              position: "absolute",
-              inset: 0,
               backdropFilter: `blur(${blur}px)`,
               WebkitBackdropFilter: `blur(${blur}px)`,
               maskImage: gradient,
@@ -163,6 +144,6 @@ export function RadialBlur({
           />
         )
       })}
-    </div>
+    </motion.div>
   )
 }
