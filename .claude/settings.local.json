@@ -62,7 +62,17 @@
       "Bash(curl -s \"https://registry.npmjs.org/-/v1/download-stats/extract-colors/last-week\")",
       "mcp__plugin_compound-engineering_pw__browser_console_messages",
       "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Add colorthief + Color from image demo *)",
-      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Use album covers as color extraction samples + fix re-extraction on src change *)"
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m 'Use album covers as color extraction samples + fix re-extraction on src change *)",
+      "Bash(python -c \"import sys, json, base64; d=json.load\\(sys.stdin\\); print\\(base64.b64decode\\(d['content']\\).decode\\(\\)\\)\")",
+      "Bash(cd \"e:/Dropbox/_Projects/Sandbox/Project-Base/_template\")",
+      "Bash(echo '=== Installing __TRACKED_VAR__ ===')",
+      "Bash(npx --yes shadcn@latest add https://motion-primitives.com/c/__TRACKED_VAR__.json --yes --overwrite)",
+      "Bash(npx --yes shadcn@4.7.0 add \"https://motion-primitives.com/c/tilt.json\" --yes)",
+      "Bash(python _scripts/fetch-motion-primitives.py)",
+      "Bash(mkdir -p src/hooks)",
+      "Bash(mv src/components/ui/useClickOutside.tsx src/hooks/)",
+      "Bash(mv src/components/ui/usePreventScroll.tsx src/hooks/)",
+      "Bash(git -c user.email=hello@brycelewis.work -c 'user.name=Bryce Lewis' commit -m ' *)"
     ]
   }
 }

@@ -17,6 +17,15 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { LinearBlur, RadialBlur } from "@/components/ui/progressive-blur"
+import { TextEffect } from "@/components/ui/text-effect"
+import { AnimatedNumber } from "@/components/ui/animated-number"
+import { InfiniteSlider } from "@/components/ui/infinite-slider"
+import { Tilt } from "@/components/ui/tilt"
+import { GlowEffect } from "@/components/ui/glow-effect"
+import { TextShimmer } from "@/components/ui/text-shimmer"
+import { InView } from "@/components/ui/in-view"
+// ScrollProgress available at @/components/ui/scroll-progress — omitted from
+// the demo since it requires a fixed-position bar and would overlap the nav.
 import {
   useImagePalette,
   harmonies,
@@ -38,6 +47,7 @@ export function Demos() {
       <SquircleDemo />
       <ProgressiveBlurDemo />
       <ColorFromImageDemo />
+      <MotionPrimitivesDemo />
       <MotionDemo />
       <GsapDemo />
       <RouterDemo />
@@ -45,6 +55,139 @@ export function Demos() {
       <SonnerDemo />
       <LucideDemo />
     </main>
+  )
+}
+
+function MotionPrimitivesDemo() {
+  const [num, setNum] = useState(0)
+  const [textKey, setTextKey] = useState(0)
+  return (
+    <DemoSection title="Motion primitives" lib="motion-primitives">
+      <p className="text-sm text-muted-foreground">
+        32 copy-paste animation components from{" "}
+        <a href="https://motion-primitives.com" className="underline" target="_blank" rel="noopener">
+          motion-primitives.com
+        </a>
+        . Built on the same <code>motion</code> package already in the stack. Showing a sample below
+        — all 32 are installed and importable from <code>@/components/ui/</code>.
+      </p>
+
+      {/* TextEffect */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">TextEffect — blur reveal</span>
+        <div className="flex items-center gap-3">
+          <TextEffect
+            key={textKey}
+            per="word"
+            as="p"
+            preset="blur"
+            className="text-lg font-medium"
+          >
+            Every detail is an opportunity for polish.
+          </TextEffect>
+          <Button size="sm" variant="outline" onClick={() => setTextKey((k) => k + 1)}>
+            Replay
+          </Button>
+        </div>
+      </div>
+
+      {/* TextShimmer */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">TextShimmer</span>
+        <TextShimmer className="text-lg font-medium" duration={1.5}>
+          Shimmering highlight sweep
+        </TextShimmer>
+      </div>
+
+      {/* AnimatedNumber */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">AnimatedNumber</span>
+        <div className="flex items-center gap-3">
+          <AnimatedNumber
+            value={num}
+            className="text-4xl font-medium tabular-nums"
+            springOptions={{ bounce: 0, duration: 1200 }}
+          />
+          <Button size="sm" onClick={() => setNum((n) => n + Math.floor(Math.random() * 500 + 100))}>
+            Add
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setNum(0)}>
+            Reset
+          </Button>
+        </div>
+      </div>
+
+      {/* InfiniteSlider */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">InfiniteSlider</span>
+        <InfiniteSlider gap={12} speed={20}>
+          {["motion", "gsap", "zustand", "sonner", "colorthief", "squircle", "tailwind", "shadcn", "vite", "react"].map(
+            (lib) => (
+              <Badge key={lib} variant="secondary">{lib}</Badge>
+            ),
+          )}
+        </InfiniteSlider>
+      </div>
+
+      {/* Tilt + GlowEffect */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-medium text-muted-foreground">Tilt</span>
+          <Tilt rotationFactor={8} springOptions={{ stiffness: 300, damping: 20 }}>
+            <div className="flex h-28 items-center justify-center rounded-xl bg-foreground/5 text-sm text-muted-foreground">
+              Hover and tilt
+            </div>
+          </Tilt>
+        </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-medium text-muted-foreground">GlowEffect</span>
+          <div className="relative flex h-28 items-center justify-center rounded-xl bg-foreground/5 text-sm text-muted-foreground">
+            <GlowEffect colors={["#0894FF", "#C959DD", "#FF2E54", "#FF9004"]} mode="colorShift" />
+            Animated glow border
+          </div>
+        </div>
+      </div>
+
+      {/* InView */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-muted-foreground">InView — scroll to reveal</span>
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+            visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" as const }}
+          viewOptions={{ once: true, margin: "0px 0px -40px 0px" }}
+        >
+          <div className="flex h-20 items-center justify-center rounded-xl bg-foreground/5 text-sm text-muted-foreground">
+            I animated in when you scrolled here
+          </div>
+        </InView>
+      </div>
+
+      {/* Full inventory */}
+      <details className="text-sm">
+        <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+          All 32 installed components
+        </summary>
+        <div className="mt-2 flex flex-wrap gap-1">
+          {[
+            "accordion", "animated-background", "animated-group", "animated-number",
+            "border-trail", "carousel", "cursor", "dialog", "disclosure", "dock",
+            "glow-effect", "image-comparison", "in-view", "infinite-slider",
+            "magnetic", "morphing-dialog", "morphing-popover", "scroll-progress",
+            "sliding-number", "spinning-text", "spotlight", "text-effect",
+            "text-loop", "text-morph", "text-roll", "text-scramble",
+            "text-shimmer", "text-shimmer-wave", "tilt", "toolbar-dynamic",
+            "toolbar-expandable", "transition-panel",
+          ].map((name) => (
+            <Badge key={name} variant="outline" className="font-mono text-[10px]">
+              {name}
+            </Badge>
+          ))}
+        </div>
+      </details>
+    </DemoSection>
   )
 }
 
