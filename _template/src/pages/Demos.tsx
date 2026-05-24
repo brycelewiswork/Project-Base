@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { ArrowRightIcon, HeartIcon, SparklesIcon, ZapIcon } from "lucide-react"
 
 import { DemoSection } from "@/components/DemoSection"
-import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
+import { Squircle, SQUIRCLE_RADIUS, buildShadow, SQUIRCLE_SHADOW } from "@/components/squircle"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -606,31 +606,92 @@ function SquircleDemo() {
           <div className="h-12 rounded-md bg-foreground/5" />
         </CardContent>
       </Card>
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card shadow="sm">
-          <CardHeader>
-            <CardTitle>shadow=&quot;sm&quot;</CardTitle>
-            <CardDescription>Hairline elevation.</CardDescription>
-          </CardHeader>
-        </Card>
-        <Card shadow="md">
-          <CardHeader>
-            <CardTitle>shadow=&quot;md&quot;</CardTitle>
-            <CardDescription>Default lift.</CardDescription>
-          </CardHeader>
-        </Card>
-        <Card shadow="lg">
-          <CardHeader>
-            <CardTitle>shadow=&quot;lg&quot;</CardTitle>
-            <CardDescription>Modal-ish elevation.</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <Button shadow="md">Button shadow=md</Button>
-        <Button shadow="lg" variant="secondary">shadow=lg</Button>
-      </div>
+      <ShadowPresets />
+      <ShadowDirectional />
     </DemoSection>
+  )
+}
+
+function ShadowPresets() {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-xs font-medium text-muted-foreground">
+        7-tier presets (aligned with Tailwind v4's shadow-2xs → shadow-2xl)
+      </span>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {(Object.keys(SQUIRCLE_SHADOW) as Array<keyof typeof SQUIRCLE_SHADOW>).map((key) => (
+          <Card key={key} shadow={key}>
+            <CardHeader>
+              <CardTitle className="font-mono text-sm">{key}</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ShadowDirectional() {
+  const [elevation, setElevation] = useState(3)
+  const [direction, setDirection] = useState(0)
+  const [tinted, setTinted] = useState(false)
+  const shadow = buildShadow({
+    elevation,
+    direction,
+    color: tinted ? "rgba(59, 130, 246, 0.4)" : undefined,
+  })
+
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="text-xs font-medium text-muted-foreground">
+        Directional via <code>buildShadow({"{}"})</code>
+      </span>
+      <div className="flex items-center gap-6">
+        <Card shadow={shadow} className="w-48">
+          <CardHeader>
+            <CardTitle className="font-mono text-sm">{direction}°</CardTitle>
+            <CardDescription className="text-xs">elev {elevation}</CardDescription>
+          </CardHeader>
+        </Card>
+        <div className="flex flex-1 flex-col gap-2">
+          <label className="flex items-center gap-3 text-sm">
+            <span className="w-16 text-muted-foreground">direction</span>
+            <input
+              type="range"
+              min={0}
+              max={360}
+              step={5}
+              value={direction}
+              onChange={(e) => setDirection(parseInt(e.target.value, 10))}
+              className="flex-1 accent-foreground"
+            />
+            <span className="w-10 text-right font-mono text-xs">{direction}°</span>
+          </label>
+          <label className="flex items-center gap-3 text-sm">
+            <span className="w-16 text-muted-foreground">elevation</span>
+            <input
+              type="range"
+              min={0.5}
+              max={5}
+              step={0.5}
+              value={elevation}
+              onChange={(e) => setElevation(parseFloat(e.target.value))}
+              className="flex-1 accent-foreground"
+            />
+            <span className="w-10 text-right font-mono text-xs">{elevation}</span>
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={tinted}
+              onChange={(e) => setTinted(e.target.checked)}
+              className="accent-foreground"
+            />
+            <span className="text-muted-foreground">Blue tint</span>
+          </label>
+        </div>
+      </div>
+    </div>
   )
 }
 

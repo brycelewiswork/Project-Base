@@ -15,18 +15,68 @@ export type SquircleOptions = {
 
 const DEFAULT_SMOOTHING = 0.6
 
-// Layered drop-shadows by elevation tier. Applied via `filter:` on the
-// wrapper so the shadow follows the squircled child's silhouette.
+// ---------------------------------------------------------------------------
+// Parametric shadow system
 //
-// Why a wrapper? Chrome doesn't paint `filter: drop-shadow()` outside the
-// `clip-path: path()` region on the same element — the shadow vanishes. The
-// fix is to put the clip on the child and the filter on the parent. The
-// parent then renders a drop-shadow from the clipped child's alpha mask,
-// which follows the squircle outline exactly.
+// Builds stacked `drop-shadow()` filters with progressively larger offsets,
+// wider blurs, and decreasing opacities — mimicking a real penumbra. Applied
+// via `filter:` on a wrapper so the shadow follows the squircled child's
+// silhouette (Chrome can't paint drop-shadow outside a clip-path on the same
+// element).
+// ---------------------------------------------------------------------------
+
+export type ShadowOptions = {
+  /** Elevation on a 0.5–5 scale. Higher = bigger, softer shadow. */
+  elevation?: number
+  /** Light source angle in degrees. 0 = top (shadow falls down),
+   *  90 = left (shadow falls right), 180 = bottom (shadow falls up). */
+  direction?: number
+  /** CSS color for shadow tint. Default: black at varying opacity. */
+  color?: string
+  /** Number of stacked layers (default 4). More = smoother falloff. */
+  layers?: number
+}
+
+export function buildShadow(opts: ShadowOptions = {}): string {
+  const {
+    elevation = 2.5,
+    direction = 0,
+    color,
+    layers = 4,
+  } = opts
+
+  const rad = (direction * Math.PI) / 180
+  const sinA = Math.sin(rad)
+  const cosA = Math.cos(rad)
+
+  const parts: string[] = []
+  for (let i = 0; i < layers; i++) {
+    const progress = (i + 1) / layers
+    const p2 = progress * progress
+
+    const ox = Math.round(sinA * elevation * p2 * 8 * 10) / 10
+    const oy = Math.round(cosA * elevation * p2 * 8 * 10) / 10
+    const blur = Math.round(elevation * p2 * 16 * 10) / 10
+    const opacity = Math.round((0.04 + (0.12 / layers) * (layers - i)) * 1000) / 1000
+
+    if (color) {
+      parts.push(`drop-shadow(${ox}px ${oy}px ${blur}px ${color})`)
+    } else {
+      parts.push(`drop-shadow(${ox}px ${oy}px ${blur}px rgba(0, 0, 0, ${opacity}))`)
+    }
+  }
+  return parts.join(" ")
+}
+
+// Preset tiers aligned with Tailwind v4's shadow scale (2xs → 2xl).
 export const SQUIRCLE_SHADOW = {
-  sm: "drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08))",
-  md: "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.14))",
-  lg: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.10)) drop-shadow(0 16px 32px rgba(0, 0, 0, 0.18))",
+  "2xs": buildShadow({ elevation: 0.5 }),
+  xs:    buildShadow({ elevation: 1 }),
+  sm:    buildShadow({ elevation: 1.5 }),
+  md:    buildShadow({ elevation: 2.5 }),
+  lg:    buildShadow({ elevation: 3.5 }),
+  xl:    buildShadow({ elevation: 4.5 }),
+  "2xl": buildShadow({ elevation: 5 }),
 } as const
 
 export type SquircleShadowKey = keyof typeof SQUIRCLE_SHADOW

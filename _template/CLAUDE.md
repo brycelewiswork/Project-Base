@@ -50,12 +50,32 @@ Every shadcn component must render its root through `<Squircle as={…}>` or `us
 
 The outer filter then renders a drop-shadow from the inner element's clipped alpha mask, so the shadow follows the squircle outline exactly.
 
-**How to use it in this template:**
+**Presets** — 7 tiers aligned with Tailwind v4's shadow scale (`2xs → xs → sm → md → lg → xl → 2xl`):
 
-- `<Squircle shadow="md">…</Squircle>` — the wrapper renders the outer/inner pair automatically. Acceptable values: `true` (= md), `'sm' | 'md' | 'lg'` (presets in `SQUIRCLE_SHADOW`), or any custom `filter` string.
-- `<Card shadow="md">` and `<Button shadow="lg">` — both accept the same prop and route it through.
+```tsx
+<Card shadow="md" />          // preset
+<Card shadow="xl" />          // larger
+<Card shadow={true} />        // shorthand for "md"
+```
+
+**Custom directional shadows** via `buildShadow()`:
+
+```tsx
+import { buildShadow } from "@/components/squircle"
+
+// Light from upper-left — shadow falls toward bottom-right:
+<Card shadow={buildShadow({ elevation: 3, direction: 315 })} />
+
+// Blue-tinted shadow:
+<Card shadow={buildShadow({ elevation: 2, color: "rgba(59, 130, 246, 0.4)" })} />
+```
+
+`buildShadow({ elevation, direction, color, layers })` returns a stacked `drop-shadow()` CSS filter string with 3–5 layers of progressively larger offsets and decreasing opacities. `elevation` (0.5–5) controls depth; `direction` (degrees, default 0 = straight down) shifts X/Y offsets; `color` tints the shadow.
+
+**Other ways to apply:**
+
 - `<SquircleShadow shadow="md">…</SquircleShadow>` — standalone wrapper for cases where you can't pass `shadow` directly (third-party render-prop components, foreign children).
-- For Sonner: a `MutationObserver` in `sonner.tsx` applies the squircle to each `<li data-sonner-toast>` and sets `filter: drop-shadow(...)` on the `<ol data-sonner-toaster>` parent. The toaster's drop-shadow is generated from the toasts' clipped silhouettes.
+- For Sonner: a `MutationObserver` in `sonner.tsx` applies the squircle to each `<li data-sonner-toast>` and sets `filter: drop-shadow(...)` on the `<ol data-sonner-toaster>` parent.
 
 **When adding a new shadcn component via `npx shadcn@latest add`:** decide if it needs elevation. If yes, surface a `shadow` prop that forwards to `<Squircle shadow={...}>` (or wrap externally with `<SquircleShadow>`). The squircle stays in either case.
 
