@@ -7,10 +7,11 @@ import {
 import useClickOutside from '@/hooks/useClickOutside';
 import { ArrowLeft, Search, User } from 'lucide-react';
 
+import { SPRING_FAST } from '@/lib/motion';
+
 const transition = {
   type: 'spring' as const,
-  bounce: 0.1,
-  duration: 0.2,
+  ...SPRING_FAST.snappy,
 };
 
 function Button({

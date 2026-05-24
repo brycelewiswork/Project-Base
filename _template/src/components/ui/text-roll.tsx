@@ -5,6 +5,7 @@ import {
   type TargetAndTransition,
   type Transition,
 } from 'motion/react';
+import { EASE } from '@/lib/motion';
 
 export type TextRollProps = {
   children: string;
@@ -32,7 +33,7 @@ export function TextRoll({
   getEnterDelay = (i) => i * 0.1,
   getExitDelay = (i) => i * 0.1 + 0.2,
   className,
-  transition = { ease: 'easeIn' as const },
+  transition = { ease: EASE.easeIn },
   variants,
   onAnimationComplete,
 }: TextRollProps) {

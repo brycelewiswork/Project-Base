@@ -3,6 +3,7 @@ import {
   motion,
   type Transition,
 } from 'motion/react';
+import { EASE } from '@/lib/motion';
 
 export type GlowEffectProps = {
   className?: string;
@@ -42,7 +43,7 @@ export function GlowEffect({
   const BASE_TRANSITION = {
     repeat: Infinity,
     duration: duration,
-    ease: 'linear' as const,
+    ease: EASE.linear,
   };
 
   const animations = {

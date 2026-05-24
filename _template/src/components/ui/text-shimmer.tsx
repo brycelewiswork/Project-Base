@@ -3,6 +3,7 @@ import {
   motion,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { EASE } from '@/lib/motion'
 
 export type TextShimmerProps = {
   children: string;
@@ -41,7 +42,7 @@ function TextShimmerComponent({
       transition={{
         repeat: Infinity,
         duration,
-        ease: 'linear' as const,
+        ease: EASE.linear,
       }}
       style={
         {

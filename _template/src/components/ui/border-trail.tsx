@@ -3,6 +3,7 @@ import {
   motion,
   type Transition,
 } from 'motion/react';
+import { EASE } from '@/lib/motion';
 
 export type BorderTrailProps = {
   className?: string;
@@ -22,7 +23,7 @@ export function BorderTrail({
   const defaultTransition: Transition = {
     repeat: Infinity,
     duration: 5,
-    ease: 'linear' as const,
+    ease: EASE.linear,
   };
 
   return (

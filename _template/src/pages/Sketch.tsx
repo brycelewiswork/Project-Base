@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { Button } from "@/components/ui/button"
+import { GSAP_EASE } from "@/lib/motion"
 
 export function Sketch() {
   const boxRefs = useRef<Array<HTMLDivElement | null>>([])
@@ -13,7 +14,7 @@ export function Sketch() {
         scale: 0.9,
         stagger: 0.06,
         duration: 0.7,
-        ease: "power3.out",
+        ease: GSAP_EASE.snappy,
       })
     })
     return () => ctx.revert()
@@ -24,7 +25,7 @@ export function Sketch() {
       rotate: "+=360",
       duration: 1.2,
       stagger: 0.04,
-      ease: "power2.inOut",
+      ease: GSAP_EASE.smooth,
     })
   }
 

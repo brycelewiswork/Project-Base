@@ -32,6 +32,7 @@ import {
   type Color,
 } from "@/components/ui/color-thief"
 import { useCounterStore } from "@/store/useCounterStore"
+import { SPRING, EASE, GSAP_EASE, DURATION } from '@/lib/motion'
 
 export function Demos() {
   return (
@@ -163,7 +164,7 @@ function MotionPrimitivesDemo() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-medium text-muted-foreground">Tilt</span>
-          <Tilt rotationFactor={8} springOptions={{ stiffness: 300, damping: 20 }}>
+          <Tilt rotationFactor={8} springOptions={SPRING.snappy}>
             <div className="flex h-28 items-center justify-center rounded-xl bg-foreground/5 text-sm text-muted-foreground">
               Hover and tilt
             </div>
@@ -186,7 +187,7 @@ function MotionPrimitivesDemo() {
             hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
             visible: { opacity: 1, y: 0, filter: "blur(0px)" },
           }}
-          transition={{ duration: 0.5, ease: "easeOut" as const }}
+          transition={{ duration: DURATION.slow, ease: EASE.easeOut }}
           viewOptions={{ once: true, margin: "0px 0px -40px 0px" }}
         >
           <div className="flex h-20 items-center justify-center rounded-xl bg-foreground/5 text-sm text-muted-foreground">
@@ -706,7 +707,7 @@ function MotionDemo() {
           className="flex h-16 w-16 items-center justify-center bg-foreground text-background"
           style={{ borderRadius: 14 }}
           animate={{ rotate: [0, 90, 0], scale: [1, 1.1, 1] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: EASE.easeInOut }}
         >
           <SparklesIcon className="size-5" />
         </motion.div>
@@ -729,7 +730,7 @@ function GsapDemo() {
         opacity: 1,
         duration: 0.6,
         stagger: 0.05,
-        ease: "back.out(2)",
+        ease: GSAP_EASE.bounce,
       },
     )
   }

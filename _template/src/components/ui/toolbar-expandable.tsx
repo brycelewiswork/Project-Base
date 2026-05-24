@@ -10,10 +10,11 @@ import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import useClickOutside from '@/hooks/useClickOutside';
 import { Folder, MessageCircle, User, WalletCards } from 'lucide-react';
 
+import { SPRING_FAST } from '@/lib/motion';
+
 const transition = {
   type: 'spring' as const,
-  bounce: 0.1,
-  duration: 0.25,
+  ...SPRING_FAST.snappy,
 };
 
 const ITEMS = [

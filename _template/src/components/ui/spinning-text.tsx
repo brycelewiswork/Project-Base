@@ -5,6 +5,7 @@ import {
   type Variants,
 } from 'motion/react';
 import React, { type CSSProperties } from 'react';
+import { EASE } from '@/lib/motion'
 
 export type SpinningTextProps = {
   children: string;
@@ -23,7 +24,7 @@ export type SpinningTextProps = {
 
 const BASE_TRANSITION = {
   repeat: Infinity,
-  ease: 'linear' as const,
+  ease: EASE.linear,
 };
 
 const BASE_ITEM_VARIANTS = {

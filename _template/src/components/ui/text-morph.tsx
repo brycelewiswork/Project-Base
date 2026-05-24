@@ -6,6 +6,7 @@ import {
   type Variants,
 } from 'motion/react';
 import { useMemo, useId } from 'react';
+import { SPRING } from '@/lib/motion';
 
 export type TextMorphProps = {
   children: string;
@@ -48,9 +49,7 @@ export function TextMorph({
 
   const defaultTransition: Transition = {
     type: 'spring' as const,
-    stiffness: 280,
-    damping: 18,
-    mass: 0.3,
+    ...SPRING.snappy,
   };
 
   return (

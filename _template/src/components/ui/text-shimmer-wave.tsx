@@ -4,6 +4,7 @@ import {
   type Transition,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { EASE } from '@/lib/motion'
 
 export type TextShimmerWaveProps = {
   children: string;
@@ -78,7 +79,7 @@ export function TextShimmerWave({
               repeat: Infinity,
               repeatDelay: (children.length * 0.05) / spread,
               delay,
-              ease: 'easeInOut' as const,
+              ease: EASE.easeInOut,
               ...transition,
             }}
           >

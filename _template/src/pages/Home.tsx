@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react"
 import { toast } from "sonner"
+import { SPRING, EASE, DURATION } from "@/lib/motion"
 import { useCounterStore } from "@/store/useCounterStore"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,15 +12,15 @@ export function Home() {
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), { stiffness: 200, damping: 20 })
-  const rotateY = useSpring(useTransform(x, [-100, 100], [-10, 10]), { stiffness: 200, damping: 20 })
+  const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), SPRING.smooth)
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-10, 10]), SPRING.smooth)
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-12 px-6 py-16">
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: DURATION.slow, ease: EASE.apple }}
         className="flex flex-col gap-3"
       >
         <Badge variant="secondary" className="w-fit">project-base</Badge>

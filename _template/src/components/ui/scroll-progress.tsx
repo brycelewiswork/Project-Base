@@ -13,9 +13,10 @@ export type ScrollProgressProps = {
   containerRef?: RefObject<HTMLDivElement>;
 };
 
+import { SPRING_FAST } from '@/lib/motion';
+
 const DEFAULT_SPRING_OPTIONS: SpringOptions = {
-  stiffness: 200,
-  damping: 50,
+  ...SPRING_FAST.smooth,
   restDelta: 0.001,
 };
 

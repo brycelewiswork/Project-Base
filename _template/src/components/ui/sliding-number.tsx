@@ -8,11 +8,11 @@ import {
 } from 'motion/react';
 import useMeasure from 'react-use-measure';
 
+import { SPRING } from '@/lib/motion';
+
 const TRANSITION = {
   type: 'spring' as const,
-  stiffness: 280,
-  damping: 18,
-  mass: 0.3,
+  ...SPRING.snappy,
 };
 
 function Digit({ value, place }: { value: number; place: number }) {

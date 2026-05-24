@@ -6,6 +6,7 @@ import {
 } from 'motion/react';
 import { useState, useEffect } from 'react';
 import useMeasure from 'react-use-measure';
+import { EASE } from '@/lib/motion'
 
 export type InfiniteSliderProps = {
   children: React.ReactNode;
@@ -47,7 +48,7 @@ export function InfiniteSlider({
       const transitionDuration = remainingDistance / currentSpeed;
 
       controls = animate(translation, [translation.get(), to], {
-        ease: 'linear' as const,
+        ease: EASE.linear,
         duration: transitionDuration,
         onComplete: () => {
           setIsTransitioning(false);
@@ -56,7 +57,7 @@ export function InfiniteSlider({
       });
     } else {
       controls = animate(translation, [from, to], {
-        ease: 'linear' as const,
+        ease: EASE.linear,
         duration: duration,
         repeat: Infinity,
         repeatType: 'loop',

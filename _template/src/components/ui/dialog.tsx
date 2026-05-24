@@ -11,6 +11,7 @@ import { useId } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { usePreventScroll } from '@/hooks/usePreventScroll';
+import { EASE } from '@/lib/motion'
 
 const DialogContext = createContext<{
   isOpen: boolean;
@@ -39,7 +40,7 @@ const defaultVariants: Variants = {
 };
 
 const defaultTransition: Transition = {
-  ease: 'easeOut' as const,
+  ease: EASE.easeOut,
   duration: 0.2,
 };
 
