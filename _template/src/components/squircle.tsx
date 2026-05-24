@@ -49,15 +49,22 @@ export function buildShadow(opts: ShadowOptions = {}): string {
   const sinA = Math.sin(rad)
   const cosA = Math.cos(rad)
 
+  // Opacity now scales with elevation so low tiers are subtle (matching
+  // Tailwind's 5% at 2xs) and high tiers are heavier (matching 2xl's 25%).
+  // Multi-layer stacking compounds visually, so per-layer opacity stays
+  // lower than a single-layer box-shadow would need.
+  const baseOpacity = 0.02 + (elevation / 5) * 0.08
+
   const parts: string[] = []
   for (let i = 0; i < layers; i++) {
     const progress = (i + 1) / layers
     const p2 = progress * progress
 
-    const ox = Math.round(sinA * elevation * p2 * 8 * 10) / 10
-    const oy = Math.round(cosA * elevation * p2 * 8 * 10) / 10
-    const blur = Math.round(elevation * p2 * 16 * 10) / 10
-    const opacity = Math.round((0.04 + (0.12 / layers) * (layers - i)) * 1000) / 1000
+    const ox = Math.round(sinA * elevation * p2 * 6 * 10) / 10
+    const oy = Math.round(cosA * elevation * p2 * 6 * 10) / 10
+    const blur = Math.round(elevation * p2 * 12 * 10) / 10
+    const layerFalloff = 0.3 + 0.7 * (layers - i) / layers
+    const opacity = Math.round(baseOpacity * layerFalloff * 1000) / 1000
 
     if (color) {
       parts.push(`drop-shadow(${ox}px ${oy}px ${blur}px ${color})`)
