@@ -6,6 +6,7 @@ import {
   MotionConfig,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import useClickOutside from '@/hooks/useClickOutside';
 import { Folder, MessageCircle, User, WalletCards } from 'lucide-react';
 
@@ -27,7 +28,7 @@ const ITEMS = [
           <span>Ibelick</span>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           Edit Profile
@@ -43,7 +44,7 @@ const ITEMS = [
       <div className='flex flex-col space-y-4'>
         <div className='text-zinc-700'>You have 3 new messages.</div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           View more
@@ -65,7 +66,7 @@ const ITEMS = [
           </div>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           Manage documents
@@ -84,7 +85,7 @@ const ITEMS = [
           <span>$1,250.32</span>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           View Transactions
@@ -116,7 +117,7 @@ export default function ToolbarExpandable() {
   return (
     <MotionConfig transition={transition}>
       <div className='absolute bottom-8' ref={ref}>
-        <div className='h-full w-full rounded-xl border border-zinc-950/10 bg-white'>
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-zinc-950/10 bg-white'>
           <div className='overflow-hidden'>
             <AnimatePresence initial={false} mode='sync'>
               {isOpen ? (
@@ -181,7 +182,7 @@ export default function ToolbarExpandable() {
               </button>
             ))}
           </div>
-        </div>
+        </Squircle>
       </div>
     </MotionConfig>
   );

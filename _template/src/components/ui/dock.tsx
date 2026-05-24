@@ -7,6 +7,7 @@ import {
   type SpringOptions,
   AnimatePresence,
 } from 'motion/react';
+import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import {
   Children,
   cloneElement,
@@ -101,8 +102,10 @@ function Dock({
       }}
       className='mx-2 flex max-w-full items-end overflow-x-auto'
     >
-      <motion.div
-        onMouseMove={({ pageX }) => {
+      <Squircle
+        as={motion.div}
+        cornerRadius={SQUIRCLE_RADIUS['2xl']}
+        onMouseMove={({ pageX }: { pageX: number }) => {
           isHovered.set(1);
           mouseX.set(pageX);
         }}
@@ -121,7 +124,7 @@ function Dock({
         <DockProvider value={{ mouseX, spring, distance, magnification }}>
           {children}
         </DockProvider>
-      </motion.div>
+      </Squircle>
     </motion.div>
   );
 }

@@ -6,6 +6,7 @@ import {
 } from 'motion/react';
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import { useId } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
@@ -215,7 +216,11 @@ function DialogContent({ children, className, container }: DialogContentProps) {
   const content = (
     <AnimatePresence mode='wait'>
       {isOpen && (
-        <motion.dialog
+        <Squircle
+          as={motion.dialog}
+          cornerRadius={SQUIRCLE_RADIUS.lg}
+          shadow="md"
+          shadowClassName="contents"
           key={ids.dialog}
           ref={dialogRef as React.RefObject<HTMLDialogElement>}
           id={ids.dialog}
@@ -223,7 +228,7 @@ function DialogContent({ children, className, container }: DialogContentProps) {
           aria-describedby={ids.description}
           aria-modal='true'
           role='dialog'
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             if (e.target === dialogRef.current) {
               setIsOpen(false);
             }
@@ -235,14 +240,14 @@ function DialogContent({ children, className, container }: DialogContentProps) {
           transition={transition}
           onAnimationComplete={onAnimationComplete}
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-lg border border-zinc-200 p-0 shadow-lg dark:border dark:border-zinc-700',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-lg inset-ring-1 inset-ring-zinc-200 p-0 dark:inset-ring-zinc-700',
             'backdrop:bg-black/50 backdrop:backdrop-blur-xs',
             'open:flex open:flex-col',
             className
           )}
         >
           <div className='w-full'>{children}</div>
-        </motion.dialog>
+        </Squircle>
       )}
     </AnimatePresence>
   );

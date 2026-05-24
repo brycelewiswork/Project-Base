@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import {
   motion,
   MotionConfig,
@@ -47,7 +48,7 @@ export default function ToolbarDynamic() {
   return (
     <MotionConfig transition={transition}>
       <div className='absolute bottom-8' ref={containerRef}>
-        <div className='h-full w-full rounded-xl border border-zinc-950/10 bg-white'>
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-zinc-950/10 bg-white'>
           <motion.div
             animate={{
               // @todo: here I want to remove the width
@@ -75,7 +76,7 @@ export default function ToolbarDynamic() {
                   </Button>
                   <div className='relative w-full'>
                     <input
-                      className='h-9 w-full rounded-lg border border-zinc-950/10 bg-transparent p-2 text-zinc-900 placeholder-zinc-500 focus:outline-hidden'
+                      className='h-9 w-full rounded-lg inset-ring-1 inset-ring-zinc-950/10 bg-transparent p-2 text-zinc-900 placeholder-zinc-500 focus:outline-hidden'
                       autoFocus
                       placeholder='Search notes'
                     />
@@ -85,7 +86,7 @@ export default function ToolbarDynamic() {
               )}
             </div>
           </motion.div>
-        </div>
+        </Squircle>
       </div>
     </MotionConfig>
   );

@@ -1,3 +1,4 @@
+import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import {
   useState,
   useId,
@@ -194,7 +195,10 @@ function MorphingPopoverContent({
     <AnimatePresence>
       {context.isOpen && (
         <>
-          <motion.div
+          <Squircle
+            as={motion.div}
+            cornerRadius={SQUIRCLE_RADIUS.md}
+            shadow="sm"
             {...props}
             ref={ref}
             layoutId={`popover-trigger-${context.uniqueId}`}
@@ -203,7 +207,7 @@ function MorphingPopoverContent({
             role='dialog'
             aria-modal='true'
             className={cn(
-              'absolute overflow-hidden rounded-md border border-zinc-950/10 bg-white p-2 text-zinc-950 shadow-md dark:border-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50',
+              'absolute overflow-hidden rounded-md inset-ring-1 inset-ring-zinc-950/10 bg-white p-2 text-zinc-950 dark:inset-ring-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50',
               className
             )}
             initial='initial'
@@ -212,7 +216,7 @@ function MorphingPopoverContent({
             variants={context.variants}
           >
             {children}
-          </motion.div>
+          </Squircle>
         </>
       )}
     </AnimatePresence>
