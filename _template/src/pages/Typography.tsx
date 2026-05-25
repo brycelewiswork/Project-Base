@@ -19,10 +19,12 @@ const LEVELS = [
   { label: "H4", n: 3, tag: "h4" },
   { label: "H5", n: 2, tag: "h5" },
   { label: "H6", n: 1, tag: "h6" },
-  { label: "Body", n: 0, tag: "p" },
-  { label: "Small", n: -1, tag: "small" },
+  { label: "Paragraph", n: 0, tag: "p" },
+  { label: "Paragraph Small", n: -1, tag: "small" },
   { label: "XS", n: -2, tag: "small" },
 ] as const
+
+const MIN_SIZE_PX = 12
 
 const WEIGHT_NAMES: Record<number, string> = {
   100: "Thin",
@@ -49,7 +51,16 @@ export function Typography() {
   const [headingLS, setHeadingLS] = useState(-0.02)
 
   const computeSize = (n: number) => {
-    const px = base * Math.pow(ratio, n)
+    let px: number
+    if (n >= 0) {
+      px = base * Math.pow(ratio, n)
+    } else {
+      // Gentler falloff below paragraph: linear steps of ~2px instead of
+      // the same exponential ratio, so small sizes stay readable.
+      // At 16px base: paragraph-small ≈ 14, xs ≈ 12.
+      const step = Math.min(2, (base - MIN_SIZE_PX) / 2)
+      px = Math.max(MIN_SIZE_PX, base + n * step)
+    }
     const rem = px / 16
     return { px: Math.round(px * 10) / 10, rem: Math.round(rem * 1000) / 1000 }
   }
