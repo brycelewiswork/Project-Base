@@ -50,20 +50,34 @@ export function Typography() {
   const [bodyLS, setBodyLS] = useState(0)
   const [headingLS, setHeadingLS] = useState(-0.02)
   const [opticalSizing, setOpticalSizing] = useState(true)
+  const [fluid, setFluid] = useState(false)
+  const [minVw, setMinVw] = useState(320)
+  const [maxVw, setMaxVw] = useState(1200)
+  const [fluidScale, setFluidScale] = useState(0.75)
 
   const computeSize = (n: number) => {
     let px: number
     if (n >= 0) {
       px = base * Math.pow(ratio, n)
     } else {
-      // Gentler falloff below paragraph: linear steps of ~2px instead of
-      // the same exponential ratio, so small sizes stay readable.
-      // At 16px base: paragraph-small ≈ 14, xs ≈ 12.
       const step = Math.min(2, (base - MIN_SIZE_PX) / 2)
       px = Math.max(MIN_SIZE_PX, base + n * step)
     }
     const rem = px / 16
     return { px: Math.round(px * 10) / 10, rem: Math.round(rem * 1000) / 1000 }
+  }
+
+  const computeClamp = (n: number) => {
+    const { rem: maxRem } = computeSize(n)
+    const minRem = Math.max(MIN_SIZE_PX / 16, Math.round(maxRem * fluidScale * 1000) / 1000)
+    const slope = (maxRem - minRem) / ((maxVw - minVw) / 16)
+    const intercept = Math.round((minRem - slope * (minVw / 16)) * 1000) / 1000
+    const slopeVw = Math.round(slope * 100 * 100) / 100
+    return {
+      minRem,
+      maxRem,
+      css: `clamp(${minRem}rem, ${intercept}rem + ${slopeVw}vw, ${maxRem}rem)`,
+    }
   }
 
   return (
@@ -111,6 +125,24 @@ export function Typography() {
                 Optical sizing <span className="font-mono">(opsz 9–40)</span>
               </span>
             </label>
+            <div className="border-t border-border/40 pt-4">
+              <label className="flex items-center gap-2 text-xs">
+                <input
+                  type="checkbox"
+                  checked={fluid}
+                  onChange={(e) => setFluid(e.target.checked)}
+                  className="accent-foreground"
+                />
+                <span className="font-medium text-muted-foreground">Fluid type (clamp)</span>
+              </label>
+            </div>
+            {fluid && (
+              <div className="flex flex-col gap-3">
+                <Slider label="Mobile scale" value={fluidScale} min={0.6} max={0.95} step={0.05} onChange={setFluidScale} />
+                <Slider label="Min viewport" value={minVw} min={280} max={480} step={10} unit="px" onChange={setMinVw} />
+                <Slider label="Max viewport" value={maxVw} min={900} max={1600} step={50} unit="px" onChange={setMaxVw} />
+              </div>
+            )}
           </aside>
 
           {/* Preview */}
@@ -119,21 +151,27 @@ export function Typography() {
             <section className="flex flex-col gap-0">
               {LEVELS.map((level) => {
                 const { px, rem } = computeSize(level.n)
+                const clamp = fluid ? computeClamp(level.n) : null
                 const isHeading = level.n > 0
                 return (
                   <div
                     key={level.label}
                     className="flex items-baseline gap-4 border-b border-border/40 py-3"
                   >
-                    <div className="flex w-28 shrink-0 flex-col gap-0.5 text-right">
+                    <div className="flex w-32 shrink-0 flex-col gap-0.5 text-right">
                       <span className="font-mono text-xs text-muted-foreground">{level.label}</span>
                       <span className="font-mono text-[10px] text-muted-foreground/60">
                         {px}px / {rem}rem
                       </span>
+                      {clamp && (
+                        <span className="font-mono text-[9px] text-muted-foreground/40 break-all">
+                          {clamp.css}
+                        </span>
+                      )}
                     </div>
                     <span
                       style={{
-                        fontSize: `${rem}rem`,
+                        fontSize: clamp ? clamp.css : `${rem}rem`,
                         fontWeight: isHeading ? headingWeight : bodyWeight,
                         lineHeight: isHeading ? headingLH : bodyLH,
                         letterSpacing: `${isHeading ? headingLS : bodyLS}em`,
