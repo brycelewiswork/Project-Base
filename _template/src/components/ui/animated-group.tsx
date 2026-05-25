@@ -4,6 +4,7 @@ import {
   type Variants,
 } from 'motion/react';
 import React from 'react';
+import { SPRING } from '@/lib/motion';
 
 export type PresetType =
   | 'fade'
@@ -64,35 +65,35 @@ const presetVariants: Record<PresetType, Variants> = {
     hidden: { scale: 0.5 },
     visible: {
       scale: 1,
-      transition: { type: 'spring' as const, stiffness: 300, damping: 20 },
+      transition: { type: 'spring' as const, ...SPRING.snappy },
     },
   },
   flip: {
     hidden: { rotateX: -90 },
     visible: {
       rotateX: 0,
-      transition: { type: 'spring' as const, stiffness: 300, damping: 20 },
+      transition: { type: 'spring' as const, ...SPRING.snappy },
     },
   },
   bounce: {
     hidden: { y: -50 },
     visible: {
       y: 0,
-      transition: { type: 'spring' as const, stiffness: 400, damping: 10 },
+      transition: { type: 'spring' as const, ...SPRING.bouncy },
     },
   },
   rotate: {
     hidden: { rotate: -180 },
     visible: {
       rotate: 0,
-      transition: { type: 'spring' as const, stiffness: 200, damping: 15 },
+      transition: { type: 'spring' as const, ...SPRING.smooth },
     },
   },
   swing: {
     hidden: { rotate: -10 },
     visible: {
       rotate: 0,
-      transition: { type: 'spring' as const, stiffness: 300, damping: 8 },
+      transition: { type: 'spring' as const, ...SPRING.bouncy },
     },
   },
 };

@@ -14,6 +14,7 @@ import {
 } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { SPRING } from '@/lib/motion';
 
 export type CarouselContextType = {
   index: number;
@@ -308,10 +309,8 @@ function CarouselContent({
       onDragEnd={disableDrag ? undefined : onDragEnd}
       transition={
         transition || {
-          damping: 18,
-          stiffness: 90,
+          ...SPRING.gentle,
           type: 'spring' as const,
-          duration: 0.2,
         }
       }
       className={cn(

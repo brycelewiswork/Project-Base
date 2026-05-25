@@ -705,7 +705,7 @@ function MotionDemo() {
       <div className="flex items-center gap-4">
         <motion.div
           className="flex h-16 w-16 items-center justify-center bg-foreground text-background"
-          style={{ borderRadius: 14 }}
+          style={{ borderRadius: SQUIRCLE_RADIUS.xl }}
           animate={{ rotate: [0, 90, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: EASE.easeInOut }}
         >

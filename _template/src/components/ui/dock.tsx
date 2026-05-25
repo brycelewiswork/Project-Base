@@ -8,6 +8,7 @@ import {
   AnimatePresence,
 } from 'motion/react';
 import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
+import { SPRING } from '@/lib/motion';
 import {
   Children,
   cloneElement,
@@ -79,7 +80,7 @@ function useDock() {
 function Dock({
   children,
   className,
-  spring = { mass: 0.1, stiffness: 150, damping: 12 },
+  spring = SPRING.smooth,
   magnification = DEFAULT_MAGNIFICATION,
   distance = DEFAULT_DISTANCE,
   panelHeight = DEFAULT_PANEL_HEIGHT,
