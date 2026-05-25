@@ -49,6 +49,7 @@ export function Typography() {
   const [headingLH, setHeadingLH] = useState(1.2)
   const [bodyLS, setBodyLS] = useState(0)
   const [headingLS, setHeadingLS] = useState(-0.02)
+  const [opticalSizing, setOpticalSizing] = useState(true)
 
   const computeSize = (n: number) => {
     let px: number
@@ -99,6 +100,17 @@ export function Typography() {
             <Slider label="Heading line-height" value={headingLH} min={1} max={1.6} step={0.05} onChange={setHeadingLH} />
             <Slider label="Body tracking" value={bodyLS} min={-0.05} max={0.1} step={0.005} unit="em" onChange={setBodyLS} />
             <Slider label="Heading tracking" value={headingLS} min={-0.05} max={0.05} step={0.005} unit="em" onChange={setHeadingLS} />
+            <label className="flex items-center gap-2 text-xs">
+              <input
+                type="checkbox"
+                checked={opticalSizing}
+                onChange={(e) => setOpticalSizing(e.target.checked)}
+                className="accent-foreground"
+              />
+              <span className="text-muted-foreground">
+                Optical sizing <span className="font-mono">(opsz 9–40)</span>
+              </span>
+            </label>
           </aside>
 
           {/* Preview */}
@@ -125,6 +137,7 @@ export function Typography() {
                         fontWeight: isHeading ? headingWeight : bodyWeight,
                         lineHeight: isHeading ? headingLH : bodyLH,
                         letterSpacing: `${isHeading ? headingLS : bodyLS}em`,
+                        fontOpticalSizing: opticalSizing ? "auto" : "none",
                       }}
                       className="min-w-0 truncate"
                     >

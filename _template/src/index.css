@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/dm-sans/opsz";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -127,5 +127,6 @@
     }
   html {
     @apply font-sans;
+    font-optical-sizing: auto;
     }
 }
