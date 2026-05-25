@@ -8,7 +8,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import useClickOutside from '@/hooks/useClickOutside';
-import { Folder, MessageCircle, User, WalletCards } from 'lucide-react';
+import { IconFolder, IconMessageCircle, IconUser, IconWallet } from '@tabler/icons-react';
 
 import { SPRING_FAST } from '@/lib/motion';
 
@@ -20,8 +20,8 @@ const transition = {
 const ITEMS = [
   {
     id: 1,
-    label: 'User',
-    title: <User className='h-5 w-5' />,
+    label: 'IconUser',
+    title: <IconUser className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
         <div className='flex flex-col space-y-1 text-zinc-700'>
@@ -40,7 +40,7 @@ const ITEMS = [
   {
     id: 2,
     label: 'Messages',
-    title: <MessageCircle className='h-5 w-5' />,
+    title: <IconMessageCircle className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
         <div className='text-zinc-700'>You have 3 new messages.</div>
@@ -56,7 +56,7 @@ const ITEMS = [
   {
     id: 3,
     label: 'Documents',
-    title: <Folder className='h-5 w-5' />,
+    title: <IconFolder className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
         <div className='flex flex-col text-zinc-700'>
@@ -78,7 +78,7 @@ const ITEMS = [
   {
     id: 4,
     label: 'Wallet',
-    title: <WalletCards className='h-5 w-5' />,
+    title: <IconWallet className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
         <div className='flex flex-col text-zinc-700'>

@@ -16,7 +16,7 @@ import {
 } from 'motion/react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
-import { XIcon } from 'lucide-react';
+import { IconX } from '@tabler/icons-react';
 import useClickOutside from '@/hooks/useClickOutside';
 
 export type MorphingDialogContextType = {
@@ -402,7 +402,7 @@ function MorphingDialogClose({
       exit='exit'
       variants={variants}
     >
-      {children || <XIcon size={24} />}
+      {children || <IconX size={24} />}
     </motion.button>
   );
 }

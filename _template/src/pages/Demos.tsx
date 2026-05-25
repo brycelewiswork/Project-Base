@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { motion } from "motion/react"
 import gsap from "gsap"
 import { toast } from "sonner"
-import { ArrowRightIcon, HeartIcon, SparklesIcon, ZapIcon } from "lucide-react"
+import { IconArrowRight, IconHeart, IconSparkles, IconBolt } from '@tabler/icons-react'
 
 import { DemoSection } from "@/components/DemoSection"
 import { Squircle, SQUIRCLE_RADIUS, buildShadow, SQUIRCLE_SHADOW } from "@/components/squircle"
@@ -64,7 +64,7 @@ export function Demos() {
               ["React Router", "routing"],
               ["Zustand", "state"],
               ["Sonner", "toasts"],
-              ["lucide-react", "icons"],
+              ["Tabler Icons", "icons"],
             ].map(([lib, role]) => (
               <div key={lib} className="flex items-baseline gap-2">
                 <span className="font-medium">{lib}</span>
@@ -84,7 +84,7 @@ export function Demos() {
       <RouterDemo />
       <ZustandDemo />
       <SonnerDemo />
-      <LucideDemo />
+      <TablerDemo />
     </main>
   )
 }
@@ -333,7 +333,7 @@ const ALBUM_SAMPLES = [
 function ColorFromImageDemo() {
   const imgRef = useRef<HTMLImageElement>(null)
   const [src, setSrc] = useState<string>(ALBUM_SAMPLES[0].src)
-  // User's explicit pick (set when they click a swatch). Cleared on src change
+  // IconUser's explicit pick (set when they click a swatch). Cleared on src change
   // so the active color falls back to the new image's dominant.
   const [userPickedHex, setUserPickedHex] = useState<string | null>(null)
   const { dominant, palette, swatches, loading, error } = useImagePalette(imgRef, {
@@ -709,7 +709,7 @@ function MotionDemo() {
           animate={{ rotate: [0, 90, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: EASE.easeInOut }}
         >
-          <SparklesIcon className="size-5" />
+          <IconSparkles className="size-5" />
         </motion.div>
         <span className="text-sm text-muted-foreground">
           Looping rotate + scale via <code>motion.div</code>.
@@ -764,10 +764,10 @@ function RouterDemo() {
       </p>
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <Link to="/" className="inline-flex items-center gap-1 underline">
-          Home <ArrowRightIcon className="size-3" />
+          Home <IconArrowRight className="size-3" />
         </Link>
         <Link to="/sketch" className="inline-flex items-center gap-1 underline">
-          Sketch <ArrowRightIcon className="size-3" />
+          Sketch <IconArrowRight className="size-3" />
         </Link>
       </div>
     </DemoSection>
@@ -812,15 +812,17 @@ function SonnerDemo() {
   )
 }
 
-function LucideDemo() {
+function TablerDemo() {
   return (
-    <DemoSection title="Lucide" lib="lucide-react">
-      <p className="text-sm text-muted-foreground">Icon library used by shadcn defaults.</p>
+    <DemoSection title="Tabler Icons" lib="@tabler/icons-react">
+      <p className="text-sm text-muted-foreground">
+        5,400+ icons in outline + filled. Consistent 2px stroke on 24px grid.
+      </p>
       <div className="flex items-center gap-4 text-foreground/70">
-        <SparklesIcon className="size-5" />
-        <HeartIcon className="size-5" />
-        <ZapIcon className="size-5" />
-        <ArrowRightIcon className="size-5" />
+        <IconSparkles className="size-5" />
+        <IconHeart className="size-5" />
+        <IconBolt className="size-5" />
+        <IconArrowRight className="size-5" />
       </div>
     </DemoSection>
   )

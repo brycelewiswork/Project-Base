@@ -13,7 +13,7 @@ import {
   useMotionValue,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { SPRING } from '@/lib/motion';
 
 export type CarouselContextType = {
@@ -157,7 +157,7 @@ function CarouselNavigation({
           }
         }}
       >
-        <ChevronLeft
+        <IconChevronLeft
           className='stroke-zinc-600 dark:stroke-zinc-50'
           size={16}
         />
@@ -182,7 +182,7 @@ function CarouselNavigation({
           }
         }}
       >
-        <ChevronRight
+        <IconChevronRight
           className='stroke-zinc-600 dark:stroke-zinc-50'
           size={16}
         />

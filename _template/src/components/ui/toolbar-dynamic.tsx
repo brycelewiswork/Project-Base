@@ -5,7 +5,7 @@ import {
   MotionConfig,
 } from 'motion/react';
 import useClickOutside from '@/hooks/useClickOutside';
-import { ArrowLeft, Search, User } from 'lucide-react';
+import { IconArrowLeft, IconSearch, IconUser } from '@tabler/icons-react';
 
 import { SPRING_FAST } from '@/lib/motion';
 
@@ -60,26 +60,26 @@ export default function ToolbarDynamic() {
             <div className='overflow-hidden p-2'>
               {!isOpen ? (
                 <div className='flex space-x-2'>
-                  <Button disabled ariaLabel='User profile'>
-                    <User className='h-5 w-5' />
+                  <Button disabled ariaLabel='IconUser profile'>
+                    <IconUser className='h-5 w-5' />
                   </Button>
                   <Button
                     onClick={() => setIsOpen(true)}
-                    ariaLabel='Search notes'
+                    ariaLabel='IconSearch notes'
                   >
-                    <Search className='h-5 w-5' />
+                    <IconSearch className='h-5 w-5' />
                   </Button>
                 </div>
               ) : (
                 <div className='flex space-x-2'>
                   <Button onClick={() => setIsOpen(false)} ariaLabel='Back'>
-                    <ArrowLeft className='h-5 w-5' />
+                    <IconArrowLeft className='h-5 w-5' />
                   </Button>
                   <div className='relative w-full'>
                     <input
                       className='h-9 w-full rounded-lg inset-ring-1 inset-ring-zinc-950/10 bg-transparent p-2 text-zinc-900 placeholder-zinc-500 focus:outline-hidden'
                       autoFocus
-                      placeholder='Search notes'
+                      placeholder='IconSearch notes'
                     />
                     <div className='absolute right-1 top-0 flex h-full items-center justify-center'></div>
                   </div>

@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
 import { useId } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { IconX } from '@tabler/icons-react';
 import { usePreventScroll } from '@/hooks/usePreventScroll';
 import { EASE } from '@/lib/motion'
 
@@ -328,7 +328,7 @@ function DialogClose({ className, children, disabled }: DialogCloseProps) {
       )}
       disabled={disabled}
     >
-      {children || <X className='h-4 w-4' />}
+      {children || <IconX className='h-4 w-4' />}
       <span className='sr-only'>Close</span>
     </button>
   );
