@@ -206,29 +206,23 @@ export function Typography() {
               </div>
             </section>
 
-            {/* Paragraph preview */}
+            {/* Prose preview */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-medium text-muted-foreground">Paragraph preview</h2>
-              <div
-                className="rounded-xl bg-foreground/3 p-6"
-                style={{
-                  fontSize: `${computeSize(0).rem}rem`,
-                  fontWeight: bodyWeight,
-                  lineHeight: bodyLH,
-                  letterSpacing: `${bodyLS}em`,
-                }}
-              >
-                <p className="mb-4">
-                  Typography is the craft of endowing human language with a durable visual form.
-                  Good typography is measured by how well it reinforces the meaning of the text,
-                  not by some abstract standard of legibility.
-                </p>
-                <p>
-                  A well-tuned type scale creates visual hierarchy through mathematical
-                  relationships between sizes, weights, and spacing — letting the reader's eye
-                  navigate content naturally without conscious effort.
-                </p>
-              </div>
+              <h2 className="text-sm font-medium text-muted-foreground">Prose preview</h2>
+              <ProsePreview
+                base={base}
+                ratio={ratio}
+                bodyWeight={bodyWeight}
+                headingWeight={headingWeight}
+                bodyLH={bodyLH}
+                headingLH={headingLH}
+                bodyLS={bodyLS}
+                headingLS={headingLS}
+                opticalSizing={opticalSizing}
+                fluid={fluid}
+                computeSize={computeSize}
+                computeClamp={fluid ? computeClamp : undefined}
+              />
             </section>
 
             {/* Current values */}
@@ -284,5 +278,140 @@ function Slider({
         className="w-full accent-foreground"
       />
     </div>
+  )
+}
+
+function ProsePreview({
+  base,
+  ratio,
+  bodyWeight,
+  headingWeight,
+  bodyLH,
+  headingLH,
+  bodyLS,
+  headingLS,
+  opticalSizing,
+  fluid,
+  computeSize,
+  computeClamp,
+}: {
+  base: number
+  ratio: number
+  bodyWeight: number
+  headingWeight: number
+  bodyLH: number
+  headingLH: number
+  bodyLS: number
+  headingLS: number
+  opticalSizing: boolean
+  fluid: boolean
+  computeSize: (n: number) => { px: number; rem: number }
+  computeClamp?: (n: number) => { css: string }
+}) {
+  const hs = (n: number): React.CSSProperties => ({
+    fontSize: computeClamp ? computeClamp(n).css : `${computeSize(n).rem}rem`,
+    fontWeight: headingWeight,
+    lineHeight: headingLH,
+    letterSpacing: `${headingLS}em`,
+    fontOpticalSizing: opticalSizing ? "auto" : "none",
+    textWrap: "balance",
+    marginTop: "1.5em",
+    marginBottom: "0.5em",
+  })
+
+  const ps: React.CSSProperties = {
+    fontSize: computeClamp ? computeClamp(0).css : `${computeSize(0).rem}rem`,
+    fontWeight: bodyWeight,
+    lineHeight: bodyLH,
+    letterSpacing: `${bodyLS}em`,
+    fontOpticalSizing: opticalSizing ? "auto" : "none",
+    textWrap: "pretty",
+    marginBottom: "1em",
+  }
+
+  const smps: React.CSSProperties = {
+    ...ps,
+    fontSize: computeClamp ? computeClamp(-1).css : `${computeSize(-1).rem}rem`,
+    color: "var(--muted-foreground)",
+  }
+
+  return (
+    <article className="max-w-[65ch] rounded-xl bg-foreground/3 px-8 py-6">
+      <h1 style={hs(6)}>The Foundations of Good Typography</h1>
+      <p style={ps}>
+        Typography is the craft of endowing human language with a durable visual
+        form. Good typography is measured by how well it reinforces the meaning
+        of the text, not by some abstract standard of legibility.
+      </p>
+
+      <h2 style={hs(5)}>Why Type Scale Matters</h2>
+      <p style={ps}>
+        A well-tuned type scale creates visual hierarchy through mathematical
+        relationships between sizes, weights, and spacing — letting the
+        reader's eye navigate content naturally without conscious effort.
+      </p>
+      <p style={ps}>
+        The ratio between adjacent sizes determines the feel: a tight ratio
+        like 1.125 creates subtle, professional hierarchy; a wide ratio like
+        1.333 creates dramatic contrast that commands attention.
+      </p>
+
+      <h3 style={hs(4)}>Choosing the Right Scale</h3>
+      <p style={ps}>
+        For long-form reading, a Minor Third (1.2) or Major Second (1.125)
+        provides enough differentiation without overwhelming the page. For
+        marketing and hero sections, a Perfect Fourth (1.333) or higher gives
+        headings the visual weight they need.
+      </p>
+
+      <h4 style={hs(3)}>Line Height and Measure</h4>
+      <p style={ps}>
+        Line height should generally be between 1.4 and 1.6 for body text.
+        Shorter lines need less leading; longer lines need more. The ideal
+        measure (line length) is 45–75 characters — wide enough for
+        comfortable reading, narrow enough to track back to the next line.
+      </p>
+
+      <h5 style={hs(2)}>Letter Spacing Adjustments</h5>
+      <p style={ps}>
+        Large headings often benefit from negative letter-spacing (tighter
+        tracking) to maintain visual density. Small text may need slightly
+        positive tracking to stay legible. Variable fonts with an optical
+        size axis handle some of this automatically.
+      </p>
+
+      <h6 style={hs(1)}>A Note on Optical Sizing</h6>
+      <p style={ps}>
+        Fonts designed with an optical size axis adjust their letterforms
+        based on rendered size — wider counters and heavier strokes at small
+        sizes, finer details at display sizes. DM Sans supports this from
+        9pt to 40pt.
+      </p>
+
+      <blockquote
+        className="border-l-2 border-foreground/20 pl-4 italic"
+        style={ps}
+      >
+        "The details are not the details. They make the design."
+        <span className="block not-italic" style={smps}>— Charles Eames</span>
+      </blockquote>
+
+      <p style={ps}>
+        The best typography is invisible — the reader absorbs the content
+        without noticing the medium. Every decision in a type system, from
+        scale ratio to letter spacing, serves that goal.
+      </p>
+
+      <ul className="list-disc pl-6" style={ps}>
+        <li>Consistent scale creates predictable hierarchy</li>
+        <li>Fluid sizing adapts gracefully across viewports</li>
+        <li>Optical sizing preserves legibility at every size</li>
+        <li>Balanced wrapping eliminates orphans in headings</li>
+      </ul>
+
+      <p style={smps}>
+        Last updated — base {base}px, ratio {ratio}, {fluid ? "fluid" : "fixed"}
+      </p>
+    </article>
   )
 }

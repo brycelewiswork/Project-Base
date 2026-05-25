@@ -129,4 +129,10 @@
     @apply font-sans;
     font-optical-sizing: auto;
     }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    }
+  p, li, dd, blockquote, figcaption, small, caption, label {
+    text-wrap: pretty;
+    }
 }
