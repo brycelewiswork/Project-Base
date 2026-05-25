@@ -2,6 +2,7 @@ import { Link, Route, Routes } from "react-router-dom"
 import { Home } from "@/pages/Home"
 import { Sketch } from "@/pages/Sketch"
 import { Demos } from "@/pages/Demos"
+import { Typography } from "@/pages/Typography"
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Link to="/" className="hover:text-foreground">Home</Link>
           <Link to="/sketch" className="hover:text-foreground">GSAP</Link>
           <Link to="/demos" className="hover:text-foreground">Demos</Link>
+          <Link to="/typography" className="hover:text-foreground">Type</Link>
         </div>
       </nav>
 
@@ -21,6 +23,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sketch" element={<Sketch />} />
         <Route path="/demos" element={<Demos />} />
+        <Route path="/typography" element={<Typography />} />
       </Routes>
     </div>
   )
