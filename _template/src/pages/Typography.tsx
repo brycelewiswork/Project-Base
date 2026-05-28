@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageShell, PageHeader, SectionCard } from "@/components/PageHeader"
 import { Slider as SliderInput } from "@/components/ui/slider"
+import { IconDeviceFloppy, IconRefresh } from "@tabler/icons-react"
 import { loadTypeSettings, saveTypeSettings, applyTypeSettings, TYPE_DEFAULTS, type TypeSettings } from "@/lib/typography"
 
 const SCALE_RATIOS = [
@@ -122,66 +123,16 @@ export function Typography() {
             description="Tune your type scale live. Changes preview instantly — Save to persist across the system."
           />
           <div className="flex gap-2 shrink-0">
-            <Button variant="ghost" size="sm" onClick={handleReset}>Reset</Button>
-            <Button size="sm" onClick={handleSave}>Save</Button>
+            <Button variant="ghost" size="sm" onClick={handleSave}>
+              <IconDeviceFloppy size={14} stroke={2} /> Save
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleReset}>
+              <IconRefresh size={14} stroke={2} /> Reset
+            </Button>
           </div>
         </header>
 
-        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
-          {/* Controls */}
-          <SectionCard className="space-y-5">
-            <Slider label="Base size" value={base} min={10} max={24} step={1} unit="px" onChange={setBase} />
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-label-secondary">Scale ratio</label>
-              <select
-                value={ratio}
-                onChange={(e) => setRatio(parseFloat(e.target.value))}
-                className="h-8 rounded-md bg-surface px-2 text-sm inset-ring-1 inset-ring-stroke-faint"
-              >
-                {SCALE_RATIOS.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.name} ({r.value})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <Slider label="Body weight" value={bodyWeight} min={100} max={900} step={100} onChange={setBodyWeight} />
-            <Slider label="Heading weight" value={headingWeight} min={100} max={900} step={100} onChange={setHeadingWeight} />
-            <Slider label="Body line-height" value={bodyLH} min={1} max={2} step={0.05} onChange={setBodyLH} />
-            <Slider label="Heading line-height" value={headingLH} min={1} max={1.6} step={0.05} onChange={setHeadingLH} />
-            <Slider label="Body tracking" value={bodyLS} min={-0.05} max={0.1} step={0.005} unit="em" onChange={setBodyLS} />
-            <Slider label="Heading tracking" value={headingLS} min={-0.05} max={0.05} step={0.005} unit="em" onChange={setHeadingLS} />
-            <label className="flex items-center gap-2 text-xs">
-              <input
-                type="checkbox"
-                checked={opticalSizing}
-                onChange={(e) => setOpticalSizing(e.target.checked)}
-                className="accent-blue-500"
-              />
-              <span className="text-label-secondary">
-                Optical sizing <span className="font-mono">(opsz 9–40)</span>
-              </span>
-            </label>
-            <div className="border-t border-stroke-faint/40 pt-4">
-              <label className="flex items-center gap-2 text-xs">
-                <input
-                  type="checkbox"
-                  checked={fluid}
-                  onChange={(e) => setFluid(e.target.checked)}
-                  className="accent-blue-500"
-                />
-                <span className="font-medium text-label-secondary">Fluid type (clamp)</span>
-              </label>
-            </div>
-            {fluid && (
-              <div className="flex flex-col gap-3">
-                <Slider label="Mobile scale" value={fluidScale} min={0.6} max={0.95} step={0.05} onChange={setFluidScale} />
-                <Slider label="Min viewport" value={minVw} min={280} max={480} step={10} unit="px" onChange={setMinVw} />
-                <Slider label="Max viewport" value={maxVw} min={900} max={1600} step={50} unit="px" onChange={setMaxVw} />
-              </div>
-            )}
-          </SectionCard>
-
+        <div className="flex flex-col gap-8">
           {/* Preview */}
           <main className="flex flex-col gap-6">
             {/* Scale */}
@@ -222,6 +173,58 @@ export function Typography() {
                 )
               })}
             </section>
+
+            {/* Controls */}
+            <SectionCard className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <Slider label="Base size" value={base} min={10} max={24} step={1} unit="px" onChange={setBase} />
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-label-secondary">Scale ratio</label>
+                <select
+                  value={ratio}
+                  onChange={(e) => setRatio(parseFloat(e.target.value))}
+                  className="h-8 rounded-md bg-surface px-2 text-sm inset-ring-1 inset-ring-stroke-faint"
+                >
+                  {SCALE_RATIOS.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.name} ({r.value})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <Slider label="Body weight" value={bodyWeight} min={100} max={900} step={100} onChange={setBodyWeight} />
+              <Slider label="Heading weight" value={headingWeight} min={100} max={900} step={100} onChange={setHeadingWeight} />
+              <Slider label="Body line-height" value={bodyLH} min={1} max={2} step={0.05} onChange={setBodyLH} />
+              <Slider label="Heading line-height" value={headingLH} min={1} max={1.6} step={0.05} onChange={setHeadingLH} />
+              <Slider label="Body tracking" value={bodyLS} min={-0.05} max={0.1} step={0.005} unit="em" onChange={setBodyLS} />
+              <Slider label="Heading tracking" value={headingLS} min={-0.05} max={0.05} step={0.005} unit="em" onChange={setHeadingLS} />
+              <label className="flex items-center gap-2 text-xs self-end pb-2">
+                <input
+                  type="checkbox"
+                  checked={opticalSizing}
+                  onChange={(e) => setOpticalSizing(e.target.checked)}
+                  className="accent-blue-500"
+                />
+                <span className="text-label-secondary">
+                  Optical sizing <span className="font-mono">(opsz 9–40)</span>
+                </span>
+              </label>
+              <label className="flex items-center gap-2 text-xs self-end pb-2 sm:col-span-2 lg:col-span-1 border-t border-stroke-faint/40 pt-4 sm:border-t-0 sm:pt-0">
+                <input
+                  type="checkbox"
+                  checked={fluid}
+                  onChange={(e) => setFluid(e.target.checked)}
+                  className="accent-blue-500"
+                />
+                <span className="font-medium text-label-secondary">Fluid type (clamp)</span>
+              </label>
+              {fluid && (
+                <>
+                  <Slider label="Mobile scale" value={fluidScale} min={0.6} max={0.95} step={0.05} onChange={setFluidScale} />
+                  <Slider label="Min viewport" value={minVw} min={280} max={480} step={10} unit="px" onChange={setMinVw} />
+                  <Slider label="Max viewport" value={maxVw} min={900} max={1600} step={50} unit="px" onChange={setMaxVw} />
+                </>
+              )}
+            </SectionCard>
 
             {/* Available weights */}
             <section className="flex flex-col gap-3">

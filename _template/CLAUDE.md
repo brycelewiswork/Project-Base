@@ -14,6 +14,7 @@ scaffold for high-fidelity React sketches.
 - Zustand for state — stores in `src/store/`
 - Sonner for toasts (mounted in `src/main.tsx`)
 - **DM Sans** (`@fontsource-variable/dm-sans`) — default `--font-sans`, variable font with weights 100–900. Typography tuning page at `/typography` with live controls for base size, scale ratio, weights, line-height, and letter-spacing.
+- **DM Mono** (`@fontsource/dm-mono`) — default `--font-mono`, used via Tailwind `font-mono` for code chips, value displays, tabular numbers, and any monospaced UI element. Centralized in the `@theme` block in `index.css`; never hardcode `ui-monospace`/`monospace` stacks in components.
 - **Tabler Icons** (`@tabler/icons-react`) — 5,400+ icons in outline + filled, consistent 2px/24px grid. Import directly from the package. When `npx shadcn add` brings in a new component with `lucide-react` imports, swap to the Tabler equivalent in the same commit. Custom icons go in `src/components/icons/` as individual files.
 - **corner-smoothing** for Apple-style squircles — applied to every shadcn component (see Conventions)
 - **Progressive blur** (custom, in [src/components/ui/progressive-blur.tsx](src/components/ui/progressive-blur.tsx)) — `<LinearBlur side="top|bottom|left|right">` for edge fades and `<RadialBlur origin="edge|center">` for radial vignettes/focal blurs. Configure via `strength` + `steps` for a geometric ramp, or pass `blurLevels=[...]` for explicit multi-stop control. Zero deps; pure CSS `backdrop-filter` + mask gradients.

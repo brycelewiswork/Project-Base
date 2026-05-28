@@ -5,9 +5,11 @@ import { ThemeProvider } from "next-themes"
 import { Toaster } from "@/components/ui/sonner"
 import App from "./App"
 import { initTypeSystem } from "@/lib/typography"
+import { initColorSystem } from "@/lib/colors"
 import "./index.css"
 
 initTypeSystem()
+initColorSystem()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

@@ -8,11 +8,13 @@ import { Typography } from "@/pages/Typography"
 import { Colors } from "@/pages/Colors"
 import { Spacing } from "@/pages/Spacing"
 import { Breakpoints } from "@/pages/Breakpoints"
+import { Icons } from "@/pages/Icons"
 import { SliderPage } from "@/pages/components/SliderPage"
 import { ButtonPage } from "@/pages/components/ButtonPage"
 import { BadgePage } from "@/pages/components/BadgePage"
 import { CardPage } from "@/pages/components/CardPage"
 import { AccordionPage } from "@/pages/components/AccordionPage"
+import { ShadersPage } from "@/pages/components/ShadersPage"
 import { useTheme } from "next-themes"
 import { SPRING_FAST } from "@/lib/motion"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
@@ -24,10 +26,12 @@ import {
   IconPalette,
   IconSpacingVertical,
   IconLayoutGrid,
+  IconIcons,
   IconChevronRight,
   IconAdjustmentsHorizontal,
   IconClick,
   IconSparkles,
+  IconColorSwatch,
   IconTag,
   IconLayoutCards,
   IconBoxMultiple,
@@ -47,6 +51,7 @@ const PAGES: NavItem[] = [
   { to: "/motion", label: "Motion", icon: IconBounceRight },
   { to: "/spacing", label: "Spacing", icon: IconSpacingVertical },
   { to: "/breakpoints", label: "Layout", icon: IconLayoutGrid },
+  { to: "/icons", label: "Icons", icon: IconIcons },
 ]
 
 const COMPONENTS: NavGroup = {
@@ -58,6 +63,7 @@ const COMPONENTS: NavGroup = {
     { to: "/components/accordion", label: "Accordion", icon: IconBoxMultiple },
     { to: "/components/card", label: "Card", icon: IconLayoutCards },
     { to: "/components/slider", label: "Slider", icon: IconAdjustmentsHorizontal },
+    { to: "/components/shaders", label: "Shaders", icon: IconColorSwatch },
   ],
 }
 
@@ -227,11 +233,13 @@ export default function App() {
         <Route path="/colors" element={<Colors />} />
         <Route path="/spacing" element={<Spacing />} />
         <Route path="/breakpoints" element={<Breakpoints />} />
+        <Route path="/icons" element={<Icons />} />
         <Route path="/components/badge" element={<BadgePage />} />
         <Route path="/components/button" element={<ButtonPage />} />
         <Route path="/components/card" element={<CardPage />} />
         <Route path="/components/slider" element={<SliderPage />} />
         <Route path="/components/accordion" element={<AccordionPage />} />
+        <Route path="/components/shaders" element={<ShadersPage />} />
         <Route path="*" element={<div className="mx-auto max-w-4xl px-6 py-16 text-center"><h1 className="text-h3 text-label">404</h1><p className="text-label-secondary mt-2">Page not found</p></div>} />
       </Routes>
       </main>

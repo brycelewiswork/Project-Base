@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { motion } from "motion/react"
 import gsap from "gsap"
 import { toast } from "sonner"
-import { IconArrowRight, IconHeart, IconSparkles, IconBolt } from '@tabler/icons-react'
+import { IconArrowRight, IconSparkles } from '@tabler/icons-react'
 
 import { PageShell, PageHeader, SectionCard } from "@/components/PageHeader"
 import { DemoSection } from "@/components/DemoSection"
@@ -58,6 +58,7 @@ import {
 import { TightText } from "@/components/ui/tight-text"
 import { Accordion } from "@/components/ui/accordion"
 import { pretextStyleFromElement, usePretextHeight } from "@/lib/pretext"
+import { PulsingBorder, DotGrid, MeshGradient } from "@paper-design/shaders-react"
 
 export function Demos() {
   return (
@@ -87,7 +88,19 @@ export function Demos() {
               ["React Router", "routing"],
               ["Zustand", "state"],
               ["Sonner", "toasts"],
-              ["Tabler Icons", "icons"],
+              ["Base UI", "headless primitives"],
+              ["next-themes", "light/dark"],
+              ["react-use-measure", "size hook"],
+              ["Recharts", "charts"],
+              ["visx", "SVG primitives"],
+              ["Skeleton", "loading states"],
+              ["HTML in Canvas", "experimental API"],
+              ["paper-shaders", "WebGL catalog"],
+              ["three", "3D / WebGL"],
+              ["react-three-fiber", "R3F renderer"],
+              ["drei", "R3F helpers"],
+              ["react-three-postprocessing", "post FX"],
+              ["use-shader-fx", "FX hooks"],
             ].map(([lib, role]) => (
               <div key={lib} className="flex items-baseline gap-2">
                 <span className="font-medium">{lib}</span>
@@ -107,12 +120,13 @@ export function Demos() {
       <RouterDemo />
       <ZustandDemo />
       <SonnerDemo />
-      <TablerDemo />
       <RechartsDemo />
       <VisxDemo />
       <SkeletonDemo />
       <PretextDemo />
       <HtmlInCanvasDemo />
+      <ShadersDemo />
+      <ColorEditorDemo />
     </PageShell>
   )
 }
@@ -835,22 +849,6 @@ function SonnerDemo() {
   )
 }
 
-function TablerDemo() {
-  return (
-    <DemoSection title="Tabler Icons" lib="@tabler/icons-react" docsUrl="https://tabler.io/icons">
-      <p className="text-body text-label-secondary">
-        5,400+ icons in outline + filled. Consistent 2px stroke on 24px grid.
-      </p>
-      <div className="flex items-center gap-4 text-label/70">
-        <IconSparkles className="size-5" />
-        <IconHeart className="size-5" />
-        <IconBolt className="size-5" />
-        <IconArrowRight className="size-5" />
-      </div>
-    </DemoSection>
-  )
-}
-
 /* ------------------------------------------------------------------ */
 /*  Recharts                                                          */
 /* ------------------------------------------------------------------ */
@@ -1509,6 +1507,125 @@ function SkeletonDemo() {
           </div>
         </div>
       </div>
+    </DemoSection>
+  )
+}
+
+function ShadersDemo() {
+  return (
+    <DemoSection
+      title="Shaders"
+      lib="@paper-design/shaders-react · @react-three/fiber + drei + postprocessing"
+      version="five-tier toolkit"
+      docsUrl="https://shaders.paper.design/"
+    >
+      <p className="text-sm text-label-secondary">
+        A tiered WebGL toolkit shipped in the template. The two tiles below recreate the reference effects; the full catalog with live controls for every shader lives on the{" "}
+        <Link to="/components/shaders" className="text-label underline underline-offset-2 hover:text-blue-500">
+          Shaders page
+        </Link>.
+      </p>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        {/* Reference 1 — Aurora pill */}
+        <div className="space-y-2">
+          <div className="text-xs font-medium text-label">Aurora pill</div>
+          <div className="text-[11px] text-label-secondary">PulsingBorder + DotGrid backdrop + glass pill</div>
+          <Squircle
+            as="div"
+            cornerRadius={SQUIRCLE_RADIUS.xl}
+            className="relative h-[260px] overflow-hidden rounded-xl bg-black inset-ring-1 inset-ring-stroke-faint"
+          >
+            <DotGrid
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+              colorBack="#06061a"
+              colorFill="#1c1c3a"
+              size={2}
+              gapX={18}
+              gapY={18}
+              shape="circle"
+            />
+            <PulsingBorder
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+              colorBack="#06061a00"
+              colors={["#ff36c5", "#a52bff", "#ff8be4"]}
+              thickness={0.18}
+              softness={0.7}
+              bloom={0.95}
+              spots={5}
+              pulse={0.35}
+              smoke={0.7}
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Squircle
+                as="div"
+                cornerRadius={999}
+                className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-md inset-ring-1 inset-ring-white/20"
+              >
+                <IconSparkles size={16} stroke={2} className="text-white/90" />
+                Ask Anything
+              </Squircle>
+            </div>
+          </Squircle>
+        </div>
+
+        {/* Reference 2 — Dot grid bloom */}
+        <div className="space-y-2">
+          <div className="text-xs font-medium text-label">Dot-grid bloom</div>
+          <div className="text-[11px] text-label-secondary">MeshGradient bloom over DotGrid</div>
+          <Squircle
+            as="div"
+            cornerRadius={SQUIRCLE_RADIUS.xl}
+            className="relative h-[260px] overflow-hidden rounded-xl bg-black inset-ring-1 inset-ring-stroke-faint"
+          >
+            <DotGrid
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+              colorBack="#02020a"
+              colorFill="#1c1c3a"
+              size={2}
+              gapX={16}
+              gapY={16}
+              shape="circle"
+            />
+            <MeshGradient
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", mixBlendMode: "screen", opacity: 0.85 }}
+              colors={["#c8a8ff", "#5b6bff", "#06061a"]}
+              distortion={0.6}
+              swirl={0.3}
+              speed={0.3}
+              offsetY={0.35}
+              scale={1.2}
+            />
+          </Squircle>
+        </div>
+      </div>
+    </DemoSection>
+  )
+}
+
+// ── Color editor + culori ───────────────────────────────────────────────────
+function ColorEditorDemo() {
+  return (
+    <DemoSection
+      title="Color editor"
+      lib="culori"
+      docsUrl="https://culorijs.org/"
+    >
+      <p className="text-body text-label-secondary">
+        Every semantic token on <Link to="/colors" className="underline">/colors</Link> is
+        click-to-edit with a Figma-style picker (SV square, hue + alpha sliders,
+        hex / RGB / CSS / HSL / HSB modes, native EyeDropper in Chromium).
+        Conversions go through <code>culori</code>; storage stays OKLCH to
+        preserve the system. Overrides persist to localStorage as a sparse
+        per-mode diff, so saved palettes survive future token additions.
+        Export as JSON or paste-ready CSS, import to restore.
+      </p>
+      <Link
+        to="/colors"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-label hover:text-label/80"
+      >
+        Open the editor <IconArrowRight size={14} stroke={2} />
+      </Link>
     </DemoSection>
   )
 }
