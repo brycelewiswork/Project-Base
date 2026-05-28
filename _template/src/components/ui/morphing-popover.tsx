@@ -17,11 +17,11 @@ import {
 } from 'motion/react';
 import useClickOutside from '@/hooks/useClickOutside';
 import { cn } from '@/lib/utils';
+import { SPRING_FAST } from '@/lib/motion';
 
 const TRANSITION = {
   type: 'spring' as const,
-  bounce: 0.1,
-  duration: 0.4,
+  ...SPRING_FAST.gentle,
 };
 
 type MorphingPopoverContextValue = {
@@ -207,7 +207,7 @@ function MorphingPopoverContent({
             role='dialog'
             aria-modal='true'
             className={cn(
-              'absolute overflow-hidden rounded-md inset-ring-1 inset-ring-zinc-950/10 bg-white p-2 text-zinc-950 dark:inset-ring-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50',
+              'absolute overflow-hidden rounded-md inset-ring-1 inset-ring-stroke-faint bg-surface-secondary p-2 text-label',
               className
             )}
             initial='initial'

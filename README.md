@@ -59,6 +59,16 @@ npm install
 
 After that, `.\new-project.ps1 <name>` produces instant copies just like the original machine.
 
+## Experimental web APIs to know about
+
+New browser APIs that postdate most LLM training data — read the doc
+before generating code that touches them:
+
+- **HTML in Canvas** ([docs/html-in-canvas.md](docs/html-in-canvas.md)) —
+  render real, interactive HTML *through* a canvas (scale, rotate,
+  shade, post-process with WebGL/WebGPU) while the underlying DOM stays
+  live, focusable, and accessible. Chromium flag only as of 2026-05.
+
 ## Adding to the template
 
 Edit anything under `_template/` directly. Common changes:

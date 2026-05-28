@@ -39,9 +39,9 @@ export const EASE = {
   decelerate: [0, 0, 0.58, 1] as const,
   accelerate: [0.42, 0, 1, 1] as const,
   linear:     "linear" as const,
-  easeIn:     "easeIn" as const,
-  easeOut:    "easeOut" as const,
-  easeInOut:  "easeInOut" as const,
+  easeIn:     [0.50, 0.05, 0.70, 0.18] as const,
+  easeOut:    [0.22, 0.62, 0.35, 1] as const,
+  easeInOut:  [0.65, 0.05, 0.35, 1] as const,
 } as const
 
 // ---------------------------------------------------------------------------

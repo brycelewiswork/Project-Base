@@ -1,5 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
+import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { PageShell, PageHeader, SectionCard } from "@/components/PageHeader"
+import { Slider as SliderInput } from "@/components/ui/slider"
+import { loadTypeSettings, saveTypeSettings, applyTypeSettings, TYPE_DEFAULTS, type TypeSettings } from "@/lib/typography"
 
 const SCALE_RATIOS = [
   { name: "Minor Second", value: 1.067 },
@@ -41,19 +46,47 @@ const WEIGHT_NAMES: Record<number, string> = {
 const SAMPLE = "The quick brown fox jumps over the lazy dog"
 
 export function Typography() {
-  const [base, setBase] = useState(14)
-  const [ratio, setRatio] = useState(1.2)
-  const [bodyWeight, setBodyWeight] = useState(400)
-  const [headingWeight, setHeadingWeight] = useState(600)
-  const [bodyLH, setBodyLH] = useState(1.5)
-  const [headingLH, setHeadingLH] = useState(1.2)
-  const [bodyLS, setBodyLS] = useState(0)
-  const [headingLS, setHeadingLS] = useState(-0.02)
+  const [saved] = useState(() => loadTypeSettings())
+  const [base, setBase] = useState(saved.base)
+  const [ratio, setRatio] = useState(saved.ratio)
+  const [bodyWeight, setBodyWeight] = useState(saved.weightBody)
+  const [headingWeight, setHeadingWeight] = useState(saved.weightHeading)
+  const [bodyLH, setBodyLH] = useState(saved.lhBody)
+  const [headingLH, setHeadingLH] = useState(saved.lhHeading)
+  const [bodyLS, setBodyLS] = useState(saved.lsBody)
+  const [headingLS, setHeadingLS] = useState(saved.lsHeading)
   const [opticalSizing, setOpticalSizing] = useState(true)
   const [fluid, setFluid] = useState(false)
   const [minVw, setMinVw] = useState(320)
   const [maxVw, setMaxVw] = useState(1200)
   const [fluidScale, setFluidScale] = useState(0.75)
+
+  const currentSettings = useCallback((): TypeSettings => ({
+    base, ratio,
+    weightHeading: headingWeight, weightBody: bodyWeight,
+    lhHeading: headingLH, lhBody: bodyLH,
+    lsHeading: headingLS, lsBody: bodyLS,
+  }), [base, ratio, headingWeight, bodyWeight, headingLH, bodyLH, headingLS, bodyLS])
+
+  useEffect(() => {
+    applyTypeSettings(currentSettings())
+  }, [currentSettings])
+
+  const handleSave = () => {
+    saveTypeSettings(currentSettings())
+    toast.success("Type scale saved")
+  }
+
+  const handleReset = () => {
+    setBase(TYPE_DEFAULTS.base)
+    setRatio(TYPE_DEFAULTS.ratio)
+    setBodyWeight(TYPE_DEFAULTS.weightBody)
+    setHeadingWeight(TYPE_DEFAULTS.weightHeading)
+    setBodyLH(TYPE_DEFAULTS.lhBody)
+    setHeadingLH(TYPE_DEFAULTS.lhHeading)
+    setBodyLS(TYPE_DEFAULTS.lsBody)
+    setHeadingLS(TYPE_DEFAULTS.lsHeading)
+  }
 
   const computeSize = (n: number) => {
     let px: number
@@ -81,25 +114,29 @@ export function Typography() {
   }
 
   return (
-    <div className="min-h-svh bg-background text-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12">
-        <header className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight">Typography</h1>
-          <p className="text-muted-foreground">
-            Tune your type scale live. Formula: <code className="font-mono text-sm">base × ratio<sup>n</sup></code>
-          </p>
+    <div className="min-h-svh bg-surface text-label">
+      <PageShell className="space-y-0! flex flex-col gap-8">
+        <header className="flex items-start justify-between">
+          <PageHeader
+            title="Type"
+            description="Tune your type scale live. Changes preview instantly — Save to persist across the system."
+          />
+          <div className="flex gap-2 shrink-0">
+            <Button variant="ghost" size="sm" onClick={handleReset}>Reset</Button>
+            <Button size="sm" onClick={handleSave}>Save</Button>
+          </div>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
           {/* Controls */}
-          <aside className="flex flex-col gap-5 rounded-xl bg-foreground/3 p-4">
+          <SectionCard className="space-y-5">
             <Slider label="Base size" value={base} min={10} max={24} step={1} unit="px" onChange={setBase} />
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Scale ratio</label>
+              <label className="text-xs font-medium text-label-secondary">Scale ratio</label>
               <select
                 value={ratio}
                 onChange={(e) => setRatio(parseFloat(e.target.value))}
-                className="h-8 rounded-md bg-background px-2 text-sm inset-ring-1 inset-ring-border"
+                className="h-8 rounded-md bg-surface px-2 text-sm inset-ring-1 inset-ring-stroke-faint"
               >
                 {SCALE_RATIOS.map((r) => (
                   <option key={r.value} value={r.value}>
@@ -119,21 +156,21 @@ export function Typography() {
                 type="checkbox"
                 checked={opticalSizing}
                 onChange={(e) => setOpticalSizing(e.target.checked)}
-                className="accent-foreground"
+                className="accent-blue-500"
               />
-              <span className="text-muted-foreground">
+              <span className="text-label-secondary">
                 Optical sizing <span className="font-mono">(opsz 9–40)</span>
               </span>
             </label>
-            <div className="border-t border-border/40 pt-4">
+            <div className="border-t border-stroke-faint/40 pt-4">
               <label className="flex items-center gap-2 text-xs">
                 <input
                   type="checkbox"
                   checked={fluid}
                   onChange={(e) => setFluid(e.target.checked)}
-                  className="accent-foreground"
+                  className="accent-blue-500"
                 />
-                <span className="font-medium text-muted-foreground">Fluid type (clamp)</span>
+                <span className="font-medium text-label-secondary">Fluid type (clamp)</span>
               </label>
             </div>
             {fluid && (
@@ -143,7 +180,7 @@ export function Typography() {
                 <Slider label="Max viewport" value={maxVw} min={900} max={1600} step={50} unit="px" onChange={setMaxVw} />
               </div>
             )}
-          </aside>
+          </SectionCard>
 
           {/* Preview */}
           <main className="flex flex-col gap-6">
@@ -156,15 +193,15 @@ export function Typography() {
                 return (
                   <div
                     key={level.label}
-                    className="flex items-baseline gap-4 border-b border-border/40 py-3"
+                    className="flex items-baseline gap-4 border-b border-stroke-faint/40 py-3"
                   >
                     <div className="flex w-32 shrink-0 flex-col gap-0.5 text-right">
-                      <span className="font-mono text-xs text-muted-foreground">{level.label}</span>
-                      <span className="font-mono text-[10px] text-muted-foreground/60">
+                      <span className="font-mono text-xs text-label-secondary">{level.label}</span>
+                      <span className="font-mono text-[10px] text-label-secondary/60">
                         {px}px / {rem}rem
                       </span>
                       {clamp && (
-                        <span className="font-mono text-[9px] text-muted-foreground/40 break-all">
+                        <span className="font-mono text-[9px] text-label-secondary/40 break-all">
                           {clamp.css}
                         </span>
                       )}
@@ -188,17 +225,17 @@ export function Typography() {
 
             {/* Available weights */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-medium text-muted-foreground">Available weights — DM Sans Variable</h2>
+              <h2 className="text-sm font-medium text-label-secondary">Available weights — DM Sans Variable</h2>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
                 {[100, 200, 300, 400, 500, 600, 700, 800, 900].map((w) => (
                   <div
                     key={w}
-                    className="flex flex-col gap-1 rounded-lg bg-foreground/3 p-3"
+                    className="flex flex-col gap-1 rounded-lg bg-label/3 p-3"
                   >
                     <span style={{ fontWeight: w }} className="text-lg">
                       Aa
                     </span>
-                    <span className="font-mono text-[10px] text-muted-foreground">
+                    <span className="font-mono text-[10px] text-label-secondary">
                       {w} — {WEIGHT_NAMES[w]}
                     </span>
                   </div>
@@ -208,7 +245,7 @@ export function Typography() {
 
             {/* Prose preview */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-medium text-muted-foreground">Prose preview</h2>
+              <h2 className="text-sm font-medium text-label-secondary">Prose preview</h2>
               <ProsePreview
                 base={base}
                 ratio={ratio}
@@ -227,7 +264,7 @@ export function Typography() {
 
             {/* Current values */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-medium text-muted-foreground">Current values</h2>
+              <h2 className="text-sm font-medium text-label-secondary">Current values</h2>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">base: {base}px</Badge>
                 <Badge variant="secondary">ratio: {ratio}</Badge>
@@ -237,7 +274,7 @@ export function Typography() {
             </section>
           </main>
         </div>
-      </div>
+      </PageShell>
     </div>
   )
 }
@@ -262,20 +299,18 @@ function Slider({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between">
-        <label className="text-xs font-medium text-muted-foreground">{label}</label>
-        <span className="font-mono text-xs text-muted-foreground">
+        <label className="text-xs font-medium text-label-secondary">{label}</label>
+        <span className="font-mono text-xs text-label-secondary">
           {Number.isInteger(value) ? value : value.toFixed(step < 0.01 ? 3 : 2)}
           {unit ?? ""}
         </span>
       </div>
-      <input
-        type="range"
+      <SliderInput
         min={min}
         max={max}
         step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full accent-foreground"
+        value={[value]}
+        onValueChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
       />
     </div>
   )
@@ -332,11 +367,11 @@ function ProsePreview({
   const smps: React.CSSProperties = {
     ...ps,
     fontSize: computeClamp ? computeClamp(-1).css : `${computeSize(-1).rem}rem`,
-    color: "var(--muted-foreground)",
+    color: "var(--label-secondary)",
   }
 
   return (
-    <article className="max-w-[65ch] rounded-xl bg-foreground/3 px-8 py-6">
+    <SectionCard className="max-w-[65ch] px-8 py-6">
       <h1 style={hs(6)}>The Foundations of Good Typography</h1>
       <p style={ps}>
         Typography is the craft of endowing human language with a durable visual
@@ -389,7 +424,7 @@ function ProsePreview({
       </p>
 
       <blockquote
-        className="border-l-2 border-foreground/20 pl-4 italic"
+        className="border-l-2 border-label/20 pl-4 italic"
         style={ps}
       >
         "The details are not the details. They make the design."
@@ -412,6 +447,6 @@ function ProsePreview({
       <p style={smps}>
         Last updated — base {base}px, ratio {ratio}, {fluid ? "fluid" : "fixed"}
       </p>
-    </article>
+    </SectionCard>
   )
 }

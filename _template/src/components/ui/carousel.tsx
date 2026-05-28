@@ -141,7 +141,7 @@ function CarouselNavigation({
         type='button'
         aria-label='Previous slide'
         className={cn(
-          'pointer-events-auto h-fit w-fit rounded-full bg-zinc-50 p-2 transition-opacity duration-300 dark:bg-zinc-950',
+          'pointer-events-auto h-fit w-fit rounded-full bg-surface-secondary p-2 transition-opacity duration-300',
           alwaysShow
             ? 'opacity-100'
             : 'opacity-0 group-hover/hover:opacity-100',
@@ -158,14 +158,14 @@ function CarouselNavigation({
         }}
       >
         <IconChevronLeft
-          className='stroke-zinc-600 dark:stroke-zinc-50'
+          className='stroke-label'
           size={16}
         />
       </button>
       <button
         type='button'
         className={cn(
-          'pointer-events-auto h-fit w-fit rounded-full bg-zinc-50 p-2 transition-opacity duration-300 dark:bg-zinc-950',
+          'pointer-events-auto h-fit w-fit rounded-full bg-surface-secondary p-2 transition-opacity duration-300',
           alwaysShow
             ? 'opacity-100'
             : 'opacity-0 group-hover/hover:opacity-100',
@@ -183,7 +183,7 @@ function CarouselNavigation({
         }}
       >
         <IconChevronRight
-          className='stroke-zinc-600 dark:stroke-zinc-50'
+          className='stroke-label'
           size={16}
         />
       </button>
@@ -205,7 +205,7 @@ function CarouselIndicator({
   return (
     <div
       className={cn(
-        'absolute bottom-0 z-10 flex w-full items-center justify-center',
+        'absolute bottom-0 z-raised flex w-full items-center justify-center',
         className
       )}
     >
@@ -219,8 +219,8 @@ function CarouselIndicator({
             className={cn(
               'h-2 w-2 rounded-full transition-opacity duration-300',
               index === i
-                ? 'bg-zinc-950 dark:bg-zinc-50'
-                : 'bg-zinc-900/50 dark:bg-zinc-100/50',
+                ? 'bg-label'
+                : 'bg-label/50',
               classNameButton
             )}
           />

@@ -11,7 +11,7 @@ import { useId } from 'react';
 import { createPortal } from 'react-dom';
 import { IconX } from '@tabler/icons-react';
 import { usePreventScroll } from '@/hooks/usePreventScroll';
-import { EASE } from '@/lib/motion'
+import { DURATION, EASE } from '@/lib/motion'
 
 const DialogContext = createContext<{
   isOpen: boolean;
@@ -41,7 +41,7 @@ const defaultVariants: Variants = {
 
 const defaultTransition: Transition = {
   ease: EASE.easeOut,
-  duration: 0.2,
+  duration: DURATION.fast,
 };
 
 export type DialogProps = {
@@ -241,7 +241,7 @@ function DialogContent({ children, className, container }: DialogContentProps) {
           transition={transition}
           onAnimationComplete={onAnimationComplete}
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-lg inset-ring-1 inset-ring-zinc-200 p-0 dark:inset-ring-zinc-700',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-lg inset-ring-1 inset-ring-stroke-faint p-0',
             'backdrop:bg-black/50 backdrop:backdrop-blur-xs',
             'open:flex open:flex-col',
             className
@@ -279,7 +279,7 @@ function DialogTitle({ children, className }: DialogTitleProps) {
   return (
     <h2
       id={context.ids.title}
-      className={cn('text-base font-medium', className)}
+      className={cn('text-h6', className)}
     >
       {children}
     </h2>
@@ -298,7 +298,7 @@ function DialogDescription({ children, className }: DialogDescriptionProps) {
   return (
     <p
       id={context.ids.description}
-      className={cn('text-base text-zinc-500', className)}
+      className={cn('text-body text-label-secondary', className)}
     >
       {children}
     </p>
@@ -323,7 +323,7 @@ function DialogClose({ className, children, disabled }: DialogCloseProps) {
       className={cn(
         'absolute top-4 right-4 rounded-xs opacity-70 transition-opacity',
         'hover:opacity-100 focus:ring-2 focus:outline-hidden',
-        'focus:ring-zinc-500 focus:ring-offset-2 disabled:pointer-events-none',
+        'focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
         className
       )}
       disabled={disabled}

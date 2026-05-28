@@ -1,197 +1,197 @@
-import {
-  motion,
-  AnimatePresence,
-  type Transition,
-  type Variants,
-  type Variant,
-  MotionConfig,
-} from 'motion/react';
-import { cn } from '@/lib/utils';
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import * as React from "react"
+import { motion, AnimatePresence, type Transition } from "motion/react"
+import useMeasure from "react-use-measure"
+import { cn } from "@/lib/utils"
+import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
+import { SPRING, EASE, DURATION } from "@/lib/motion"
+import { prepare, layout } from "@chenglou/pretext"
+import { pretextStyleFromElement } from "@/lib/pretext"
 
-export type AccordionContextType = {
-  expandedValue: React.Key | null;
-  toggleItem: (value: React.Key) => void;
-  variants?: { expanded: Variant; collapsed: Variant };
-};
+// ---------------------------------------------------------------------------
+// Accordion — accordion whose open/close animation springs to a
+// *predicted* pixel height instead of `height: auto`.
+//
+// Why: spring physics can't actually animate to `auto` — motion fakes it by
+// freezing the auto-resolved height at start, which makes the transition
+// jump if content reflows mid-animation, and disables true overshoot. By
+// asking Pretext to compute the body's height *before* paint, we get a real
+// numeric target for the spring and the smoothest possible motion.
+//
+// Items take a single string (`body`) so Pretext can measure it. For richer
+// bodies, render plain text via the `body` prop and decorate around it.
+// ---------------------------------------------------------------------------
 
-const AccordionContext = createContext<AccordionContextType | undefined>(
-  undefined
-);
-
-function useAccordion() {
-  const context = useContext(AccordionContext);
-  if (!context) {
-    throw new Error('useAccordion must be used within an AccordionProvider');
-  }
-  return context;
+export type AccordionItem = {
+  value: React.Key
+  title: string
+  body: string
 }
 
-export type AccordionProviderProps = {
-  children: ReactNode;
-  variants?: { expanded: Variant; collapsed: Variant };
-  expandedValue?: React.Key | null;
-  onValueChange?: (value: React.Key | null) => void;
-};
-
-function AccordionProvider({
-  children,
-  variants,
-  expandedValue: externalExpandedValue,
-  onValueChange,
-}: AccordionProviderProps) {
-  const [internalExpandedValue, setInternalExpandedValue] =
-    useState<React.Key | null>(null);
-
-  const expandedValue =
-    externalExpandedValue !== undefined
-      ? externalExpandedValue
-      : internalExpandedValue;
-
-  const toggleItem = (value: React.Key) => {
-    const newValue = expandedValue === value ? null : value;
-    if (onValueChange) {
-      onValueChange(newValue);
-    } else {
-      setInternalExpandedValue(newValue);
-    }
-  };
-
-  return (
-    <AccordionContext.Provider value={{ expandedValue, toggleItem, variants }}>
-      {children}
-    </AccordionContext.Provider>
-  );
+type AccordionProps = {
+  items: AccordionItem[]
+  /**
+   * Width the body text will render at. Defaults to the container's
+   * measured inner width (via ResizeObserver), so the accordion is
+   * width-responsive out of the box. Pass a number to override.
+   */
+  bodyWidth?: number
+  /** Horizontal padding subtracted from container width when auto-measuring. */
+  bodyPadding?: number
+  /**
+   * Visual variant.
+   * - `"cards"` (default): each item is its own squircled card with its
+   *   own background and outline. Use when the accordion sits on a plain
+   *   page background and needs to provide its own surfaces.
+   * - `"flat"`: items are borderless rows separated by a divider, with no
+   *   per-item background. Use when the accordion is already inside a
+   *   card / section surface and you don't want card-on-card stacking.
+   */
+  variant?: "cards" | "flat"
+  /** Spring or tween used for both open & close. */
+  transition?: Transition
+  className?: string
+  defaultExpanded?: React.Key | null
 }
 
-export type AccordionProps = {
-  children: ReactNode;
-  className?: string;
-  transition?: Transition;
-  variants?: { expanded: Variant; collapsed: Variant };
-  expandedValue?: React.Key | null;
-  onValueChange?: (value: React.Key | null) => void;
-};
-
-function Accordion({
-  children,
-  className,
+export function Accordion({
+  items,
+  bodyWidth,
+  bodyPadding = 32,
+  variant = "cards",
   transition,
-  variants,
-  expandedValue,
-  onValueChange,
+  className,
+  defaultExpanded = null,
 }: AccordionProps) {
-  return (
-    <MotionConfig transition={transition}>
-      <div className={cn('relative', className)} aria-orientation='vertical'>
-        <AccordionProvider
-          variants={variants}
-          expandedValue={expandedValue}
-          onValueChange={onValueChange}
-        >
-          {children}
-        </AccordionProvider>
-      </div>
-    </MotionConfig>
-  );
-}
+  const [expanded, setExpanded] = React.useState<React.Key | null>(defaultExpanded)
+  const probeRef = React.useRef<HTMLDivElement>(null)
+  const [containerRef, rawBounds] = useMeasure()
+  const containerW = Math.round(rawBounds.width)
+  const [style, setStyle] = React.useState<ReturnType<typeof pretextStyleFromElement> | null>(null)
 
-export type AccordionItemProps = {
-  value: React.Key;
-  children: ReactNode;
-  className?: string;
-};
+  // Sample the body's computed font once mounted. The hidden probe inherits
+  // the same Tailwind classes as the real body so Pretext sees the same font.
+  React.useLayoutEffect(() => {
+    setStyle(pretextStyleFromElement(probeRef.current))
+  }, [])
 
-function AccordionItem({ value, children, className }: AccordionItemProps) {
-  const { expandedValue } = useAccordion();
-  const isExpanded = value === expandedValue;
+  // Resolved text-render width: caller override, else container width
+  // minus padding, else null (skip measurement until container size known).
+  const measuredWidth =
+    bodyWidth ?? (containerW > 0 ? Math.max(40, containerW - bodyPadding) : null)
+
+  const heights = React.useMemo(() => {
+    if (!style || measuredWidth === null) return null
+    const out: Record<string, number> = {}
+    for (const it of items) {
+      const prepared = prepare(it.body, style.font, {
+        letterSpacing: style.letterSpacing || undefined,
+      })
+      const { height } = layout(prepared, measuredWidth, style.lineHeight)
+      out[String(it.value)] = height
+    }
+    return out
+  }, [items, style, measuredWidth])
+
+  const springT: Transition = transition ?? { type: "spring", ...SPRING.smooth }
+
+  const isFlat = variant === "flat"
 
   return (
     <div
-      className={cn('overflow-hidden', className)}
-      {...(isExpanded ? { 'data-expanded': '' } : {'data-closed': ''})}
+      ref={containerRef}
+      className={cn(
+        "flex w-full flex-col",
+        isFlat ? "divide-y divide-stroke-faint" : "gap-2",
+        className,
+      )}
     >
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          const el = child as React.ReactElement<Record<string, unknown>>;
-          return React.cloneElement(el, {
-            ...el.props,
-            value,
-            expanded: isExpanded,
-          });
+      {/* Hidden probe — same text classes as the real body, so computed
+          styles (and therefore Pretext's measurement) match. */}
+      <div
+        ref={probeRef}
+        aria-hidden
+        className="pointer-events-none absolute -z-1 text-body text-label-secondary opacity-0"
+        style={{ position: "absolute", visibility: "hidden", height: 0 }}
+      >
+        probe
+      </div>
+
+      {items.map((it) => {
+        const isOpen = expanded === it.value
+        const targetHeight = heights?.[String(it.value)]
+
+        const trigger = (
+          <button
+            type="button"
+            onClick={() => setExpanded(isOpen ? null : it.value)}
+            aria-expanded={isOpen}
+            className={cn(
+              "flex w-full items-center justify-between gap-3 text-left text-label transition-colors",
+              isFlat
+                ? "py-3 hover:text-label-secondary"
+                : "px-4 py-3 hover:bg-fill-quaternary",
+            )}
+          >
+            <span className="text-body font-medium">{it.title}</span>
+            <motion.span
+              aria-hidden
+              animate={{ rotate: isOpen ? 90 : 0 }}
+              transition={{ duration: DURATION.fast, ease: EASE.easeOut }}
+              className="text-label-tertiary"
+            >
+              ›
+            </motion.span>
+          </button>
+        )
+
+        const body = (
+          <AnimatePresence initial={false}>
+            {isOpen && (
+              <motion.div
+                key="body"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{
+                  height: targetHeight !== undefined ? targetHeight + (isFlat ? 16 : 24) : "auto",
+                  opacity: 1,
+                }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={springT}
+                style={{ overflow: "hidden" }}
+              >
+                <div
+                  className={cn(
+                    "text-body text-label-secondary",
+                    isFlat ? "pb-4" : "px-4 pb-4",
+                  )}
+                >
+                  {it.body}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )
+
+        if (isFlat) {
+          return (
+            <div key={String(it.value)}>
+              {trigger}
+              {body}
+            </div>
+          )
         }
-        return child;
+
+        return (
+          <Squircle
+            key={String(it.value)}
+            as="div"
+            cornerRadius={SQUIRCLE_RADIUS.lg}
+            className="overflow-hidden rounded-lg bg-surface-secondary inset-ring-1 inset-ring-stroke-faint/60"
+          >
+            {trigger}
+            {body}
+          </Squircle>
+        )
       })}
     </div>
-  );
+  )
 }
-
-export type AccordionTriggerProps = {
-  children: ReactNode;
-  className?: string;
-};
-
-function AccordionTrigger({
-  children,
-  className,
-  ...props
-}: AccordionTriggerProps) {
-  const { toggleItem, expandedValue } = useAccordion();
-  const value = (props as { value?: React.Key }).value;
-  const isExpanded = value === expandedValue;
-
-  return (
-    <button
-      onClick={() => value !== undefined && toggleItem(value)}
-      aria-expanded={isExpanded}
-      type='button'
-      className={cn('group', className)}
-      {...(isExpanded ? { 'data-expanded': '' } : {'data-closed': ''})}
-    >
-      {children}
-    </button>
-  );
-}
-
-export type AccordionContentProps = {
-  children: ReactNode;
-  className?: string;
-};
-
-function AccordionContent({
-  children,
-  className,
-  ...props
-}: AccordionContentProps) {
-  const { expandedValue, variants } = useAccordion();
-  const value = (props as { value?: React.Key }).value;
-  const isExpanded = value === expandedValue;
-
-  const BASE_VARIANTS: Variants = {
-    expanded: { height: 'auto', opacity: 1 },
-    collapsed: { height: 0, opacity: 0 },
-  };
-
-  const combinedVariants = {
-    expanded: { ...BASE_VARIANTS.expanded, ...variants?.expanded },
-    collapsed: { ...BASE_VARIANTS.collapsed, ...variants?.collapsed },
-  };
-
-  return (
-    <AnimatePresence initial={false}>
-      {isExpanded && (
-        <motion.div
-          initial='collapsed'
-          animate='expanded'
-          exit='collapsed'
-          variants={combinedVariants}
-          className={className}
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };

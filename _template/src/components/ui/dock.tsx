@@ -8,7 +8,7 @@ import {
   AnimatePresence,
 } from 'motion/react';
 import { Squircle, SQUIRCLE_RADIUS } from '@/components/squircle';
-import { SPRING } from '@/lib/motion';
+import { DURATION, SPRING } from '@/lib/motion';
 import {
   Children,
   cloneElement,
@@ -115,7 +115,7 @@ function Dock({
           mouseX.set(Infinity);
         }}
         className={cn(
-          'mx-auto flex w-fit gap-4 rounded-2xl bg-gray-50 px-4 dark:bg-neutral-900',
+          'mx-auto flex w-fit gap-4 rounded-2xl bg-surface-secondary px-4',
           className
         )}
         style={{ height: panelHeight }}
@@ -194,9 +194,9 @@ function DockLabel({ children, className, ...rest }: DockLabelProps) {
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: -10 }}
           exit={{ opacity: 0, y: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: DURATION.fast }}
           className={cn(
-            'absolute -top-6 left-1/2 w-fit whitespace-pre rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs text-neutral-700 dark:border-neutral-900 dark:bg-neutral-800 dark:text-white',
+            'absolute -top-6 left-1/2 w-fit whitespace-pre rounded-md border border-stroke-faint bg-surface-tertiary px-2 py-0.5 text-xs text-label',
             className
           )}
           role='tooltip'

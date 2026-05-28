@@ -27,7 +27,7 @@ function Button({
 }) {
   return (
     <button
-      className='relative flex h-9 w-9 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
+      className='relative flex h-9 w-9 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
       type='button'
       onClick={onClick}
       disabled={disabled}
@@ -49,7 +49,7 @@ export default function ToolbarDynamic() {
   return (
     <MotionConfig transition={transition}>
       <div className='absolute bottom-8' ref={containerRef}>
-        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-zinc-950/10 bg-white'>
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-stroke-faint bg-surface-secondary'>
           <motion.div
             animate={{
               // @todo: here I want to remove the width
@@ -77,7 +77,7 @@ export default function ToolbarDynamic() {
                   </Button>
                   <div className='relative w-full'>
                     <input
-                      className='h-9 w-full rounded-lg inset-ring-1 inset-ring-zinc-950/10 bg-transparent p-2 text-zinc-900 placeholder-zinc-500 focus:outline-hidden'
+                      className='h-9 w-full rounded-lg inset-ring-1 inset-ring-stroke-faint bg-transparent p-2 text-label placeholder-label-secondary focus:outline-hidden'
                       autoFocus
                       placeholder='IconSearch notes'
                     />

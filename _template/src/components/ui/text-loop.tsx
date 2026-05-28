@@ -7,6 +7,7 @@ import {
   type AnimatePresenceProps,
 } from 'motion/react';
 import { useState, useEffect, Children } from 'react';
+import { DURATION } from '@/lib/motion';
 
 export type TextLoopProps = {
   children: React.ReactNode[];
@@ -23,7 +24,7 @@ export function TextLoop({
   children,
   className,
   interval = 2,
-  transition = { duration: 0.3 },
+  transition = { duration: DURATION.normal },
   variants,
   onIndexChange,
   trigger = true,

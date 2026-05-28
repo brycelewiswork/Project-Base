@@ -24,12 +24,12 @@ const ITEMS = [
     title: <IconUser className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
-        <div className='flex flex-col space-y-1 text-zinc-700'>
+        <div className='flex flex-col space-y-1 text-label'>
           <div className='h-8 w-8 rounded-full bg-linear-to-br from-blue-500 to-blue-400' />
           <span>Ibelick</span>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           Edit Profile
@@ -43,9 +43,9 @@ const ITEMS = [
     title: <IconMessageCircle className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
-        <div className='text-zinc-700'>You have 3 new messages.</div>
+        <div className='text-label'>You have 3 new messages.</div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           View more
@@ -59,7 +59,7 @@ const ITEMS = [
     title: <IconFolder className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
-        <div className='flex flex-col text-zinc-700'>
+        <div className='flex flex-col text-label'>
           <div className='space-y-1'>
             <div>Project_Proposal.pdf</div>
             <div>Meeting_Notes.docx</div>
@@ -67,7 +67,7 @@ const ITEMS = [
           </div>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           Manage documents
@@ -81,12 +81,12 @@ const ITEMS = [
     title: <IconWallet className='h-5 w-5' />,
     content: (
       <div className='flex flex-col space-y-4'>
-        <div className='flex flex-col text-zinc-700'>
+        <div className='flex flex-col text-label'>
           <span>Current Balance</span>
           <span>$1,250.32</span>
         </div>
         <button
-          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-zinc-950/10 px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]'
+          className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
           View Transactions
@@ -118,7 +118,7 @@ export default function ToolbarExpandable() {
   return (
     <MotionConfig transition={transition}>
       <div className='absolute bottom-8' ref={ref}>
-        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-zinc-950/10 bg-white'>
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} className='h-full w-full rounded-xl inset-ring-1 inset-ring-stroke-faint bg-surface-secondary'>
           <div className='overflow-hidden'>
             <AnimatePresence initial={false} mode='sync'>
               {isOpen ? (
@@ -164,8 +164,8 @@ export default function ToolbarExpandable() {
                 key={item.id}
                 aria-label={item.label}
                 className={cn(
-                  'relative flex h-9 w-9 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98]',
-                  active === item.id ? 'bg-zinc-100 text-zinc-800' : ''
+                  'relative flex h-9 w-9 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]',
+                  active === item.id ? 'bg-surface-tertiary text-label' : ''
                 )}
                 type='button'
                 onClick={() => {

@@ -6,6 +6,7 @@ import {
   type SpringOptions,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { SPRING_FAST } from '@/lib/motion';
 
 export type SpotlightProps = {
   className?: string;
@@ -16,7 +17,7 @@ export type SpotlightProps = {
 export function Spotlight({
   className,
   size = 200,
-  springOptions = { bounce: 0 },
+  springOptions = SPRING_FAST.snappy,
 }: SpotlightProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -74,7 +75,7 @@ export function Spotlight({
       ref={containerRef}
       className={cn(
         'pointer-events-none absolute rounded-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops),transparent_80%)] blur-xl transition-opacity duration-200',
-        'from-zinc-100 via-zinc-200 to-zinc-400 dark:from-zinc-50 dark:via-zinc-100 dark:to-zinc-200',
+        'from-neutral-100 via-neutral-200 to-neutral-400 dark:from-neutral-50 dark:via-neutral-100 dark:to-neutral-200',
         isHovered ? 'opacity-100' : 'opacity-0',
         className
       )}
