@@ -5,9 +5,12 @@ scaffold for high-fidelity React sketches.
 
 ## Dev server: always phone-accessible
 
-These sketches are mobile UI prototypes — Bryce loads them on his phone over
-local Wi-Fi. `vite.config.ts` is pre-configured with `server: { host: true, port: 5173 }`
-so `npm run dev` exposes a `Network:` URL out of the box.
+These sketches are mobile UI prototypes — they're meant to be loaded on a phone
+over local Wi-Fi. `vite.config.ts` is pre-configured with `server: { host: true,
+port: process.env.PORT ?? 5173 }` so `npm run dev` exposes a `Network:` URL out
+of the box. The port is env-overridable (`PORT=5174 npm run dev` or set in
+`.env.local`) so anyone cloning the project can pick their own without editing
+the config.
 
 When starting the dev server, always:
 
@@ -21,9 +24,10 @@ When starting the dev server, always:
 4. Mention "Add to Home Screen" in mobile Safari/Chrome for a chromeless launch,
    and that HMR works over LAN.
 
-**Port collisions:** if running multiple sketches at once, bump this clone's `port`
-to a unique value (e.g. 5174, 5175) so saved phone bookmarks stay stable instead of
-Vite silently incrementing.
+**Port collisions:** if running multiple sketches at once, give this clone a unique
+port via `PORT=5174 npm run dev` (or a `.env.local` with `PORT=5174`) so saved phone
+bookmarks stay stable instead of Vite silently incrementing. Don't hardcode a new
+default in `vite.config.ts` — keep it env-driven so the project stays portable.
 
 ## Stack
 
