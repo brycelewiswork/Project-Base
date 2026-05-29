@@ -3,6 +3,28 @@
 This project was spawned from [project-base](../Project-Base/), a personal
 scaffold for high-fidelity React sketches.
 
+## Dev server: always phone-accessible
+
+These sketches are mobile UI prototypes — Bryce loads them on his phone over
+local Wi-Fi. `vite.config.ts` is pre-configured with `server: { host: true, port: 5173 }`
+so `npm run dev` exposes a `Network:` URL out of the box.
+
+When starting the dev server, always:
+
+1. Surface the **`Network:` URL** Vite prints (e.g. `http://<PC-IPv4>:5173/`). If
+   missing, derive from `ipconfig`. Never tell him to use `localhost` / `127.0.0.1`
+   for the phone.
+2. Remind him once that the phone must be on the **same Wi-Fi** as the PC.
+3. If the phone can't connect, suspect **Windows Firewall** blocking inbound Node —
+   needs "Allow on Private networks". Don't suggest disabling the firewall as a fix
+   (only as a brief diagnostic).
+4. Mention "Add to Home Screen" in mobile Safari/Chrome for a chromeless launch,
+   and that HMR works over LAN.
+
+**Port collisions:** if running multiple sketches at once, bump this clone's `port`
+to a unique value (e.g. 5174, 5175) so saved phone bookmarks stay stable instead of
+Vite silently incrementing.
+
 ## Stack
 
 - Vite 7 + React 19 + TypeScript (strict) — using `@vitejs/plugin-react-swc` (SWC, not Babel)

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, Route, Routes, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "motion/react"
 import { Home } from "@/pages/Home"
@@ -67,13 +67,13 @@ const COMPONENTS: NavGroup = {
   ],
 }
 
-function NavLink({ to, label, icon: Icon, indent }: NavItem & { indent?: boolean }) {
+function NavLink({ to, label, icon: Icon, indent, onNavigate }: NavItem & { indent?: boolean; onNavigate?: () => void }) {
   const location = useLocation()
   const active = location.pathname === to
   return (
     <Link
       to={to}
-      onClick={() => window.scrollTo(0, 0)}
+      onClick={() => { window.scrollTo(0, 0); onNavigate?.() }}
       className={`flex items-center gap-2.5 text-sm rounded-xl transition-colors ${
         indent ? "pl-9 pr-4 py-2" : "px-4 py-2.5"
       } ${
@@ -138,12 +138,37 @@ function SideNav() {
   const componentsActive = location.pathname.startsWith("/components")
   const [open, setOpen] = useState(false)
   const [componentsOpen, setComponentsOpen] = useState(componentsActive)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("pointerdown", onDown)
+    return () => document.removeEventListener("pointerdown", onDown)
+  }, [open])
 
   return (
     <div
+      ref={ref}
       className="fixed right-4 top-1/2 -translate-y-1/2 z-nav"
-      onMouseEnter={() => { setOpen(true); if (componentsActive) setComponentsOpen(true) }}
-      onMouseLeave={() => { setOpen(false); setComponentsOpen(componentsActive) }}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== "mouse") return
+        setOpen(true)
+        if (componentsActive) setComponentsOpen(true)
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== "mouse") return
+        setOpen(false)
+        setComponentsOpen(componentsActive)
+      }}
+      onClick={(e) => {
+        if (open) return
+        e.stopPropagation()
+        setOpen(true)
+        if (componentsActive) setComponentsOpen(true)
+      }}
     >
       <motion.div
         layout
@@ -171,7 +196,7 @@ function SideNav() {
               className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl"
             >
               {PAGES.map((item) => (
-                <NavLink key={item.to} {...item} />
+                <NavLink key={item.to} {...item} onNavigate={() => setOpen(false)} />
               ))}
 
               {/* Components dropdown */}
@@ -203,7 +228,7 @@ function SideNav() {
                     className="overflow-hidden"
                   >
                     {COMPONENTS.children.map((item) => (
-                      <NavLink key={item.to} {...item} indent />
+                      <NavLink key={item.to} {...item} indent onNavigate={() => setOpen(false)} />
                     ))}
                   </motion.div>
                 )}
