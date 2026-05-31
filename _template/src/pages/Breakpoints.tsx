@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
-import { PageShell, PageHeader, Section } from "@/components/PageHeader"
+import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 import { prepare, layout, pretextStyleFromElement } from "@/lib/pretext"
 
 const BREAKPOINTS = [

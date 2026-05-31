@@ -1,4 +1,4 @@
-import { PageShell, PageHeader, Section } from "@/components/PageHeader"
+import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 import {
   IconArrowUpRight,
   // Interface

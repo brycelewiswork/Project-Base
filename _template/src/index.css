@@ -1108,3 +1108,42 @@
   .text-sm { font-size: var(--type-sm); }
   .text-xs { font-size: var(--type-xs); }
 }
+
+/* Dialkit patches:
+   1. Ships .dialkit-panel-inner with padding-bottom: 0 — crops the last control.
+   2. Only wires overflow-y: auto for [data-position="top-left"]; the other three
+      positions overflow the viewport instead of scrolling. Scrollbars are hidden
+      upstream via scrollbar-width: none — scroll works via wheel/trackpad/drag. */
+.dialkit-panel-inner:not([data-collapsed="true"]) {
+  padding-bottom: 10px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* AnimatedNumber — Apple-style blur ticker. Digits blur + slide as the value
+   changes; old digit exits, new digit enters from the direction of travel.
+   Blur radius (--digit-blur) and slide distance (--digit-travel) are set on the
+   component's root span so they can be tuned per-instance; the fallbacks below
+   are the defaults. */
+@keyframes digit-up-out {
+  0%        { opacity: 1; transform: translateY(0);                                filter: blur(0px);                       animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  25%, 100% { opacity: 0; transform: translateY(calc(-1 * var(--digit-travel, 60%))); filter: blur(var(--digit-blur, 8px)); }
+}
+@keyframes digit-up-in {
+  0%, 10%   { opacity: 0; transform: translateY(var(--digit-travel, 60%));         filter: blur(var(--digit-blur, 8px));    animation-timing-function: cubic-bezier(0.34, 1.35, 0.64, 1); }
+  60%       { opacity: 1; filter: blur(0px); }
+  100%      { opacity: 1; transform: translateY(0);                                filter: blur(0px); }
+}
+@keyframes digit-down-out {
+  0%        { opacity: 1; transform: translateY(0);                                filter: blur(0px);                       animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  25%, 100% { opacity: 0; transform: translateY(var(--digit-travel, 60%));         filter: blur(var(--digit-blur, 8px)); }
+}
+@keyframes digit-down-in {
+  0%, 10%   { opacity: 0; transform: translateY(calc(-1 * var(--digit-travel, 60%))); filter: blur(var(--digit-blur, 8px)); animation-timing-function: cubic-bezier(0.34, 1.35, 0.64, 1); }
+  60%       { opacity: 1; filter: blur(0px); }
+  100%      { opacity: 1; transform: translateY(0);                                filter: blur(0px); }
+}
+@keyframes digit-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

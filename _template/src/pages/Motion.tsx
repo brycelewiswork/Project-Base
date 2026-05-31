@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform, animate, type SpringOptions } fro
 import useMeasure from "react-use-measure"
 import { IconPlayerPlayFilled } from "@tabler/icons-react"
 import { SPRING, SPRING_FAST, EASE, DURATION } from "@/lib/motion"
-import { PageShell, PageHeader, Section } from "@/components/PageHeader"
+import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 
 function simulateSpring(opts: SpringOptions): [number, number][] {
   const k = opts.stiffness ?? 100, c = opts.damping ?? 10, m = opts.mass ?? 1
