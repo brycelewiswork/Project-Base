@@ -4,9 +4,13 @@
   Spawn a new sketch project from _template/.
 
 .DESCRIPTION
-  Copies the _template/ scaffold (including its node_modules so startup is
-  instant) into a sibling folder under Sandbox/, renames the project, and
-  optionally initializes git + opens VS Code.
+  Copies the _template/ scaffold (source only) into a sibling folder under
+  Sandbox/, renames the project, runs `pnpm install`, and optionally
+  initializes git + opens VS Code.
+
+  node_modules is NOT copied — pnpm rebuilds it in the new project by
+  hard-linking from a shared global store, so the install is fast once the
+  store is warm and each sketch adds almost no disk instead of ~half a gig.
 
 .PARAMETER Name
   The folder + package name for the new project. Lowercase letters, digits,
@@ -15,9 +19,6 @@
 .PARAMETER Path
   Parent directory the new project is created in. Defaults to the parent of
   Project-Base (i.e. Sandbox/).
-
-.PARAMETER Clean
-  Skip copying node_modules — runs `npm install` in the new project instead.
 
 .PARAMETER NoGit
   Skip `git init` in the new project.
@@ -29,7 +30,7 @@
   .\new-project.ps1 my-sketch
 
 .EXAMPLE
-  .\new-project.ps1 fancy-thing -Clean -Path C:\Projects
+  .\new-project.ps1 fancy-thing -Path C:\Projects
 #>
 [CmdletBinding()]
 param(
@@ -39,7 +40,6 @@ param(
 
   [string]$Path,
 
-  [switch]$Clean,
   [switch]$NoGit,
   [switch]$NoOpen
 )
@@ -62,20 +62,18 @@ Write-Host ""
 Write-Host "  ◆ new project" -ForegroundColor Cyan
 Write-Host "  name:     $Name"
 Write-Host "  target:   $target"
-Write-Host "  clean:    $($Clean.IsPresent)"
 Write-Host ""
 
-# Copy with robocopy for speed. Exclude top-level build artifacts ONLY —
-# robocopy's /XD matches anywhere in the tree if given a bare name, which
-# would nuke node_modules/*/dist where packages keep their compiled output.
-# Pass absolute paths so the exclusion is anchored to the template root.
-# Robocopy exit codes 0-7 are success; 8+ are failures.
+# Copy with robocopy for speed. Exclude node_modules (pnpm rebuilds it from its
+# store) plus build artifacts. robocopy's /XD matches anywhere in the tree if
+# given a bare name, so pass ABSOLUTE paths to anchor each exclusion to the
+# template root. Robocopy exit codes 0-7 are success; 8+ are failures.
 $excludeDirs = @(
+  (Join-Path $template 'node_modules'),
   (Join-Path $template 'dist'),
   (Join-Path $template '.turbo'),
   (Join-Path $template '.vite')
 )
-if ($Clean) { $excludeDirs += (Join-Path $template 'node_modules') }
 
 $roboArgs = @($template, $target, '/E', '/NFL', '/NDL', '/NJH', '/NJS', '/NP', '/MT:16', '/XD') + $excludeDirs
 
@@ -103,12 +101,11 @@ $indexPath = Join-Path $target 'index.html'
 $html = (Get-Content $indexPath -Raw) -replace '<title>.*?</title>', "<title>$Name</title>"
 [System.IO.File]::WriteAllText($indexPath, $html, $utf8NoBom)
 
-# Optionally install if we skipped node_modules
-if ($Clean) {
-  Write-Host "  npm install..."
-  Push-Location $target
-  try { npm install } finally { Pop-Location }
-}
+# Install with pnpm — hard-links from the shared global store, so this is fast
+# once the store is warm and adds almost no disk per project.
+Write-Host "  pnpm install..."
+Push-Location $target
+try { pnpm install } finally { Pop-Location }
 
 # Optionally git init
 if (-not $NoGit) {
@@ -130,5 +127,5 @@ if (-not $NoOpen -and (Get-Command code -ErrorAction SilentlyContinue)) {
 Write-Host ""
 Write-Host "  done." -ForegroundColor Green
 Write-Host "  cd `"$target`""
-Write-Host "  npm run dev"
+Write-Host "  pnpm dev"
 Write-Host ""
