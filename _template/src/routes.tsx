@@ -13,6 +13,7 @@ import {
   IconTag,
   IconLayoutCards,
   IconBoxMultiple,
+  IconDroplet,
 } from "@tabler/icons-react"
 import { Home } from "@/pages/Home"
 import { Motion } from "@/pages/Motion"
@@ -28,6 +29,7 @@ import { BadgePage } from "@/pages/components/BadgePage"
 import { CardPage } from "@/pages/components/CardPage"
 import { AccordionPage } from "@/pages/components/AccordionPage"
 import { ShadersPage } from "@/pages/components/ShadersPage"
+import { LiquidGlassPage } from "@/pages/components/LiquidGlassPage"
 
 export type RouteIcon = React.ComponentType<{ size?: number; stroke?: number }>
 
@@ -56,6 +58,7 @@ export const ROUTES: RouteEntry[] = [
   { path: "/components/card",      label: "Card",      icon: IconLayoutCards,             group: "components", Component: CardPage },
   { path: "/components/slider",    label: "Slider",    icon: IconAdjustmentsHorizontal,   group: "components", Component: SliderPage },
   { path: "/components/shaders",   label: "Shaders",   icon: IconColorSwatch,             group: "components", Component: ShadersPage },
+  { path: "/components/liquid-glass", label: "Liquid Glass", icon: IconDroplet,           group: "components", Component: LiquidGlassPage },
 ]
 
 export const TOP_LEVEL_ROUTES = ROUTES.filter((r) => !r.group)
