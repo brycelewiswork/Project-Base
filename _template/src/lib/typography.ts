@@ -79,7 +79,9 @@ export function loadTypeSettings(): TypeSettings {
       const parsed = JSON.parse(raw)
       return { ...TYPE_DEFAULTS, ...parsed }
     }
-  } catch {}
+  } catch {
+    // Ignore corrupt or unavailable localStorage; fall back to defaults.
+  }
   return TYPE_DEFAULTS
 }
 

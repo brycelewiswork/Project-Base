@@ -3,7 +3,7 @@ import { IconRestore } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 import { Slider } from "@/components/ui/slider"
-import { PageShell, PageHeader, Section, SectionCard } from "@/components/PageLayout"
+import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 
 const SCALE = [
   { token: "space-1", step: 1, px: 4, rem: "0.25", use: "Icon-to-label, badge padding" },

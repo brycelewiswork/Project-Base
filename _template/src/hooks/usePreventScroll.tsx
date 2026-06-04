@@ -1,4 +1,5 @@
 // This code comes from https://github.com/adobe/react-spectrum/blob/main/packages/%40react-aria/overlays/src/usePreventScroll.ts
+/* eslint-disable -- verbatim vendored copy from react-aria; kept byte-for-byte and not linted as first-party code */
 
 import { useEffect, useLayoutEffect } from 'react';
 

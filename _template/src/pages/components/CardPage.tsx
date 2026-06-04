@@ -18,7 +18,6 @@ import {
   DocExample,
   DocPropsTable,
   DocTokens,
-  DocAccessibility,
   DocGuidelines,
   DocSource,
 } from "./_template"

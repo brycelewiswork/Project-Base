@@ -32,12 +32,16 @@ export function InView({
   as = 'div',
   once
 }: InViewProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, viewOptions);
 
   const [isViewed, setIsViewed] = useState(false)
 
-  const MotionComponent = motion[as as keyof typeof motion] as typeof as;
+  // Indexing `motion[as]` returns a union of every motion component, whose
+  // shared props collapse to `never`. Cast to a concrete motion component so
+  // the motion props (initial/animate/variants/transition) typecheck; all
+  // motion DOM components share the same prop surface.
+  const MotionComponent = motion[as as keyof typeof motion] as typeof motion.div;
 
   return (
     <MotionComponent

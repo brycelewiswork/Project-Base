@@ -120,12 +120,12 @@ function AnimatedGroup({
 
   // motion.create() in v12 returns a loosely-typed component; cast to
   // accept standard HTML props (className, children) which it does at runtime.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const MotionComponent = React.useMemo(
     () => motion.create(as as string) as any,
     [as]
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const MotionChild = React.useMemo(
     () => motion.create(asChild as string) as any,
     [asChild]

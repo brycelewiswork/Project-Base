@@ -165,17 +165,17 @@ export function useSquircle<T extends HTMLElement>(
   ref: React.RefObject<T | null>,
   options: SquircleOptions,
 ) {
-  const optsRef = React.useRef(options)
-  optsRef.current = options
-
   React.useEffect(() => {
     const el = ref.current
     if (!el) return
     const observer = squircleObserver(el, {
       cornerSmoothing: DEFAULT_SMOOTHING,
-      ...optsRef.current,
+      ...options,
     })
     return () => observer.disconnect()
+    // `options` is intentionally excluded; the individual fields below are the
+    // real inputs, and the object identity changes every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     ref,
     options.cornerRadius,
@@ -237,15 +237,20 @@ export function SquircleShadow({
 } & Record<string, unknown>) {
   const filterValue = resolveShadow(shadow)
   if (!filterValue) return <>{children}</>
+  // `As` is a polymorphic element type; rendered with arbitrary pass-through
+  // props (`...rest`, data attributes) its props collapse to `never`. Cast
+  // through `any`, mirroring the `RawSquircle as any` cast above.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Tag = As as any
   return (
-    <As
+    <Tag
       data-squircle-shadow=""
       className={className}
       style={{ filter: filterValue, display: "inline-block", ...style }}
       {...rest}
     >
       {children}
-    </As>
+    </Tag>
   )
 }
 

@@ -2,14 +2,22 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/utils"
 
+// Base UI's `onValueChange` yields `number | readonly number[]`; the rest of
+// the template models slider state as a plain `number[]`. Expose that cleaner
+// signature (matching the documented API) and normalize internally.
+type SliderProps = Omit<SliderPrimitive.Root.Props, "onValueChange"> & {
+  onValueChange?: (value: number[]) => void
+}
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  onValueChange,
   ...props
-}: SliderPrimitive.Root.Props) {
+}: SliderProps) {
   const _values = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)
@@ -25,6 +33,11 @@ function Slider({
       min={min}
       max={max}
       thumbAlignment="edge"
+      onValueChange={
+        onValueChange
+          ? (next) => onValueChange(Array.isArray(next) ? [...next] : [next])
+          : undefined
+      }
       {...props}
     >
       <SliderPrimitive.Control className="relative flex w-full touch-none items-center py-2 select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col data-vertical:py-0 data-vertical:px-2">

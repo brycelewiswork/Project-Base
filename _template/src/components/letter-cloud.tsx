@@ -186,7 +186,7 @@ export function LetterCloud({
     }
     bakeStaticBg()
 
-    const { ox, oy, dx, dy, vx, vy, filled, ch, n, cols, rows, step } = particles
+    const { ox, oy, dx, dy, vx, vy, filled, ch, cols, rows, step } = particles
     const STIFFNESS = 0.14
     const DAMPING = 0.82
     const r2 = radius * radius

@@ -52,8 +52,12 @@ export function TextMorph({
     ...SPRING.snappy,
   };
 
+  // A bare `React.ElementType` tag collapses its props to `never` in JSX; cast
+  // to a concrete function-component type that accepts standard HTML attributes.
+  const Tag = Component as React.FC<React.HTMLAttributes<HTMLElement>>
+
   return (
-    <Component className={cn(className)} aria-label={children} style={style}>
+    <Tag className={cn(className)} aria-label={children} style={style}>
       <AnimatePresence mode='popLayout' initial={false}>
         {characters.map((character) => (
           <motion.span
@@ -71,6 +75,6 @@ export function TextMorph({
           </motion.span>
         ))}
       </AnimatePresence>
-    </Component>
+    </Tag>
   );
 }
