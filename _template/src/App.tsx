@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { Suspense, useEffect, useRef, useState } from "react"
 import { Link, Route, Routes, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "motion/react"
 import { useTheme } from "next-themes"
@@ -221,26 +221,38 @@ function SideNav() {
   )
 }
 
+// Shown while a code-split route chunk is fetched. Quiet on purpose — local
+// chunks resolve in a frame; over LAN it's a brief spinner instead of a flash.
+function RouteFallback() {
+  return (
+    <div className="flex min-h-svh items-center justify-center text-label-secondary">
+      <div className="size-5 animate-spin rounded-full border-2 border-current/15 border-t-current/60" />
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <div className="min-h-svh bg-surface text-label">
       <SideNav />
 
       <main className="relative z-base">
-        <Routes>
-          {ROUTES.map((r) => (
-            <Route key={r.path} path={r.path} element={<r.Component />} />
-          ))}
-          <Route
-            path="*"
-            element={
-              <div className="mx-auto max-w-4xl px-6 py-16 text-center">
-                <h1 className="text-h3 text-label">404</h1>
-                <p className="text-label-secondary mt-2">Page not found</p>
-              </div>
-            }
-          />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            {ROUTES.map((r) => (
+              <Route key={r.path} path={r.path} element={<r.Component />} />
+            ))}
+            <Route
+              path="*"
+              element={
+                <div className="mx-auto max-w-4xl px-6 py-16 text-center">
+                  <h1 className="text-h3 text-label">404</h1>
+                  <p className="text-label-secondary mt-2">Page not found</p>
+                </div>
+              }
+            />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   )

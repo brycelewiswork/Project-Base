@@ -15,21 +15,32 @@ import {
   IconBoxMultiple,
   IconDroplet,
 } from "@tabler/icons-react"
+import { lazy } from "react"
 import { Home } from "@/pages/Home"
-import { Motion } from "@/pages/Motion"
-import { Demos } from "@/pages/Demos"
-import { Typography } from "@/pages/Typography"
-import { Colors } from "@/pages/Colors"
-import { Spacing } from "@/pages/Spacing"
-import { Breakpoints } from "@/pages/Breakpoints"
-import { Icons } from "@/pages/Icons"
-import { SliderPage } from "@/pages/components/SliderPage"
-import { ButtonPage } from "@/pages/components/ButtonPage"
-import { BadgePage } from "@/pages/components/BadgePage"
-import { CardPage } from "@/pages/components/CardPage"
-import { AccordionPage } from "@/pages/components/AccordionPage"
-import { ShadersPage } from "@/pages/components/ShadersPage"
-import { LiquidGlassPage } from "@/pages/components/LiquidGlassPage"
+
+// Home stays eager so the landing route paints instantly. Every other page is
+// code-split into its own chunk and only fetched when its route is visited —
+// this keeps the heaviest deps (three.js in Shaders, recharts/visx in Demos and
+// Motion, the motion-primitives + liquid-glass gallery) out of the initial bundle.
+const lazyPage = <T extends Record<string, React.ComponentType>>(
+  loader: () => Promise<T>,
+  name: keyof T,
+) => lazy(() => loader().then((m) => ({ default: m[name] })))
+
+const Demos = lazyPage(() => import("@/pages/Demos"), "Demos")
+const Colors = lazyPage(() => import("@/pages/Colors"), "Colors")
+const Typography = lazyPage(() => import("@/pages/Typography"), "Typography")
+const Motion = lazyPage(() => import("@/pages/Motion"), "Motion")
+const Spacing = lazyPage(() => import("@/pages/Spacing"), "Spacing")
+const Breakpoints = lazyPage(() => import("@/pages/Breakpoints"), "Breakpoints")
+const Icons = lazyPage(() => import("@/pages/Icons"), "Icons")
+const SliderPage = lazyPage(() => import("@/pages/components/SliderPage"), "SliderPage")
+const ButtonPage = lazyPage(() => import("@/pages/components/ButtonPage"), "ButtonPage")
+const BadgePage = lazyPage(() => import("@/pages/components/BadgePage"), "BadgePage")
+const CardPage = lazyPage(() => import("@/pages/components/CardPage"), "CardPage")
+const AccordionPage = lazyPage(() => import("@/pages/components/AccordionPage"), "AccordionPage")
+const ShadersPage = lazyPage(() => import("@/pages/components/ShadersPage"), "ShadersPage")
+const LiquidGlassPage = lazyPage(() => import("@/pages/components/LiquidGlassPage"), "LiquidGlassPage")
 
 export type RouteIcon = React.ComponentType<{ size?: number; stroke?: number }>
 
@@ -39,7 +50,7 @@ export type RouteEntry = {
   icon: RouteIcon
   /** Omit for top-level nav; "components" places it under the Components dropdown. */
   group?: "components"
-  Component: React.ComponentType
+  Component: React.ComponentType | React.LazyExoticComponent<React.ComponentType>
 }
 
 export const ROUTES: RouteEntry[] = [
