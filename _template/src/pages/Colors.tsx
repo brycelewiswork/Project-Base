@@ -1,33 +1,14 @@
-import { useTheme } from "next-themes"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { toast } from "sonner"
 import { Popover } from "@base-ui/react/popover"
 import { IconRefresh, IconDownload, IconUpload, IconRotate, IconColorPicker } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
-import { PageShell, PageHeader, Section } from "@/components/PageHeader"
+import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 import { Button } from "@/components/ui/button"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 import { ColorPicker } from "@/components/color/ColorPicker"
-import {
-  ALL_SECTIONS,
-  type ThemeMode,
-  type Token,
-} from "@/lib/color-tokens"
-import {
-  applyColorOverrides,
-  clearAllOverrides,
-  clearOverride,
-  exportAsCss,
-  exportAsJson,
-  importJson,
-  isOverridden,
-  isOverriddenAnyMode,
-  loadColorOverrides,
-  resolveTokenValue,
-  saveColorOverrides,
-  setOverride,
-  type ColorOverrides,
-} from "@/lib/colors"
+import { ALL_SECTIONS, type ThemeMode, type Token } from "@/lib/color-tokens"
+import { useColorOverrides } from "@/lib/colors"
 
 const NEUTRAL_STEPS = [
   { step: "50", l: "0.985" },
@@ -53,45 +34,20 @@ const ACCENT_STEPS = [50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 850, 900,
 const OPACITY_STEPS = [1,2,3,4,5,6,7,8,9,10,11,12,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] as const
 
 export function Colors() {
-  const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  const mode: ThemeMode = mounted && resolvedTheme === "dark" ? "dark" : "light"
+  const colors = useColorOverrides()
 
-  const [overrides, setOverridesState] = useState<ColorOverrides>(() => loadColorOverrides())
-
-  // Re-apply whenever overrides or mode change. (Mode switch must wipe the
-  // other mode's inline styles so they don't bleed.)
-  useEffect(() => {
-    if (!mounted) return
-    applyColorOverrides(overrides, mode)
-  }, [overrides, mode, mounted])
-
-  const persist = useCallback((next: ColorOverrides) => {
-    setOverridesState(next)
-    saveColorOverrides(next)
-  }, [])
-
-  const handleEdit = useCallback((token: Token, value: string) => {
-    persist(setOverride(overrides, mode, token.cssVar, value))
-  }, [overrides, mode, persist])
-
-  const handleResetToken = useCallback((token: Token) => {
-    persist(clearOverride(overrides, mode, token.cssVar))
-  }, [overrides, mode, persist])
-
-  const handleResetAll = useCallback(() => {
-    persist(clearAllOverrides(overrides, "both"))
+  const handleResetAll = () => {
+    colors.clearAll()
     toast.success("Reverted all colors to base")
-  }, [overrides, persist])
+  }
 
   const handleExportJson = () => {
-    download("color-overrides.json", exportAsJson(overrides), "application/json")
+    download("color-overrides.json", colors.exportJson(), "application/json")
     toast.success("Exported overrides as JSON")
   }
 
   const handleExportCss = () => {
-    download("color-overrides.css", exportAsCss(overrides), "text/css")
+    download("color-overrides.css", colors.exportCss(), "text/css")
     toast.success("Exported overrides as CSS")
   }
 
@@ -101,13 +57,12 @@ export function Colors() {
     const file = e.target.files?.[0]
     if (!file) return
     const text = await file.text()
-    const result = importJson(text)
+    const result = colors.importJson(text)
     e.target.value = ""
     if (!result) {
       toast.error("Couldn't parse that file")
       return
     }
-    persist(result.overrides)
     toast.success(
       `Imported ${result.applied} override${result.applied === 1 ? "" : "s"}` +
       (result.skipped ? ` (${result.skipped} skipped)` : ""),
@@ -160,12 +115,12 @@ export function Colors() {
               <SwatchRow
                 key={token.cssVar}
                 token={token}
-                mode={mode}
-                value={resolveTokenValue(overrides, token, mode)}
-                edited={isOverridden(overrides, token.cssVar, mode)}
-                editedOtherMode={isOverriddenAnyMode(overrides, token.cssVar) && !isOverridden(overrides, token.cssVar, mode)}
-                onChange={(v) => handleEdit(token, v)}
-                onReset={() => handleResetToken(token)}
+                mode={colors.mode}
+                value={colors.resolve(token)}
+                edited={colors.isOverridden(token.cssVar)}
+                editedOtherMode={colors.isOverriddenAnyMode(token.cssVar) && !colors.isOverridden(token.cssVar)}
+                onChange={(v) => colors.set(token, v)}
+                onReset={() => colors.clear(token)}
               />
             ))}
           </div>

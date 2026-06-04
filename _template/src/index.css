@@ -455,9 +455,6 @@
     --color-brown-dark-950: var(--color-brown-dark-950);
 }
 
-
-
-
 :root {
     /* ── Type scale (base=14px, ratio=1.2 Minor Third) ── */
     --type-base: 14;
@@ -882,6 +879,22 @@
     --color-white-100: oklch(1 0 0 / 100%);
 }
 
+/* Forced-light scope. Re-declares the light semantic tokens so a subtree can be
+   pinned to light even when an ancestor (or <html>) carries `.dark`. Used by the
+   Liquid Glass playground to show both themes side by side on one page. Use the
+   semantic tokens (bg-surface, text-label) inside — NOT `dark:` variants, which
+   still match here because the element remains a descendant of `.dark`. */
+.light {
+    --surface: oklch(0.979 0 0);
+    --surface-secondary: oklch(1 0 0);
+    --surface-tertiary: oklch(0.973 0 0);
+    --label: oklch(0.336 0.005 107);
+    --label-secondary: oklch(0.359 0.012 286 / 60%);
+    --label-tertiary: oklch(0 0 0 / 25%);
+    --stroke-faint: oklch(0.931 0 0);
+    --stroke-strong: oklch(0.919 0.007 269);
+}
+
 .dark {
     /* ── Semantic tokens (source of truth) ── */
     --surface: oklch(0.159 0 0);
@@ -1107,4 +1120,40 @@
   .text-body { font-size: var(--type-body); }
   .text-sm { font-size: var(--type-sm); }
   .text-xs { font-size: var(--type-xs); }
+}
+
+/* Dialkit patches:
+   1. Ships .dialkit-panel-inner with padding-bottom: 0 — crops the last control.
+   2. Only wires overflow-y: auto for [data-position="top-left"]; the other three
+      positions overflow the viewport instead of scrolling. Scrollbars are hidden
+      upstream via scrollbar-width: none — scroll works via wheel/trackpad/drag. */
+.dialkit-panel-inner:not([data-collapsed="true"]) {
+  padding-bottom: 10px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* AnimatedNumber — Apple-style blur ticker. Digits blur + slide as the value
+   changes; old digit exits, new digit enters from the direction of travel. */
+@keyframes digit-up-out {
+  0%        { opacity: 1; transform: translateY(0);    filter: blur(0px);  animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  25%, 100% { opacity: 0; transform: translateY(-60%); filter: blur(8px); }
+}
+@keyframes digit-up-in {
+  0%, 10%   { opacity: 0; transform: translateY(60%);  filter: blur(8px); animation-timing-function: cubic-bezier(0.34, 1.35, 0.64, 1); }
+  60%       { opacity: 1; filter: blur(0px); }
+  100%      { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+}
+@keyframes digit-down-out {
+  0%        { opacity: 1; transform: translateY(0);    filter: blur(0px);  animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  25%, 100% { opacity: 0; transform: translateY(60%);  filter: blur(8px); }
+}
+@keyframes digit-down-in {
+  0%, 10%   { opacity: 0; transform: translateY(-60%); filter: blur(8px);  animation-timing-function: cubic-bezier(0.34, 1.35, 0.64, 1); }
+  60%       { opacity: 1; filter: blur(0px); }
+  100%      { opacity: 1; transform: translateY(0);    filter: blur(0px); }
+}
+@keyframes digit-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

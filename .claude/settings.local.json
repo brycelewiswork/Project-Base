@@ -125,7 +125,9 @@
       "PowerShell(Start-Sleep -Seconds 8; \\(Invoke-WebRequest -Uri \"http://localhost:5173/\" -UseBasicParsing -TimeoutSec 10\\).StatusCode)",
       "PowerShell(Start-Sleep -Seconds 10; \\(Invoke-WebRequest -Uri \"http://localhost:5173/demos\" -UseBasicParsing -TimeoutSec 10\\).StatusCode)",
       "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Stop-Process -Force -Confirm:$false; Start-Sleep -Seconds 2; Remove-Item -Recurse -Force \"$env:LOCALAPPDATA\\\\vite-cache\\\\_template\" -ErrorAction SilentlyContinue; Set-Location \"e:\\\\Dropbox\\\\_Projects\\\\Sandbox\\\\Project-Base\\\\_template\"; npm run dev)",
-      "Bash(node -e \"console.log\\(require\\('./node_modules/recharts/package.json'\\).version\\)\")"
+      "Bash(node -e \"console.log\\(require\\('./node_modules/recharts/package.json'\\).version\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5174/)",
+      "Bash(curl -s http://localhost:5174/)"
     ]
   }
 }

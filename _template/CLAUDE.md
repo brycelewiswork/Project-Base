@@ -3,6 +3,10 @@
 This project was spawned from [project-base](../Project-Base/), a personal
 scaffold for high-fidelity React sketches.
 
+For **design intent** — personality, references, anti-patterns, the *why*
+behind the choices below — see [DESIGN.md](DESIGN.md). For stack, conventions,
+and the *how*, read on.
+
 ## Dev server: always phone-accessible
 
 These sketches are mobile UI prototypes — they're meant to be loaded on a phone
@@ -44,11 +48,17 @@ default in `vite.config.ts` — keep it env-driven so the project stays portable
 - **Tabler Icons** (`@tabler/icons-react`) — 5,400+ icons in outline + filled, consistent 2px/24px grid. Import directly from the package. When `npx shadcn add` brings in a new component with `lucide-react` imports, swap to the Tabler equivalent in the same commit. Custom icons go in `src/components/icons/` as individual files.
 - **corner-smoothing** for Apple-style squircles — applied to every shadcn component (see Conventions)
 - **Progressive blur** (custom, in [src/components/ui/progressive-blur.tsx](src/components/ui/progressive-blur.tsx)) — `<LinearBlur side="top|bottom|left|right">` for edge fades and `<RadialBlur origin="edge|center">` for radial vignettes/focal blurs. Configure via `strength` + `steps` for a geometric ramp, or pass `blurLevels=[...]` for explicit multi-stop control. Zero deps; pure CSS `backdrop-filter` + mask gradients.
+- **Liquid glass** (custom, in [src/components/ui/liquid-glass.tsx](src/components/ui/liquid-glass.tsx)) — `<LiquidGlass strength blur bevel tint radius>` wraps content in an Apple-style glass panel that refracts its backdrop. A canvas-generated displacement map drives an SVG `feDisplacementMap` inside `backdrop-filter` (kube.io technique). Zero deps; Chromium-only for the refraction, graceful frosted-blur fallback elsewhere. Same caveat as progressive blur: a parent with `filter`/`clip-path` isolates the backdrop, so keep it outside squircled wrappers when you want to see the page underneath.
 - **Motion tokens** in [src/lib/motion.ts](src/lib/motion.ts) — unified spring/easing/duration presets. `SPRING.*` (gentle, smooth, snappy, bouncy, magnetic), `SPRING_FAST.*` (same names, higher damping, professional feel), `EASE.*` (Apple curve, Material standard/emphasized, CSS keywords), `GSAP_EASE.*`, `DURATION.*`. Import and use these instead of inline `{ stiffness, damping }` literals.
 - **motion-primitives** (ibelick) — 32 copy-paste animation components built on `motion`, installed into `src/components/ui/`. Includes TextEffect, AnimatedNumber, InfiniteSlider, Tilt, Spotlight, GlowEffect, ScrollProgress, InView, Carousel, Dock, MorphingDialog, and more. Install additional ones on demand: `npx shadcn@latest add "https://motion-primitives.com/c/<name>.json"`. Skip their `progressive-blur` (we have our own).
 - **colorthief** v3.x for color extraction from images — `getColorSync(img)` for dominant color, `getPaletteSync(img, { colorCount, colorSpace: 'oklch' })` for a palette, `getSwatchesSync(img)` for semantic swatches (Vibrant/Muted/DarkVibrant/DarkMuted/LightVibrant/LightMuted). In React, use the `useImagePalette(ref, options)` hook from [src/components/ui/color-thief.tsx](src/components/ui/color-thief.tsx). Color harmony (complementary, analogous, triadic, split-complementary) is exposed via the inline `harmonies(hex)` utility in the same file — no extra dep. Pairs naturally with `<LinearBlur tint={dominant.hex()}>` for the Apple Music-style image-into-color blend.
 - **Recharts** v3 via shadcn's `ChartContainer` — declarative charts (area, bar, radial, sparkline). SVG output styled with CSS variable tokens. Install new chart types: `npx shadcn@latest add chart`.
 - **visx** (`@visx/shape`, `@visx/scale`, `@visx/group`) — low-level SVG primitives for custom visuals Recharts can't express (radial arcs, bespoke gauges). Use as an escape hatch, not the default.
+- **dialkit** (Josh Puckett) — floating control panel for live-tuning UI values. `useDialKit("Panel name", { foo: [default, min, max], bar: { type: "spring", ... }, color: { type: "color" } })` auto-generates sliders, toggles, color pickers, spring/easing editors with keyboard shortcuts. `<DialRoot />` is mounted in `main.tsx` outside the squircled app shell. Use as the per-sketch tweak overlay — the canonical tuning surfaces still live on `/typography`, `/motion`, `/spacing`, `/breakpoints`. Tune live → bake settled values into `src/lib/motion.ts` tokens. JSON export available.
+- **agentation** — in-app visual feedback for AI agents. `<Agentation />` is mounted dev-only in `main.tsx` (gated by `import.meta.env.DEV`); toggle the toolbar with `Ctrl+Shift+F`. The user clicks any element to drop a structured annotation (CSS selector, Vite source path + line, React tree, computed styles, optional `intent`/`severity`). Modes: Elements, Text, Multi-select/Area, Animation (press `P` to freeze a frame mid-spring), Layout. The agentation MCP server is registered in `.mcp.json`; Claude has 9 tools — `agentation_list_sessions`, `agentation_get_session`, `agentation_get_pending`, `agentation_get_all_pending`, `agentation_acknowledge`, `agentation_resolve`, `agentation_dismiss`, `agentation_reply`, `agentation_watch_annotations`.
+  - **Workflow split:** dialkit = numeric tuning the user does themselves. Agentation = structural / judgmental feedback handed to Claude.
+  - **The watch loop:** when the user says *"start the watch loop"* (or similar), call `agentation_watch_annotations` repeatedly; for each annotation acknowledge → make the fix → `agentation_resolve` with a one-line summary. Use `agentation_reply` for clarifying questions instead of switching to chat. Markers clear on the user's screen as you resolve.
+  - **Desktop only** — no mobile/phone support; the phone-LAN dev loop and the agentation loop are separate channels. No iframes / shadow DOM. Annotations default to 7-day localStorage; MCP-synced ones persist indefinitely.
 - **next-themes** — light/dark mode provider (wraps the app in `main.tsx`). FOUC prevention script in `index.html`.
 - **react-use-measure** — `useMeasure()` hook for reading element dimensions. Used by Motion page demos.
 - **Pretext** (`@chenglou/pretext`) — Cheng Lou's pure-JS multiline text measurement & layout engine. Computes paragraph heights, line counts, and tight widths from canvas font metrics with **zero DOM reflow**. Live walkthrough on `/demos` (Pretext section), full `<Accordion>` component docs at `/components/accordion`. Hooks, primitive, and component shipped:
@@ -75,6 +85,26 @@ default in `vite.config.ts` — keep it env-driven so the project stays portable
   **Gotchas:**
   - Pretext wants a real CSS font shorthand (e.g. `'500 16px "DM Sans Variable"'`). `system-ui` is unsafe on macOS per upstream — always pass an explicit family. Use `pretextStyleFromElement(ref.current)` after mount instead of hardcoding.
   - Never inline `lineHeight: 20` etc. into Pretext calls — sample it from a hidden probe element that wears the same Tailwind classes as the real rendered text. That keeps measurement and render in lockstep when the design system changes.
+
+## Not in the bundle — reach for these first
+
+These libraries are **deliberately not installed** by default to keep the
+template lean, but they are the preferred choice when a sketch needs the
+capability. **Before suggesting an `npm install` of anything not on this list
+or in the Stack section above, consult the table below first.** If the need
+fits a row, install the listed library; don't reach for a sibling.
+
+Add a row when you find yourself recommending a library that isn't installed:
+the goal is for this table to grow into a complete map of *"what to use when
+the bundle doesn't already cover it."*
+
+| Need | Reach for | Skip / why |
+|---|---|---|
+| Node / flow / graph UI (React) | [`@xyflow/react`](https://reactflow.dev/) (React Flow) | The canonical choice for node editors, flowcharts, pipeline UIs, n8n-style canvases. Don't hand-roll panning/zooming/edge routing. |
+|   |   |   |
+
+When installing one of these into a spawned sketch, add a `<DemoSection>` for
+it on `/demos` in the same change — same convention as the bundled libraries.
 
 ## System pages
 
@@ -169,7 +199,7 @@ import { buildShadow } from "@/components/squircle"
 **Other ways to apply:**
 
 - `<SquircleShadow shadow="md">…</SquircleShadow>` — standalone wrapper for cases where you can't pass `shadow` directly (third-party render-prop components, foreign children).
-- For Sonner: a `MutationObserver` in `sonner.tsx` applies the squircle to each `<li data-sonner-toast>` and sets `filter: drop-shadow(...)` on the `<ol data-sonner-toaster>` parent.
+- **Sonner is the documented exception** to the global squircle convention. The parent-filter pattern can't give each toast its own shadow (filter on the `<ol>` merges all stacked toasts into a single union silhouette on hover/expand; per-toast filter is clipped by per-toast clip-path; sonner's portal won't accept an injected wrapper without breaking measurements/gestures). At toast radii (~8–10px) the visual delta between superellipse and rounded rect is imperceptible, so [sonner.tsx](src/components/ui/sonner.tsx) keeps sonner's native `border-radius` + `box-shadow` stack lift. Don't reintroduce the squircle observer on toasts.
 
 **When adding a new shadcn component via `npx shadcn@latest add`:** decide if it needs elevation. If yes, surface a `shadow` prop that forwards to `<Squircle shadow={...}>` (or wrap externally with `<SquircleShadow>`). The squircle stays in either case.
 

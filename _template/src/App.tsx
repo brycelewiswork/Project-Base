@@ -1,73 +1,37 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, Route, Routes, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "motion/react"
-import { Home } from "@/pages/Home"
-import { Motion } from "@/pages/Motion"
-import { Demos } from "@/pages/Demos"
-import { Typography } from "@/pages/Typography"
-import { Colors } from "@/pages/Colors"
-import { Spacing } from "@/pages/Spacing"
-import { Breakpoints } from "@/pages/Breakpoints"
-import { Icons } from "@/pages/Icons"
-import { SliderPage } from "@/pages/components/SliderPage"
-import { ButtonPage } from "@/pages/components/ButtonPage"
-import { BadgePage } from "@/pages/components/BadgePage"
-import { CardPage } from "@/pages/components/CardPage"
-import { AccordionPage } from "@/pages/components/AccordionPage"
-import { ShadersPage } from "@/pages/components/ShadersPage"
 import { useTheme } from "next-themes"
 import { SPRING_FAST } from "@/lib/motion"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 import {
-  IconHome,
-  IconBounceRight,
+  ROUTES,
+  TOP_LEVEL_ROUTES,
+  COMPONENT_ROUTES,
+  COMPONENTS_BASE_PATH,
+  type RouteIcon,
+} from "@/routes"
+import {
   IconComponents,
-  IconTypography,
-  IconPalette,
-  IconSpacingVertical,
-  IconLayoutGrid,
-  IconIcons,
   IconChevronRight,
-  IconAdjustmentsHorizontal,
-  IconClick,
-  IconSparkles,
-  IconColorSwatch,
-  IconTag,
-  IconLayoutCards,
-  IconBoxMultiple,
   IconSun,
   IconMoon,
   IconDeviceLaptop,
 } from "@tabler/icons-react"
 
-type NavItem = { to: string; label: string; icon: React.ComponentType<{ size?: number; stroke?: number }> }
-type NavGroup = { label: string; icon: React.ComponentType<{ size?: number; stroke?: number }>; children: NavItem[] }
-
-const PAGES: NavItem[] = [
-  { to: "/", label: "Home", icon: IconHome },
-  { to: "/demos", label: "Demos", icon: IconSparkles },
-  { to: "/colors", label: "Color", icon: IconPalette },
-  { to: "/typography", label: "Type", icon: IconTypography },
-  { to: "/motion", label: "Motion", icon: IconBounceRight },
-  { to: "/spacing", label: "Spacing", icon: IconSpacingVertical },
-  { to: "/breakpoints", label: "Layout", icon: IconLayoutGrid },
-  { to: "/icons", label: "Icons", icon: IconIcons },
-]
-
-const COMPONENTS: NavGroup = {
-  label: "Components",
-  icon: IconComponents,
-  children: [
-    { to: "/components/badge", label: "Badge", icon: IconTag },
-    { to: "/components/button", label: "Button", icon: IconClick },
-    { to: "/components/accordion", label: "Accordion", icon: IconBoxMultiple },
-    { to: "/components/card", label: "Card", icon: IconLayoutCards },
-    { to: "/components/slider", label: "Slider", icon: IconAdjustmentsHorizontal },
-    { to: "/components/shaders", label: "Shaders", icon: IconColorSwatch },
-  ],
-}
-
-function NavLink({ to, label, icon: Icon, indent, onNavigate }: NavItem & { indent?: boolean; onNavigate?: () => void }) {
+function NavLink({
+  to,
+  label,
+  icon: Icon,
+  indent,
+  onNavigate,
+}: {
+  to: string
+  label: string
+  icon: RouteIcon
+  indent?: boolean
+  onNavigate?: () => void
+}) {
   const location = useLocation()
   const active = location.pathname === to
   return (
@@ -135,7 +99,7 @@ function ThemeToggle() {
 
 function SideNav() {
   const location = useLocation()
-  const componentsActive = location.pathname.startsWith("/components")
+  const componentsActive = location.pathname.startsWith(COMPONENTS_BASE_PATH)
   const [open, setOpen] = useState(false)
   const [componentsOpen, setComponentsOpen] = useState(componentsActive)
   const ref = useRef<HTMLDivElement>(null)
@@ -195,8 +159,14 @@ function SideNav() {
               transition={{ duration: 0.15, delay: 0.05 }}
               className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl"
             >
-              {PAGES.map((item) => (
-                <NavLink key={item.to} {...item} onNavigate={() => setOpen(false)} />
+              {TOP_LEVEL_ROUTES.map((r) => (
+                <NavLink
+                  key={r.path}
+                  to={r.path}
+                  label={r.label}
+                  icon={r.icon}
+                  onNavigate={() => setOpen(false)}
+                />
               ))}
 
               {/* Components dropdown */}
@@ -208,8 +178,8 @@ function SideNav() {
                     : "text-label-secondary hover:text-label hover:bg-fill-quaternary"
                 }`}
               >
-                <COMPONENTS.icon size={16} stroke={1.75} />
-                <span className="flex-1">{COMPONENTS.label}</span>
+                <IconComponents size={16} stroke={1.75} />
+                <span className="flex-1">Components</span>
                 <motion.span
                   animate={{ rotate: componentsOpen ? 90 : 0 }}
                   transition={{ duration: 0.15 }}
@@ -227,8 +197,15 @@ function SideNav() {
                     transition={{ type: "spring", ...SPRING_FAST.snappy }}
                     className="overflow-hidden"
                   >
-                    {COMPONENTS.children.map((item) => (
-                      <NavLink key={item.to} {...item} indent onNavigate={() => setOpen(false)} />
+                    {COMPONENT_ROUTES.map((r) => (
+                      <NavLink
+                        key={r.path}
+                        to={r.path}
+                        label={r.label}
+                        icon={r.icon}
+                        indent
+                        onNavigate={() => setOpen(false)}
+                      />
                     ))}
                   </motion.div>
                 )}
@@ -250,23 +227,20 @@ export default function App() {
       <SideNav />
 
       <main className="relative z-base">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/motion" element={<Motion />} />
-        <Route path="/demos" element={<Demos />} />
-        <Route path="/typography" element={<Typography />} />
-        <Route path="/colors" element={<Colors />} />
-        <Route path="/spacing" element={<Spacing />} />
-        <Route path="/breakpoints" element={<Breakpoints />} />
-        <Route path="/icons" element={<Icons />} />
-        <Route path="/components/badge" element={<BadgePage />} />
-        <Route path="/components/button" element={<ButtonPage />} />
-        <Route path="/components/card" element={<CardPage />} />
-        <Route path="/components/slider" element={<SliderPage />} />
-        <Route path="/components/accordion" element={<AccordionPage />} />
-        <Route path="/components/shaders" element={<ShadersPage />} />
-        <Route path="*" element={<div className="mx-auto max-w-4xl px-6 py-16 text-center"><h1 className="text-h3 text-label">404</h1><p className="text-label-secondary mt-2">Page not found</p></div>} />
-      </Routes>
+        <Routes>
+          {ROUTES.map((r) => (
+            <Route key={r.path} path={r.path} element={<r.Component />} />
+          ))}
+          <Route
+            path="*"
+            element={
+              <div className="mx-auto max-w-4xl px-6 py-16 text-center">
+                <h1 className="text-h3 text-label">404</h1>
+                <p className="text-label-secondary mt-2">Page not found</p>
+              </div>
+            }
+          />
+        </Routes>
       </main>
     </div>
   )
