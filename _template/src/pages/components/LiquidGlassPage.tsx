@@ -1,13 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDialKit, DialStore } from "dialkit"
-import {
-  IconX,
-  IconSearch,
-  IconHome,
-  IconHeart,
-  IconUser,
-  IconPlus,
-} from "@tabler/icons-react"
+import { IconX } from "@tabler/icons-react"
 import { LiquidGlass } from "@/components/ui/liquid-glass"
 import {
   GLASS_DEFAULTS,
@@ -299,65 +292,6 @@ function ExampleTile({
   )
 }
 
-// Glass used as a background MATERIAL (the iOS/macOS pattern): a navbar + tab
-// bar pinned over scrolling content. The bars are absolute background layers
-// (`as="header"/"nav"`) that refract what scrolls behind them; their own
-// content composites on top.
-function SurfaceDemo() {
-  return (
-    <section className="space-y-4">
-      <SectionHeader
-        title="As a surface"
-        description="Glass as a background material — a navbar and tab bar pinned over scrolling content. The bars refract what passes behind; their labels stay crisp on top."
-      />
-      <div className="dark relative mx-auto h-80 w-full max-w-sm overflow-hidden rounded-[2rem] bg-surface inset-ring-1 inset-ring-stroke-strong">
-        {/* Scrolling content behind the glass bars. */}
-        <div className="absolute inset-0 overflow-y-auto px-4 pt-20 pb-24">
-          <div className="space-y-3">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-16 rounded-2xl"
-                style={{
-                  background: `linear-gradient(90deg, oklch(0.62 0.2 ${i * 40}), oklch(0.72 0.18 ${i * 40 + 60}))`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Top navbar — glass as an absolute background, content inside. */}
-        <LiquidGlass
-          mode="medium"
-          tone="dark"
-          as="header"
-          radius={0}
-          className="absolute inset-x-0 top-0 z-10 flex h-14 items-center justify-between px-5"
-        >
-          <span className="text-base font-semibold text-white">Library</span>
-          <div className="flex items-center gap-3 text-white/80">
-            <IconSearch size={20} />
-            <IconPlus size={20} />
-          </div>
-        </LiquidGlass>
-
-        {/* Bottom tab bar — same pattern. */}
-        <LiquidGlass
-          mode="medium"
-          tone="dark"
-          as="nav"
-          radius={0}
-          className="absolute inset-x-0 bottom-0 z-10 flex h-16 items-center justify-around px-4"
-        >
-          {[IconHome, IconSearch, IconHeart, IconUser].map((Icon, i) => (
-            <Icon key={i} size={22} className={i === 0 ? "text-white" : "text-white/55"} />
-          ))}
-        </LiquidGlass>
-      </div>
-    </section>
-  )
-}
-
 // A major section per glass type, with one sample over each backdrop.
 function ModeSection({
   mode,
@@ -621,8 +555,6 @@ export function LiquidGlassPage() {
           "Apple's four glass modes (small, medium, large, clear), each tuned for light and dark — eight presets in all. Each type has its own section below, shown over every light/dark surface and over photos. Pick a preset from the Editing dropdown in the floating dial (bottom-right) to tune it; changes persist across reloads. Apply a mode anywhere with the LiquidGlass component's mode prop or the useLiquidGlassMode hook."
         }
       />
-
-      <SurfaceDemo />
 
       {GLASS_MODES.map((mode) => (
         <ModeSection
