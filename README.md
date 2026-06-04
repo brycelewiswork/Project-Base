@@ -38,7 +38,7 @@ That creates `..\my-sketch\` (sibling of `Project-Base`), renames the project in
 | ---------- | ------------------------------------------------------------ |
 | `-Path`    | Parent directory for the new project (default: `..` of root) |
 | `-NoGit`   | Skip `git init`                                              |
-| `-NoOpen`  | Skip opening in VS Code                                      |
+| `-Open`    | Open the new project in VS Code (off by default)            |
 
 The spawn never copies `node_modules` — it runs `pnpm install`, which hardlinks
 every package from a shared global store. So each sketch is fast to create and

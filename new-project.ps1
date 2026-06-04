@@ -23,8 +23,9 @@
 .PARAMETER NoGit
   Skip `git init` in the new project.
 
-.PARAMETER NoOpen
-  Skip opening the new project in VS Code.
+.PARAMETER Open
+  Open the new project in VS Code after creating it. Off by default — coding
+  happens in Claude Code, so the spawn stays quiet unless explicitly asked.
 
 .EXAMPLE
   .\new-project.ps1 my-sketch
@@ -41,7 +42,7 @@ param(
   [string]$Path,
 
   [switch]$NoGit,
-  [switch]$NoOpen
+  [switch]$Open
 )
 
 $ErrorActionPreference = 'Stop'
@@ -107,19 +108,29 @@ Write-Host "  pnpm install..."
 Push-Location $target
 try { pnpm install } finally { Pop-Location }
 
-# Optionally git init
+# Optionally git init. git writes its CRLF normalization notices to stderr; under
+# ErrorActionPreference 'Stop' (and especially when this script's output is piped or
+# redirected) PowerShell can promote those to a terminating error. Relax the
+# preference for this block and swallow git's chatter so a benign notice never
+# aborts the spawn or floods the console.
 if (-not $NoGit) {
   Write-Host "  git init..."
   Push-Location $target
+  $gitEAP = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
   try {
-    git init --initial-branch=main | Out-Null
-    git add . | Out-Null
-    git commit -m "Initial commit from project-base" | Out-Null
-  } finally { Pop-Location }
+    git init --initial-branch=main 2>&1 | Out-Null
+    git add . 2>&1 | Out-Null
+    git commit -m "Initial commit from project-base" 2>&1 | Out-Null
+  } finally {
+    $ErrorActionPreference = $gitEAP
+    Pop-Location
+  }
 }
 
-# Optionally open in VS Code
-if (-not $NoOpen -and (Get-Command code -ErrorAction SilentlyContinue)) {
+# Open in VS Code only when explicitly asked (-Open). Default stays quiet since
+# the workflow lives in Claude Code, not an editor window.
+if ($Open -and (Get-Command code -ErrorAction SilentlyContinue)) {
   Write-Host "  opening in VS Code..."
   & code $target
 }
