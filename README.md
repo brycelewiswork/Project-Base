@@ -17,8 +17,8 @@ Personal scaffold for fast, high-fidelity React sketches.
 
 ```
 Project-Base/
-├── _template/          ← the actual scaffold (pre-installed node_modules for instant copies)
-├── new-project.ps1     ← copies _template to a new sibling folder, renames, git inits, opens VS Code
+├── _template/          ← the actual scaffold (uses pnpm; node_modules hardlinks from a shared store)
+├── new-project.ps1     ← copies _template to a sibling folder, pnpm installs, git inits, opens VS Code
 └── README.md
 ```
 
@@ -37,27 +37,33 @@ That creates `..\my-sketch\` (sibling of `Project-Base`), renames the project in
 | Flag       | Effect                                                       |
 | ---------- | ------------------------------------------------------------ |
 | `-Path`    | Parent directory for the new project (default: `..` of root) |
-| `-Clean`   | Skip copying `node_modules`; runs `npm install` instead      |
 | `-NoGit`   | Skip `git init`                                              |
 | `-NoOpen`  | Skip opening in VS Code                                      |
+
+The spawn never copies `node_modules` — it runs `pnpm install`, which hardlinks
+every package from a shared global store. So each sketch is fast to create and
+adds almost no disk (≈20 MB) instead of a full ≈480 MB copy.
 
 Example:
 
 ```powershell
-.\new-project.ps1 fancy-thing -Clean -Path C:\Projects
+.\new-project.ps1 fancy-thing -Path C:\Projects
 ```
 
 ## Cloning to a new machine
 
-`_template/node_modules` is gitignored, so a fresh clone needs one bootstrap step:
+`_template/node_modules` is gitignored, so a fresh clone needs one bootstrap step
+(pnpm ships with Node via corepack):
 
 ```powershell
 git clone <this-repo>
 cd Project-Base/_template
-npm install
+corepack enable        # one-time — makes `pnpm` available
+pnpm install
 ```
 
-After that, `.\new-project.ps1 <name>` produces instant copies just like the original machine.
+After that, `.\new-project.ps1 <name>` spawns sketches that hardlink from the shared
+pnpm store — fast to create, and each adds almost no disk.
 
 ## Experimental web APIs to know about
 
@@ -73,7 +79,7 @@ before generating code that touches them:
 
 Edit anything under `_template/` directly. Common changes:
 
-- `npm install <pkg>` inside `_template/` to add a library to every future sketch
+- `pnpm add <pkg>` inside `_template/` to add a library to every future sketch
 - `npx shadcn@latest add <component>` to bake more shadcn components in
 - Edit `_template/src/pages/` or `_template/src/App.tsx` to change the starter layout
 - Update `_template/CLAUDE.md` to change the context Claude sees inside spawned projects
