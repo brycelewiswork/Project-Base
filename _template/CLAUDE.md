@@ -106,6 +106,45 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
   - Pretext wants a real CSS font shorthand (e.g. `'500 16px "DM Sans Variable"'`). `system-ui` is unsafe on macOS per upstream — always pass an explicit family. Use `pretextStyleFromElement(ref.current)` after mount instead of hardcoding.
   - Never inline `lineHeight: 20` etc. into Pretext calls — sample it from a hidden probe element that wears the same Tailwind classes as the real rendered text. That keeps measurement and render in lockstep when the design system changes.
 
+## Claude API (AI-powered sketches)
+
+`@anthropic-ai/sdk` is wired up so sketches can call Claude. The key lives in
+**`.env.local`** (gitignored, propagated into every spawned sketch) and is read
+**server-side only** — it never enters the client bundle (no `VITE_` prefix).
+
+**Architecture.** `vite.config.ts` runs a same-origin dev proxy at
+`/api/anthropic` that forwards to `api.anthropic.com` with the key attached.
+Sketch code uses the SDK pointed at that proxy via
+[src/lib/anthropic.ts](src/lib/anthropic.ts), so the browser holds only a
+placeholder key. This also dodges Anthropic's browser-CORS block and works over
+LAN (the phone calls the PC's proxy). It's a **dev-only** path — there's no proxy
+in `vite build`/`preview`, which is fine for these local prototypes.
+
+**Use it in a sketch:**
+
+```tsx
+import { anthropic, CLAUDE_MODEL, streamText } from "@/lib/anthropic"
+
+// one-shot
+const res = await anthropic.messages.create({
+  model: CLAUDE_MODEL,            // claude-opus-4-8
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "..." }],
+})
+
+// streaming into UI
+for await (const chunk of streamText("Write a haiku about squircles")) {
+  setText((t) => t + chunk)
+}
+```
+
+`anthropic` is the full SDK — use it directly for tool use, images, multi-turn,
+or adaptive thinking (`thinking: { type: "adaptive" }`) on complex tasks. Default
+to **streaming** for long outputs. Model default is `claude-opus-4-8`.
+
+**Verify the key:** `pnpm test:anthropic` (one tiny live call, prints ✅/❌).
+`.env.example` documents the variable. Never prefix the key with `VITE_`.
+
 ## Not in the bundle — reach for these first
 
 These libraries are **deliberately not installed** by default to keep the

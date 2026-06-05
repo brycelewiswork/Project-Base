@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Env / secrets — keep keys out of git. .env.local holds the real values;
+# .env.example is the committed, value-less template.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

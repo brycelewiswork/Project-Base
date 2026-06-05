@@ -8,9 +8,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:anthropic": "node scripts/test-anthropic.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "@base-ui/react": "^1.5.0",
     "@chenglou/pretext": "^0.0.7",
     "@fontsource-variable/dm-sans": "^5.2.8",
