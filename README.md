@@ -18,27 +18,32 @@ Personal scaffold for fast, high-fidelity React sketches.
 ```
 Project-Base/
 ├── _template/          ← the actual scaffold (uses pnpm; node_modules hardlinks from a shared store)
-├── new-project.ps1     ← copies _template to a sibling folder, pnpm installs, git inits, opens VS Code
+├── new-project.sh      ← macOS / Linux: copies _template to a sibling folder, pnpm installs, git inits
+├── new-project.ps1     ← Windows: same thing in PowerShell
 └── README.md
 ```
 
 ## Usage
 
+```bash
+# from inside Project-Base/ (macOS / Linux)
+./new-project.sh my-sketch
+```
+
 ```powershell
-# from inside Project-Base/
+# from inside Project-Base/ (Windows)
 .\new-project.ps1 my-sketch
 ```
 
-That creates `..\my-sketch\` (sibling of `Project-Base`), renames the project in
-`package.json` and `index.html`, runs `git init`, and opens VS Code.
+That creates `my-sketch/` (sibling of `Project-Base`), renames the project in
+`package.json` and `index.html`, and runs `git init`.
 
 ### Flags
 
-| Flag       | Effect                                                       |
-| ---------- | ------------------------------------------------------------ |
-| `-Path`    | Parent directory for the new project (default: `..` of root) |
-| `-NoGit`   | Skip `git init`                                              |
-| `-Open`    | Open the new project in VS Code (off by default)            |
+| Bash (`.sh`)   | PowerShell (`.ps1`) | Effect                                                       |
+| -------------- | ------------------- | ------------------------------------------------------------ |
+| `--path <dir>` | `-Path <dir>`       | Parent directory for the new project (default: `..` of root) |
+| `--no-git`     | `-NoGit`            | Skip `git init`                                              |
 
 The spawn never copies `node_modules` — it runs `pnpm install`, which hardlinks
 every package from a shared global store. So each sketch is fast to create and
@@ -46,8 +51,8 @@ adds almost no disk (≈20 MB) instead of a full ≈480 MB copy.
 
 Example:
 
-```powershell
-.\new-project.ps1 fancy-thing -Path C:\Projects
+```bash
+./new-project.sh fancy-thing --path ~/Projects
 ```
 
 ## Cloning to a new machine
@@ -62,8 +67,9 @@ corepack enable        # one-time — makes `pnpm` available
 pnpm install
 ```
 
-After that, `.\new-project.ps1 <name>` spawns sketches that hardlink from the shared
-pnpm store — fast to create, and each adds almost no disk.
+After that, `./new-project.sh <name>` (or `.\new-project.ps1 <name>` on Windows)
+spawns sketches that hardlink from the shared pnpm store — fast to create, and
+each adds almost no disk.
 
 ## Experimental web APIs to know about
 

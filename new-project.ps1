@@ -6,7 +6,7 @@
 .DESCRIPTION
   Copies the _template/ scaffold (source only) into a sibling folder under
   Sandbox/, renames the project, runs `pnpm install`, and optionally
-  initializes git + opens VS Code.
+  initializes git.
 
   node_modules is NOT copied — pnpm rebuilds it in the new project by
   hard-linking from a shared global store, so the install is fast once the
@@ -23,10 +23,6 @@
 .PARAMETER NoGit
   Skip `git init` in the new project.
 
-.PARAMETER Open
-  Open the new project in VS Code after creating it. Off by default — coding
-  happens in Claude Code, so the spawn stays quiet unless explicitly asked.
-
 .EXAMPLE
   .\new-project.ps1 my-sketch
 
@@ -41,8 +37,7 @@ param(
 
   [string]$Path,
 
-  [switch]$NoGit,
-  [switch]$Open
+  [switch]$NoGit
 )
 
 $ErrorActionPreference = 'Stop'
@@ -126,13 +121,6 @@ if (-not $NoGit) {
     $ErrorActionPreference = $gitEAP
     Pop-Location
   }
-}
-
-# Open in VS Code only when explicitly asked (-Open). Default stays quiet since
-# the workflow lives in Claude Code, not an editor window.
-if ($Open -and (Get-Command code -ErrorAction SilentlyContinue)) {
-  Write-Host "  opening in VS Code..."
-  & code $target
 }
 
 Write-Host ""
