@@ -68,7 +68,8 @@ $excludeDirs = @(
   (Join-Path $template 'node_modules'),
   (Join-Path $template 'dist'),
   (Join-Path $template '.turbo'),
-  (Join-Path $template '.vite')
+  (Join-Path $template '.vite'),
+  (Join-Path $template 'vite-cache')
 )
 
 $roboArgs = @($template, $target, '/E', '/NFL', '/NDL', '/NJH', '/NJS', '/NP', '/MT:16', '/XD') + $excludeDirs

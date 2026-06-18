@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Vite dep-optimization cache (default is node_modules/.vite; this covers any stray override)
+vite-cache
+
 # Env / secrets — keep keys out of git. .env.local holds the real values;
 # .env.example is the committed, value-less template.
 .env

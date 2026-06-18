@@ -79,6 +79,7 @@ rsync -a \
   --exclude '/dist' \
   --exclude '/.turbo' \
   --exclude '/.vite' \
+  --exclude '/vite-cache' \
   --exclude '/.git' \
   "$TEMPLATE/" "$TARGET/"
 

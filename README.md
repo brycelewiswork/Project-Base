@@ -11,7 +11,7 @@ Personal scaffold for fast, high-fidelity React sketches.
 - **React Router v7** — multi-page sketches
 - **Zustand** — lightweight state
 - **Sonner** — toasts
-- **lucide-react** — icons
+- **@tabler/icons-react** — icons
 
 ## Layout
 

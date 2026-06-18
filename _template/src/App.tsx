@@ -55,7 +55,10 @@ function NavLink({
 function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  useState(() => { setMounted(true) })
+  // One-time mount flag (next-themes pattern) to avoid a theme flash before the
+  // resolved theme is known. Intentional single set-on-mount, not a sync loop.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setMounted(true) }, [])
   if (!mounted) return null
 
   const modes = [

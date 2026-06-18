@@ -40,8 +40,5 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    // Vite cache lives outside Dropbox to avoid file-locking conflicts during
-    // dep optimization.
-    cacheDir: path.resolve(process.env.LOCALAPPDATA ?? __dirname, "vite-cache/_template"),
   }
 })
