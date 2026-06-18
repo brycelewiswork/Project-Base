@@ -7,9 +7,6 @@ _template/*.tsbuildinfo
 # editor temp/swap files
 *.tmp.*
 
-# playwright MCP artifacts
-.playwright-mcp/
-
 # OS / editor
 .DS_Store
 Thumbs.db
