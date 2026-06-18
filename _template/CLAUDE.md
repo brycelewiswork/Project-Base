@@ -56,7 +56,7 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
 
 ## Stack
 
-- Vite 8 + React 19 + TypeScript (strict) — using `@vitejs/plugin-react-swc` (SWC, not Babel)
+- Vite 8 + React 19 + TypeScript (strict) — using `@vitejs/plugin-react` (Oxc transform + Fast Refresh, Rolldown-native; no Babel)
 - Tailwind CSS **v4** via `@tailwindcss/vite` (no PostCSS / no `tailwind.config.js` — config lives in `src/index.css` under `@theme`)
 - shadcn/ui (base / nova preset, neutral palette) — components live in `src/components/ui/`. shadcn v4+ uses **Base UI** (`@base-ui/react`) as its headless primitive layer (replacing Radix from earlier versions). Button and Badge already use Base UI; future `pnpm dlx shadcn add` components will too. Base UI is a dependency of shadcn, not something we manage directly.
 - motion (formerly framer-motion) — import from `motion/react` for React APIs, `motion/dom` for the Motion One-style vanilla API
