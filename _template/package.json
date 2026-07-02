@@ -10,6 +10,7 @@
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",
     "preview": "vite preview",
+    "check:vendored": "node scripts/check-vendored.mjs",
     "test:anthropic": "node scripts/test-anthropic.mjs"
   },
   "dependencies": {

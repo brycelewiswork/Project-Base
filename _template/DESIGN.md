@@ -113,6 +113,96 @@ Two spring families exist for a reason.
   Reach for `instant` (0.1s) when in doubt; `slow` (0.5s) needs justification.
 - The live curves and presets live at `/motion`.
 
+## Designing control panels
+
+These sketches are control-heavy — a dialkit panel (or a hand-built one) sitting
+next to a canvas, a shader, a live preview. A panel is a design surface with its
+own taste, and it's where AI-built tools usually feel generic. Rules below are
+framed around [dialkit](CLAUDE.md) (`useDialKit`) but apply to any control UI.
+
+**Structure by what's edited, not by control type.**
+
+- **Group by product entity, not by widget.** A group is `Background`, `Glow`,
+  `Motion`, `Tone` — the *thing* being tuned — never `Sliders`, `Colors`,
+  `Settings`, `Options`. If you can't name the group after a thing, the grouping
+  is wrong. 2–7 controls per group; when it grows past that or mixes meanings,
+  split into more specific groups (`Flow Motion` / `Flow Geometry`).
+- **Pick the control by the value's *shape*, not its look.** One entity that owns
+  a color *and* its opacity is one control, not a color picker plus a stray
+  opacity slider. A gradient is one gradient control, not two stops. Typography is
+  one compound font control (weight/size/spacing/case/color), not five scattered
+  inputs. Bounds are a range control. If the value is a compound, the control is
+  compound — splitting it across neighbors is the most common tool-UI smell.
+
+**Labels.**
+
+- **1–3 words, no explanations.** No units, formulas, or parentheticals in the
+  label — those live in the value display or a tooltip, never the label.
+- **Name the setting, not the action.** A toggle is `Glow`, `Loop`, `CRT` — never
+  `Enable Glow`. Don't echo the group title in the label (`Motion` → `Speed`, not
+  `Motion` → `Motion speed`).
+- **Must read correctly *with* the group context.** `Animation` / `Speed` is fine;
+  a bare `Settings` / `Speed` is not — fix the group name or the label.
+- **Help text only when it adds meaning.** A tooltip that recaps the label
+  ("adjusts opacity") is noise — see the tooltip anti-pattern below.
+
+**Show only what's usable — hide, don't disable.** When a mode is off, its
+dependent controls *disappear*; they don't grey out. A panel should never show a
+row you can't currently use. Greyed-out controls are visual debt that reads as
+"broken," not "unavailable."
+
+**Sliders carry the most weight, so they have the most rules.**
+
+- **Live during drag is non-negotiable.** Dragging updates the output *while*
+  dragging, not on release. A slider that only commits on mouse-up is a broken
+  mapping — fix the render path (update uniforms, cache derived inputs, coalesce
+  to rAF) rather than deferring. This is exactly what the **Perf HUD** exists to
+  catch: drag it, watch `worst`.
+- **Snapping ≠ discrete.** A `step` is numeric snapping. Only *show* tick markers
+  for small semantic integer domains (counts, levels, bands, sides) — never for
+  large continuous ranges (speed, fps, size, intensity), where markers are noise.
+- **Units are for real measurements only** — `%`, `px`, `°`, `s`, `ms`, `fps`.
+  Never `x` for a multiplier; scale/intensity/strength/opacity show a plain number.
+  Never repeat the entity the group already names (`Letters` + `letters`).
+- Value readouts get the **mono** face (they're numbers — see Mono is structural).
+
+**Density and layout.**
+
+- **Sliders stack full-width.** Never squeeze a slider into a half-width column.
+- **Colors: two per row, max.** If any color in the group carries opacity, stack
+  them instead. An odd trailing color keeps its half-width footprint — don't
+  stretch it to fill the row.
+- **Segmented control only for a few short mode choices** (≤4 options, each a word
+  or two). More options, or longer labels, → a select. A clipped segmented cell
+  is worse than a dropdown.
+- A toggle may share one equal-width row with a single related parameter (the
+  toggle keeps its label; the parameter goes label-less).
+
+**Color, specifically.** Decide labels from the *role*, applied to the whole
+group. A bank of colors that just adds variety to one shared palette
+(`Accent Shades`) goes **unlabeled**; colors that edit distinct roles
+(`Fill`, `Stroke`, `Background`) stay **labeled**. Never mix labeled and
+unlabeled inside one bank, and never title a group just `Color`.
+
+**Specialized controls, by meaning — the sharp ones.**
+
+- **A 2-axis pad is for user-*authored* parameters only** — light direction,
+  focus, anchor, offset. Never wire a pad to animation, physics, pointer, or
+  timeline state just because the value happens to have `x`/`y`. Authored ≠
+  observed.
+- **Curve interpolation follows intent:** monotone for depth / response / mask /
+  threshold curves (overshoot would be a bug), smooth for creative tone curves
+  (overshoot is the point).
+- **Short text vs long text are different controls:** a single-line input for
+  labels/names/tokens (commit while typing for content, on blur for settings);
+  a multiline editor for anything that can get long or structured (prompts, CSS,
+  shader source).
+
+**The canvas is for output, not chrome.** No buttons, CTAs, helper copy, or
+"drop a file here" prompts painted onto the canvas — those belong in the panel.
+Direct-manipulation handles (drag a gradient stop, a focus point) are the one
+exception: keep them textless, tokenized, bound to state, and out of any export.
+
 ## Anti-patterns
 
 Explicit list of looks to avoid, with the half-line reason.

@@ -74,11 +74,12 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
 - **colorthief** v3.x for color extraction from images — `getColorSync(img)` for dominant color, `getPaletteSync(img, { colorCount, colorSpace: 'oklch' })` for a palette, `getSwatchesSync(img)` for semantic swatches (Vibrant/Muted/DarkVibrant/DarkMuted/LightVibrant/LightMuted). In React, use the `useImagePalette(ref, options)` hook from [src/components/ui/color-thief.tsx](src/components/ui/color-thief.tsx). Color harmony (complementary, analogous, triadic, split-complementary) is exposed via the inline `harmonies(hex)` utility in the same file — no extra dep. Pairs naturally with `<LinearBlur tint={dominant.hex()}>` for the Apple Music-style image-into-color blend.
 - **Recharts** v3 via shadcn's `ChartContainer` — declarative charts (area, bar, radial, sparkline). SVG output styled with CSS variable tokens. Install new chart types: `pnpm dlx shadcn@latest add chart`.
 - **visx** (`@visx/shape`, `@visx/scale`, `@visx/group`) — low-level SVG primitives for custom visuals Recharts can't express (radial arcs, bespoke gauges). Use as an escape hatch, not the default.
-- **dialkit** (Josh Puckett) — floating control panel for live-tuning UI values. `useDialKit("Panel name", { foo: [default, min, max], bar: { type: "spring", ... }, color: { type: "color" } })` auto-generates sliders, toggles, color pickers, spring/easing editors with keyboard shortcuts. `<DialRoot />` is mounted in `main.tsx` outside the squircled app shell. Use as the per-sketch tweak overlay — the canonical tuning surfaces still live on `/typography`, `/motion`, `/spacing`, `/breakpoints`. Tune live → bake settled values into `src/lib/motion.ts` tokens. JSON export available.
+- **dialkit** (Josh Puckett) — floating control panel for live-tuning UI values. `useDialKit("Panel name", { foo: [default, min, max], bar: { type: "spring", ... }, color: { type: "color" } })` auto-generates sliders, toggles, color pickers, spring/easing editors with keyboard shortcuts. `<DialRoot />` is mounted in `main.tsx` outside the squircled app shell. Use as the per-sketch tweak overlay — the canonical tuning surfaces still live on `/typography`, `/motion`, `/spacing`, `/breakpoints`. Tune live → bake settled values into `src/lib/motion.ts` tokens. JSON export available. For *how to structure* a panel — grouping by entity, choosing the control by the value's shape, labels, hide-don't-disable, live-during-drag — see [DESIGN.md](DESIGN.md) → **Designing control panels**.
 - **agentation** — in-app visual feedback for AI agents. `<Agentation />` is mounted dev-only in `main.tsx` (gated by `import.meta.env.DEV`); toggle the toolbar with `Ctrl+Shift+F`. The user clicks any element to drop a structured annotation (CSS selector, Vite source path + line, React tree, computed styles, optional `intent`/`severity`). Modes: Elements, Text, Multi-select/Area, Animation (press `P` to freeze a frame mid-spring), Layout. The agentation MCP server is registered in `.mcp.json`; Claude has 9 tools — `agentation_list_sessions`, `agentation_get_session`, `agentation_get_pending`, `agentation_get_all_pending`, `agentation_acknowledge`, `agentation_resolve`, `agentation_dismiss`, `agentation_reply`, `agentation_watch_annotations`.
   - **Workflow split:** dialkit = numeric tuning the user does themselves. Agentation = structural / judgmental feedback handed to Claude.
   - **The watch loop:** when the user says *"start the watch loop"* (or similar), call `agentation_watch_annotations` repeatedly; for each annotation acknowledge → make the fix → `agentation_resolve` with a one-line summary. Use `agentation_reply` for clarifying questions instead of switching to chat. Markers clear on the user's screen as you resolve.
   - **Desktop only** — no mobile/phone support; the phone-LAN dev loop and the agentation loop are separate channels. No iframes / shadow DOM. Annotations default to 7-day localStorage; MCP-synced ones persist indefinitely.
+- **Perf HUD** (custom, dev-only, in [src/components/ui/perf-hud.tsx](src/components/ui/perf-hud.tsx)) — frame-timing meter mounted bottom-left in `main.tsx` (gated by `import.meta.env.DEV`). Shows smoothed **fps**, the **worst** frame in the trailing second (the jank detector — one 60ms frame reads as a visible hitch even when average fps looks fine), and main-thread **blocks** (>50ms long tasks). Drag a heavy control / sweep a shader param and watch `worst` spike red. Zero-dep, throttled to ~4Hz so it never causes the jank it measures. `Alt+P` hides it; click the pill for a sparkline. Live section on `/demos`. This is the everyday, in-loop responsiveness check; for CI-grade frame budgets reach for Playwright (see the reach-for table).
 - **next-themes** — light/dark mode provider (wraps the app in `main.tsx`). FOUC prevention script in `index.html`.
 - **react-use-measure** — `useMeasure()` hook for reading element dimensions. Used by Motion page demos.
 - **Pretext** (`@chenglou/pretext`) — Cheng Lou's pure-JS multiline text measurement & layout engine. Computes paragraph heights, line counts, and tight widths from canvas font metrics with **zero DOM reflow**. Live walkthrough on `/demos` (Pretext section), full `<Accordion>` component docs at `/components/accordion`. Hooks, primitive, and component shipped:
@@ -162,7 +163,10 @@ the bundle doesn't already cover it."*
 | Liquid-glass effect (zero-dep, full control) | Hand-rolled CSS + SVG `feDisplacementMap` per [kube.io/blog/liquid-glass-css-svg](https://kube.io/blog/liquid-glass-css-svg/) | When you want to tune the refraction, dispersion, and edge feel by hand. No runtime; pure SVG filter + `backdrop-filter`. |
 | Liquid-glass effect (drop-in) | [`liquidglass`](https://github.com/ybouane/liquidglass) | When you want the Apple-style glass without writing the SVG yourself. Reach for the kube.io approach instead if you need to customize the look. |
 | Node / flow / graph UI (React) | [`@xyflow/react`](https://reactflow.dev/) (React Flow) | The canonical choice for node editors, flowcharts, pipeline UIs, n8n-style canvases. Don't hand-roll panning/zooming/edge routing. |
-|   |   |   |
+| Resizable split panels (canvas + control panel, inspector/sidebar layouts) | [`react-resizable-panels`](https://github.com/bvaughn/react-resizable-panels) | The canvas-tool genre (shader/effect apps) wants a draggable split between the viewport and the controls. Don't hand-roll drag handles / min-max clamping. |
+| Drag-to-reorder / sortable lists (layers, gradient stops, keyframes) | [`@dnd-kit/core`](https://dndkit.com/) + `@dnd-kit/sortable` | Accessible, pointer + keyboard DnD. Don't hand-roll pointer math or reorder logic for layer/stop lists. |
+| Command menu / ⌘K palette | [`cmdk`](https://cmdk.paco.me/) | For command palettes and quick-switchers. shadcn's `command` is built on it. |
+| Automated frame-budget / responsiveness assertions (headless, CI) | [`@playwright/test`](https://playwright.dev/) | Only when you need *automated* perf budgets or e2e — assert `worst`-frame stays under N ms across a control sweep, in CI. For everyday tuning the dev-only Perf HUD already covers it live; don't add Playwright to a throwaway sketch. |
 
 When installing one of these into a spawned sketch, add a `<DemoSection>` for
 it on `/demos` in the same change — same convention as the bundled libraries.
@@ -177,6 +181,62 @@ Reference pages documenting the design system. Visit during `pnpm dev`:
 - `/spacing` — spacing scale, annotated layout demo, interactive tuner, recommended pairings
 - `/breakpoints` — responsive breakpoint scale, live viewport indicator, reflow demo, container widths
 - `/demos` — inventory of every installed library with working demos
+
+## Verifying changes — classify before you edit
+
+Before editing, size the change by **blast radius** (not line count) and run only the
+checks that tier calls for. Over-verifying a copy tweak wastes time; under-verifying a
+shader loop ships jank. When unsure, go one tier **up**. Don't `pnpm build` for tiny edits.
+
+The checks available in this template: `pnpm typecheck`, `pnpm lint`, `pnpm build`,
+`pnpm check:vendored`, the **Perf HUD** (bottom-left overlay), and browser verification via
+**Claude Preview** (local dev server) or **Claude in Chrome** — never assume from the code alone
+that a visual/interaction change looks right.
+
+| Tier | Use when | Run |
+|------|----------|-----|
+| **0 — copy / docs** | Comments, copy, labels, a CLAUDE.md/README edit. No types, state, or layout touched. | `pnpm typecheck` only if you touched typed code. No browser. |
+| **1 — one component's presentation** | Spacing, hover/focus/disabled, a single page's visual tweak. State shape unchanged. | `pnpm typecheck` + a focused browser look at that view (Preview/Chrome). |
+| **2 — schema / state / new component or route / library add** | New shadcn component, new page, store change, new default, added dependency. | `pnpm typecheck && pnpm lint` + browser-check the affected view. If you added a library, add its `/demos` section in the same change. |
+| **3 — renderer / canvas / shader / animation loop / heavy motion** | Anything perf-sensitive: R3F scene, shader params, GSAP timeline, drag/zoom, a control that drives heavy work. | Tier 2 checks **+ watch the Perf HUD while exercising the control** — drag the sliders, sweep the params, confirm `worst` stays out of red. |
+| **4 — foundational / template / "done"** | Editing a [foundational file](#foundational-files--modify-only-on-explicit-request), dependency/lockfile change, broad refactor, or finishing a sketch. | `pnpm check:vendored && pnpm typecheck && pnpm lint && pnpm build`, a browser pass of the signature view, and refresh `_preview.png`. |
+
+## Foundational files — modify only on explicit request
+
+The template ships a **design-system runtime** that every sketch is built *on top of*. Treat
+these as library code: don't casually rewrite, "clean up", or regenerate them. Change one only
+when the change is genuinely *about the system itself* and the user asked for it — or flag it and
+ask first. Silently editing a token file drifts every future sketch away from the shared system.
+
+Protected surface (run `pnpm check:vendored` to print the full list; it also guards against
+accidental deletion/rename):
+
+- **Tokens & core:** `src/index.css` (`@theme`), `src/lib/motion.ts`, `src/lib/utils.ts`, `src/components/squircle.tsx`
+- **Color & type systems:** `src/lib/colors.ts`, `src/lib/color-tokens.ts`, `src/lib/color-convert.ts`, `src/lib/typography.ts`
+- **Measurement / text:** `src/lib/pretext.ts`, `src/components/ui/tight-text.tsx`, `src/components/ui/accordion.tsx`
+- **Infra components:** `src/components/ui/progressive-blur.tsx`, `src/components/ui/color-thief.tsx`, `src/components/ui/perf-hud.tsx`, `src/components/shaders/**`
+- **Claude proxy:** `src/lib/anthropic.ts`
+- **Reference system pages:** `Colors`, `Typography`, `Motion`, `Spacing`, `Breakpoints`
+- **Build / scaffolding:** `vite.config.ts`, `scripts/**`
+
+**Not covered by this rule:** restyling a *newly added* `src/components/ui/<name>.tsx` right after
+`pnpm dlx shadcn add` is expected — that's the token/squircle/icon/motion pass in the Conventions
+section, not a rewrite of foundational code. The guard is about the *existing* system files above.
+
+## Building from a reference (video / Pinterest / screenshots / Figma)
+
+When the thing to reproduce is a **motion or interaction reference** — a video, GIF, screen
+recording, Pinterest board, or a sequence of screenshots — don't implement from a single frame or
+a vibe. Motion lives *between* frames. Before coding, write a short study (a few bullets in your
+plan, not a document):
+
+1. **Storyboard** the key frames — what's on screen at the start, peak, and end of the moment.
+2. **Frame-to-frame** — what moves, what stays anchored, what enters/exits, and the timing/easing feel (snap? overshoot? drift?).
+3. **Map** each observed behavior to an implementation choice (which `SPRING.*`/`EASE.*` token, which element animates, what triggers it).
+
+Then build it, and verify against the reference in the browser (Tier 1–3 above). For a **Figma
+URL**, read the actual file via the Figma MCP (nodes, variables, components) — don't eyeball a
+screenshot. Keep the study lightweight, but do it before writing motion/interaction from a reference.
 
 ## Conventions
 
@@ -290,8 +350,10 @@ doc before generating code that uses them — don't guess the surface.
 ## Commands
 
 ```
-pnpm dev      # start vite dev server
-pnpm build    # tsc -b && vite build
-pnpm lint     # eslint .
-pnpm preview  # serve the production build
+pnpm dev              # start vite dev server
+pnpm build            # tsc -b && vite build
+pnpm typecheck        # tsc -b --noEmit
+pnpm lint             # eslint .
+pnpm check:vendored   # verify the foundational-file inventory (Tier 4 gate)
+pnpm preview          # serve the production build
 ```

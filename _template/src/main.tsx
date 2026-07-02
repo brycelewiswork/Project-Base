@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes"
 import { Toaster } from "@/components/ui/sonner"
 import { DialRoot } from "dialkit"
 import { Agentation } from "agentation"
+import { PerfHud } from "@/components/ui/perf-hud"
 import App from "./App"
 import { initTypeSystem } from "@/lib/typography"
 import { initColorSystem } from "@/lib/colors"
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
         <Toaster position="top-right" />
         <DialRoot position="top-right" />
         {import.meta.env.DEV && <Agentation endpoint="http://localhost:4747" />}
+        {import.meta.env.DEV && <PerfHud />}
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
