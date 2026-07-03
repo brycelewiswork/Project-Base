@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { IconCheck, IconChevronDown, IconColorPicker } from "@tabler/icons-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { IconCheck, IconChevronDown, IconColorPicker, IconX } from "@tabler/icons-react"
 import { Select } from "@base-ui/react/select"
-import { Button } from "@/components/ui/button"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 import { converter, formatHex, type Hsl, type Hsv, type Rgb } from "culori"
 import {
@@ -13,35 +12,41 @@ import {
   type PickerMode,
 } from "@/lib/color-convert"
 
-
 const toRgb = converter("rgb")
 const toHsl = converter("hsl")
 const toHsv = converter("hsv")
 
 type Props = {
-  /** Any CSS color string. Picker parses to oklch internally. */
+  /** Any CSS color string. Picker seeds from this once on mount. */
   value: string
-  /** Called only when the user clicks Confirm. Emits an `oklch(...)` CSS string. */
-  onConfirm: (oklchCssValue: string) => void
-  /** Called when the user cancels or dismisses without confirming. */
-  onCancel?: () => void
+  /** Live — fires on every edit with an `oklch(...)` CSS string. */
+  onChange: (oklchCssValue: string) => void
+  /** Close the picker (X button / Enter / Escape). */
+  onClose?: () => void
 }
 
-const MODES: PickerMode[] = ["hex", "rgb", "css", "hsl", "hsb"]
+const MODES: PickerMode[] = ["hex", "rgb", "css", "hsl", "hsb", "okl"]
 
-export function ColorPicker({ value, onConfirm, onCancel }: Props) {
-  // Internal HSV state — kept independent of the value prop so that dragging
-  // S=0 (greyscale) doesn't snap the hue back to 0 on every emit.
+/** Checkerboard shown behind translucent colors (alpha track). */
+const CHECKER = "repeating-conic-gradient(#c8c8c8 0% 25%, #ffffff 0% 50%)"
+
+/** Above the ColorField popover portal (which sits at ~max int) so the mode menu wins. */
+const MENU_Z = 2147483647
+
+export function ColorPicker({ value, onChange, onClose }: Props) {
+  // Internal HSV state — kept independent of the value prop so editing is stable.
   const [h, setH] = useState(0)
   const [s, setS] = useState(0)
   const [v, setV] = useState(0)
   const [a, setA] = useState(1)
   const [mode, setMode] = useState<PickerMode>("hsl")
 
-  // Seed draft HSV from the incoming value on every mount/value-change. Picker
-  // stages edits locally and only emits via onConfirm — so the page beneath
-  // stays stable while the user adjusts.
+  // Seed once on mount. The picker owns its state while open and applies live, so
+  // re-seeding from the (self-updating) value prop mid-edit would cause jitter.
+  const seeded = useRef(false)
   useEffect(() => {
+    if (seeded.current) return
+    seeded.current = true
     const parsed = parseToOklch(value)
     if (!parsed) return
     const hsv = oklchToHsv(parsed)
@@ -51,20 +56,16 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
     setA(hsv.a)
   }, [value])
 
-  // Set to true while the user is mid-typing in hex/css text inputs, so the
-  // box doesn't overwrite their in-progress text from the prop-driven sync.
+  // Emit live from explicit values (state setters are async, so pass the new ones).
+  const emit = (nh: number, ns: number, nv: number, na: number) => {
+    onChange(oklchCss(hsvToOklch(nh, ns, nv, na)))
+  }
+
   const typingRef = useRef(false)
 
-  const handleConfirm = useCallback(() => {
-    onConfirm(oklchCss(hsvToOklch(h, s, v, a)))
-  }, [h, s, v, a, onConfirm])
-
   // ─── 2D canvas (saturation × value OR saturation × lightness) ────────────
-  // Canvas projection follows the active picker mode so HSL/HSB scales agree
-  // with what the user sees in the inputs. HEX/RGB/CSS fall back to HSV.
   const canvasMode: "hsv" | "hsl" = mode === "hsl" ? "hsl" : "hsv"
 
-  // Project current HSV → (x, y) thumb position in the active canvas space.
   const thumb = useMemo(() => {
     if (canvasMode === "hsv") return { x: s, y: 1 - v }
     const hsl = toHsl({ mode: "hsv", h, s, v }) as Hsl | undefined
@@ -80,13 +81,14 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
     const x = clamp01((e.clientX - rect.left) / rect.width)
     const y = 1 - clamp01((e.clientY - rect.top) / rect.height)
     if (canvasMode === "hsv") {
-      setS(x); setV(y)
+      setS(x); setV(y); emit(h, x, y, a)
       return
     }
-    // HSL canvas — convert (h, x as s_hsl, y as l) back to HSV for storage.
     const next = toHsv({ mode: "hsl", h, s: x, l: y }) as Hsv | undefined
     if (!next) return
-    setS(next.s ?? 0); setV(next.v ?? 0)
+    const ns = next.s ?? 0
+    const nv = next.v ?? 0
+    setS(ns); setV(nv); emit(h, ns, nv, a)
   }
   const onSVDown = (e: React.PointerEvent) => {
     draggingSV.current = true
@@ -111,6 +113,7 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
       if (!parsed) return
       const hsv = oklchToHsv(parsed)
       setH(hsv.h || 0); setS(hsv.s); setV(hsv.v); setA(hsv.a)
+      emit(hsv.h || 0, hsv.s, hsv.v, hsv.a)
     } catch {
       // user dismissed
     }
@@ -122,19 +125,36 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
     if (!parsed) return false
     const hsv = oklchToHsv(parsed)
     setH(hsv.h || 0); setS(hsv.s); setV(hsv.v); setA(hsv.a)
+    emit(hsv.h || 0, hsv.s, hsv.v, hsv.a)
     return true
   }
+
+  const setAlpha = (na: number) => { setA(na); emit(h, s, v, na) }
 
   // ─── Backgrounds ──────────────────────────────────────────────────────────
   const pureHueHex = useMemo(() => hsvToHex(h, 1, 1, 1), [h])
   const currentHex = useMemo(() => hsvToHex(h, s, v, 1), [h, s, v])
 
   return (
-    <div className="flex flex-col gap-3 w-[260px] p-3 select-none">
+    <div
+      className="flex flex-col gap-2.5 w-[256px] p-3 pt-1.5 select-none"
+      onKeyDown={(e) => { if (e.key === "Escape") onClose?.() }}
+    >
+      {/* Icon bar — close only */}
+      <div className="flex items-center justify-end h-6">
+        <button
+          onClick={() => onClose?.()}
+          className="h-6 w-6 flex items-center justify-center rounded-md text-label-secondary hover:text-label hover:bg-fill-quaternary cursor-pointer"
+          aria-label="Close"
+        >
+          <IconX size={15} stroke={2} />
+        </button>
+      </div>
+
       {/* 2D canvas — HSV (S×V) by default, HSL (S×L) when picker is in HSL mode */}
       <div
         ref={svRef}
-        className="relative h-[180px] w-full rounded-md overflow-hidden cursor-crosshair touch-none"
+        className="relative h-[180px] w-full rounded-lg overflow-hidden cursor-crosshair touch-none border border-black/20"
         style={canvasMode === "hsv"
           ? { backgroundColor: pureHueHex }
           : { background: `linear-gradient(to right, hsl(${h} 0% 50%), hsl(${h} 100% 50%))` }}
@@ -145,43 +165,40 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
       >
         {canvasMode === "hsv" ? (
           <>
-            {/* HSV: white→transparent (x) + transparent→black (y) */}
             <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to right, #fff, rgba(255,255,255,0))" }} />
             <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0), #000)" }} />
           </>
         ) : (
-          /* HSL: white→transparent→black (y), saturation already baked into base */
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom, #fff, rgba(255,255,255,0) 50%, rgba(0,0,0,0) 50%, #000)" }} />
         )}
-        {/* thumb */}
         <div
-          className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+          className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
           style={{
             left: `${thumb.x * 100}%`,
             top: `${thumb.y * 100}%`,
             backgroundColor: currentHex,
-            boxShadow: "0 0 0 1.5px white, 0 0 0 2.5px rgba(0,0,0,0.4)",
+            boxShadow: "0 0 0 2px white, 0 0 0 3px rgba(0,0,0,0.35)",
           }}
         />
       </div>
 
-      {/* Hue + alpha sliders */}
-      <div className="flex items-center gap-2">
+      {/* Eyedropper · hue + alpha sliders */}
+      <div className="flex items-center gap-2.5">
         {hasEyedropper && (
           <button
             onClick={pickWithDropper}
-            className="shrink-0 h-7 w-7 rounded-md flex items-center justify-center text-label-secondary hover:text-label hover:bg-fill-quaternary cursor-pointer"
+            className="shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-label-secondary hover:text-label hover:bg-fill-quaternary cursor-pointer inset-ring-1 inset-ring-stroke-faint"
             aria-label="Pick color from screen"
           >
             <IconColorPicker size={16} stroke={1.75} />
           </button>
         )}
-        <div className="flex-1 flex flex-col gap-2">
+        <div className="flex-1 flex flex-col gap-2.5">
           <RangeSlider
             value={h}
             min={0}
             max={360}
-            onChange={setH}
+            onChange={(nh) => { setH(nh); emit(nh, s, v, a) }}
             trackStyle={{
               background: "linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%)",
             }}
@@ -191,31 +208,29 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
             value={a * 100}
             min={0}
             max={100}
-            onChange={(na) => setA(na / 100)}
+            onChange={(na) => setAlpha(na / 100)}
+            trackClassName="bg-clip-padding"
             trackStyle={{
-              backgroundImage: `linear-gradient(to right, transparent, ${currentHex}), conic-gradient(at 4px 4px, #ddd 25%, #fff 0 50%, #ddd 0 75%, #fff 0)`,
-              backgroundSize: "100% 100%, 8px 8px",
+              backgroundColor: "transparent",
+              backgroundImage: `linear-gradient(to right, transparent, ${currentHex}), ${CHECKER}`,
+              backgroundSize: "100% 100%, 9px 9px",
             }}
             thumbStyle={{ backgroundColor: currentHex }}
           />
         </div>
       </div>
 
-      {/* Mode + value inputs (component boxes for rgb/hsl/hsb, single box for hex/css) */}
-      {/* Mode dropdown — its own button. Then a small gap. Then the unified
-          segmented values pill (components + alpha) sharing one outline. */}
+      {/* Mode dropdown + unified value pill (components + alpha, one outline) */}
       <div className="flex items-center gap-1.5">
-        <Select.Root value={mode} onValueChange={(v) => setMode(v as PickerMode)}>
-          <Select.Trigger
-            className="h-7 shrink-0 inline-flex items-center gap-1 rounded-md bg-fill-tertiary text-xs pl-2 pr-1.5 cursor-pointer inset-ring-1 inset-ring-stroke-faint focus:outline-none text-label"
-          >
-            <Select.Value>{(v) => String(v).toUpperCase()}</Select.Value>
+        <Select.Root value={mode} onValueChange={(m) => setMode(m as PickerMode)} modal={false}>
+          <Select.Trigger className="h-8 shrink-0 inline-flex items-center gap-1 rounded-lg bg-fill-tertiary text-xs font-medium pl-2.5 pr-1.5 cursor-pointer inset-ring-1 inset-ring-stroke-faint focus:outline-none text-label">
+            <Select.Value>{(m) => String(m).toUpperCase()}</Select.Value>
             <Select.Icon>
               <IconChevronDown size={12} stroke={2} className="text-label-secondary" />
             </Select.Icon>
           </Select.Trigger>
           <Select.Portal>
-            <Select.Positioner sideOffset={4} className="z-popover">
+            <Select.Positioner sideOffset={4} style={{ zIndex: MENU_Z }}>
               <Select.Popup
                 render={(props) => (
                   <Squircle
@@ -223,7 +238,7 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
                     cornerRadius={SQUIRCLE_RADIUS.md}
                     shadow="md"
                     {...props}
-                    className="rounded-md bg-surface-secondary inset-ring-1 inset-ring-stroke-faint py-1 min-w-[68px]"
+                    className="rounded-md bg-surface-secondary inset-ring-1 inset-ring-stroke-faint py-1 min-w-[72px]"
                   />
                 )}
               >
@@ -231,7 +246,7 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
                   <Select.Item
                     key={m}
                     value={m}
-                    className="flex items-center justify-between gap-2 px-2 py-1 text-xs text-label cursor-pointer outline-none data-highlighted:bg-fill-quaternary"
+                    className="flex items-center justify-between gap-2 px-2.5 py-1 text-xs text-label cursor-pointer outline-none data-highlighted:bg-fill-quaternary"
                   >
                     <Select.ItemText>{m.toUpperCase()}</Select.ItemText>
                     <Select.ItemIndicator>
@@ -243,28 +258,17 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
             </Select.Positioner>
           </Select.Portal>
         </Select.Root>
-        <div className="flex flex-1 items-center h-7 rounded-md bg-fill-quaternary inset-ring-1 inset-ring-stroke-faint overflow-hidden divide-x divide-stroke-faint/60 focus-within:inset-ring-stroke-strong transition-shadow">
+        <div className="flex flex-1 items-center h-8 rounded-lg bg-fill-quaternary inset-ring-1 inset-ring-stroke-faint overflow-hidden divide-x divide-stroke-faint/60 focus-within:inset-ring-stroke-strong transition-shadow">
           <ComponentInputs
             mode={mode}
             h={h} s={s} v={v} a={a}
-            onComponents={(nh, ns, nv) => { setH(nh); setS(ns); setV(nv) }}
+            onComponents={(nh, ns, nv) => { setH(nh); setS(ns); setV(nv); emit(nh, ns, nv, a) }}
             onTextChange={(raw) => commitText(raw)}
-            onConfirm={handleConfirm}
-            onCancel={() => onCancel?.()}
+            onClose={() => onClose?.()}
             typingRef={typingRef}
           />
-          <AlphaInput value={a} onChange={setA} />
+          <AlphaInput value={a} onChange={setAlpha} />
         </div>
-      </div>
-
-      {/* Confirm / Cancel */}
-      <div className="flex gap-2 pt-1">
-        <Button variant="ghost" size="sm" className="flex-1" onClick={() => onCancel?.()}>
-          Cancel
-        </Button>
-        <Button size="sm" className="flex-1" onClick={handleConfirm}>
-          Confirm
-        </Button>
       </div>
     </div>
   )
@@ -273,13 +277,14 @@ export function ColorPicker({ value, onConfirm, onCancel }: Props) {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function RangeSlider({
-  value, min, max, onChange, trackStyle, thumbStyle,
+  value, min, max, onChange, trackStyle, trackClassName, thumbStyle,
 }: {
   value: number
   min: number
   max: number
   onChange: (n: number) => void
   trackStyle?: React.CSSProperties
+  trackClassName?: string
   thumbStyle?: React.CSSProperties
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -295,7 +300,7 @@ function RangeSlider({
   return (
     <div
       ref={ref}
-      className="relative h-3 rounded-full cursor-pointer touch-none"
+      className={`relative h-3 rounded-full cursor-pointer touch-none inset-ring-1 inset-ring-black/10 ${trackClassName ?? ""}`}
       style={trackStyle}
       onPointerDown={(e) => {
         dragging.current = true
@@ -310,11 +315,18 @@ function RangeSlider({
       onPointerCancel={() => { dragging.current = false }}
     >
       <div
-        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-4 w-4 rounded-full pointer-events-none"
+        className="absolute top-1/2 -translate-y-1/2 rounded-full pointer-events-none"
         style={{
-          left: `${pct}%`,
+          // Sized to the track height (12px) with the white ring as an *inner*
+          // border (border-box) so the whole thumb stays inside the track — no
+          // outer ring spilling past the edges. Inset travel keeps the ends in too.
+          width: 12,
+          height: 12,
+          boxSizing: "border-box",
+          left: `calc((100% - 12px) * ${pct / 100})`,
           ...thumbStyle,
-          boxShadow: "0 0 0 1.5px white, 0 0 0 2.5px rgba(0,0,0,0.35)",
+          border: "3.5px solid #ffffff",
+          boxShadow: "0 1px 2.5px rgba(0,0,0,0.45)",
         }}
       />
     </div>
@@ -336,12 +348,11 @@ type ComponentInputsProps = {
   a: number
   onComponents: (h: number, s: number, v: number) => void
   onTextChange: (raw: string) => boolean
-  onConfirm: () => void
-  onCancel: () => void
+  onClose: () => void
   typingRef: React.MutableRefObject<boolean>
 }
 
-function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfirm, onCancel, typingRef }: ComponentInputsProps) {
+function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose, typingRef }: ComponentInputsProps) {
   // Single text box — hex / css
   if (mode === "hex" || mode === "css") {
     const o = hsvToOklch(h, s, v, a)
@@ -353,15 +364,14 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfi
         initial={initial}
         flex
         commit={(raw) => onTextChange(raw)}
-        onEnterConfirm={onConfirm}
-        onEscape={onCancel}
+        onClose={onClose}
         typingRef={typingRef}
       />
     )
   }
 
-  // Per-mode component triples
   const hsvObj: Hsv = { mode: "hsv", h, s, v, alpha: a }
+
   if (mode === "rgb") {
     const rgb = toRgb(hsvObj) as Rgb | undefined
     const r = Math.round((rgb?.r ?? 0) * 255)
@@ -372,16 +382,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfi
       if (!next) return
       onComponents(next.h ?? h, next.s ?? 0, next.v ?? 0)
     }
-    return (
-      <NumberTriple
-        a={{ value: r, min: 0, max: 255 }}
-        b={{ value: g, min: 0, max: 255 }}
-        c={{ value: b, min: 0, max: 255 }}
-        onChange={apply}
-        onEnterConfirm={onConfirm}
-        onEscape={onCancel}
-      />
-    )
+    return <NumberTriple a={{ value: r, min: 0, max: 255 }} b={{ value: g, min: 0, max: 255 }} c={{ value: b, min: 0, max: 255 }} onChange={apply} onClose={onClose} />
   }
 
   if (mode === "hsl") {
@@ -394,16 +395,20 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfi
       if (!next) return
       onComponents(next.h ?? nh, next.s ?? 0, next.v ?? 0)
     }
-    return (
-      <NumberTriple
-        a={{ value: H, min: 0, max: 360 }}
-        b={{ value: S, min: 0, max: 100 }}
-        c={{ value: L, min: 0, max: 100 }}
-        onChange={apply}
-        onEnterConfirm={onConfirm}
-        onEscape={onCancel}
-      />
-    )
+    return <NumberTriple a={{ value: H, min: 0, max: 360 }} b={{ value: S, min: 0, max: 100 }} c={{ value: L, min: 0, max: 100 }} onChange={apply} onClose={onClose} />
+  }
+
+  if (mode === "okl") {
+    // OKLCH: L as 0–100 (%), C as chroma×100 (integer, ~0–40 in-gamut), H 0–360.
+    const o = hsvToOklch(h, s, v, a)
+    const L = Math.round(o.l * 100)
+    const C = Math.round((o.c ?? 0) * 100)
+    const H = Math.round(o.h ?? 0)
+    const apply = (nl: number, nc: number, nh: number) => {
+      const hsv = oklchToHsv({ mode: "oklch", l: clampRange(nl, 0, 100) / 100, c: Math.max(0, nc) / 100, h: ((nh % 360) + 360) % 360, alpha: a })
+      onComponents(hsv.h, hsv.s, hsv.v)
+    }
+    return <NumberTriple a={{ value: L, min: 0, max: 100 }} b={{ value: C, min: 0, max: 100 }} c={{ value: H, min: 0, max: 360 }} onChange={apply} onClose={onClose} />
   }
 
   // hsb — HSV directly
@@ -416,8 +421,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfi
       b={{ value: S, min: 0, max: 100 }}
       c={{ value: V, min: 0, max: 100 }}
       onChange={(nh, ns, nv) => onComponents(((nh % 360) + 360) % 360, clampRange(ns, 0, 100) / 100, clampRange(nv, 0, 100) / 100)}
-      onEnterConfirm={onConfirm}
-      onEscape={onCancel}
+      onClose={onClose}
     />
   )
 }
@@ -425,32 +429,33 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onConfi
 type NumberSpec = { value: number; min: number; max: number; suffix?: string }
 
 function NumberTriple({
-  a, b, c, onChange, onEnterConfirm, onEscape,
+  a, b, c, onChange, onClose,
 }: {
   a: NumberSpec; b: NumberSpec; c: NumberSpec
   onChange: (a: number, b: number, c: number) => void
-  onEnterConfirm: () => void
-  onEscape: () => void
+  onClose: () => void
 }) {
   return (
     <div className="flex flex-1 min-w-0 divide-x divide-stroke-faint/60 h-full">
-      <NumberBox spec={a} onChange={(n) => onChange(n, b.value, c.value)} onEnterConfirm={onEnterConfirm} onEscape={onEscape} />
-      <NumberBox spec={b} onChange={(n) => onChange(a.value, n, c.value)} onEnterConfirm={onEnterConfirm} onEscape={onEscape} />
-      <NumberBox spec={c} onChange={(n) => onChange(a.value, b.value, n)} onEnterConfirm={onEnterConfirm} onEscape={onEscape} />
+      <NumberBox spec={a} onChange={(n) => onChange(n, b.value, c.value)} onClose={onClose} />
+      <NumberBox spec={b} onChange={(n) => onChange(a.value, n, c.value)} onClose={onClose} />
+      <NumberBox spec={c} onChange={(n) => onChange(a.value, b.value, n)} onClose={onClose} />
     </div>
   )
 }
 
 function NumberBox({
-  spec, onChange, onEnterConfirm, onEscape,
+  spec, onChange, onClose,
 }: {
   spec: NumberSpec
   onChange: (n: number) => void
-  onEnterConfirm: () => void
-  onEscape: () => void
+  onClose: () => void
 }) {
   const [text, setText] = useState(String(spec.value))
   const focused = useRef(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  // Drag-to-scrub: press and drag left/right to change the value (Figma-style).
+  const scrub = useRef<{ x: number; val: number; moved: boolean } | null>(null)
   useEffect(() => {
     if (!focused.current) setText(String(spec.value))
   }, [spec.value])
@@ -458,17 +463,48 @@ function NumberBox({
     const n = parseFloat(raw)
     if (!Number.isNaN(n)) onChange(n)
   }
+
+  const onPointerDown = (e: React.PointerEvent<HTMLInputElement>) => {
+    // While focused (typing) leave the caret/selection alone. Otherwise suppress
+    // the immediate focus so a drag scrubs and a plain click focuses on release.
+    if (e.button !== 0 || focused.current) return
+    e.preventDefault()
+    scrub.current = { x: e.clientX, val: spec.value, moved: false }
+    try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* pointer may be inactive */ }
+  }
+  const onPointerMove = (e: React.PointerEvent<HTMLInputElement>) => {
+    const st = scrub.current
+    if (!st) return
+    const dx = e.clientX - st.x
+    if (!st.moved && Math.abs(dx) < 3) return
+    st.moved = true
+    const mult = e.shiftKey ? 10 : 1
+    const next = clampRange(st.val + Math.round(dx / 4) * mult, spec.min, spec.max)
+    onChange(next)
+    setText(String(next))
+  }
+  const onPointerUp = (e: React.PointerEvent<HTMLInputElement>) => {
+    const st = scrub.current
+    scrub.current = null
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* no-op */ }
+    if (st && !st.moved) { inputRef.current?.focus(); inputRef.current?.select() }
+  }
+
   return (
     <div className="relative flex-1 min-w-0 h-full focus-within:bg-fill-tertiary transition-colors">
       <input
+        ref={inputRef}
         value={text}
         inputMode="numeric"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
         onFocus={(e) => { focused.current = true; e.currentTarget.select() }}
         onChange={(e) => setText(e.target.value)}
         onBlur={(e) => { focused.current = false; commit(e.target.value); setText(String(spec.value)) }}
         onKeyDown={(e) => {
-          if (e.key === "Enter") { commit((e.target as HTMLInputElement).value); onEnterConfirm() }
-          else if (e.key === "Escape") { onEscape() }
+          if (e.key === "Enter") { commit((e.target as HTMLInputElement).value); onClose() }
+          else if (e.key === "Escape") { onClose() }
           else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
             e.preventDefault()
             const delta = e.key === "ArrowUp" ? 1 : -1
@@ -478,7 +514,7 @@ function NumberBox({
             setText(String(next))
           }
         }}
-        className={`w-full h-full bg-transparent text-xs px-1.5 font-mono focus:outline-none tabular-nums text-center ${spec.suffix ? "pr-3.5" : ""}`}
+        className={`w-full h-full bg-transparent text-xs px-1.5 focus:outline-none tabular-nums text-center touch-none cursor-ew-resize focus:cursor-text selection:bg-label/20 ${spec.suffix ? "pr-3.5" : ""}`}
         spellCheck={false}
       />
       {spec.suffix && (
@@ -489,13 +525,12 @@ function NumberBox({
 }
 
 function NumericText({
-  initial, flex, commit, onEnterConfirm, onEscape, typingRef,
+  initial, flex, commit, onClose, typingRef,
 }: {
   initial: string
   flex?: boolean
   commit: (raw: string) => boolean
-  onEnterConfirm: () => void
-  onEscape: () => void
+  onClose: () => void
   typingRef: React.MutableRefObject<boolean>
 }) {
   const [text, setText] = useState(initial)
@@ -506,18 +541,14 @@ function NumericText({
   return (
     <input
       value={text}
-      onFocus={() => { focused.current = true; typingRef.current = true }}
+      onFocus={(e) => { focused.current = true; typingRef.current = true; const el = e.currentTarget; setTimeout(() => { if (document.activeElement === el) el.select() }, 0) }}
       onChange={(e) => setText(e.target.value)}
       onBlur={(e) => { focused.current = false; typingRef.current = false; commit(e.target.value); setText(initial) }}
       onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          const ok = commit((e.target as HTMLInputElement).value)
-          if (ok) onEnterConfirm()
-        } else if (e.key === "Escape") {
-          onEscape()
-        }
+        if (e.key === "Enter") { commit((e.target as HTMLInputElement).value); onClose() }
+        else if (e.key === "Escape") { onClose() }
       }}
-      className={`h-full bg-transparent text-xs px-2 font-mono focus:outline-none focus-within:bg-fill-tertiary ${flex ? "flex-1 min-w-0" : ""}`}
+      className={`h-full bg-transparent text-xs px-2 tabular-nums focus:outline-none focus-within:bg-fill-tertiary selection:bg-label/20 ${flex ? "flex-1 min-w-0" : ""}`}
       spellCheck={false}
     />
   )
@@ -529,8 +560,7 @@ function AlphaInput({ value, onChange }: { value: number; onChange: (n: number) 
       <NumberBox
         spec={{ value: Math.round(value * 100), min: 0, max: 100, suffix: "%" }}
         onChange={(n) => onChange(clampRange(n, 0, 100) / 100)}
-        onEnterConfirm={() => {}}
-        onEscape={() => {}}
+        onClose={() => {}}
       />
     </div>
   )

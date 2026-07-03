@@ -14,6 +14,7 @@ import {
   IconLayoutCards,
   IconBoxMultiple,
   IconDroplet,
+  IconAdjustments,
 } from "@tabler/icons-react"
 import { lazy } from "react"
 import { Home } from "@/pages/Home"
@@ -28,6 +29,7 @@ const lazyPage = <T extends Record<string, React.ComponentType>>(
 ) => lazy(() => loader().then((m) => ({ default: m[name] })))
 
 const Demos = lazyPage(() => import("@/pages/Demos"), "Demos")
+const DialkitGallery = lazyPage(() => import("@/pages/DialkitGallery"), "DialkitGallery")
 const Colors = lazyPage(() => import("@/pages/Colors"), "Colors")
 const Typography = lazyPage(() => import("@/pages/Typography"), "Typography")
 const Motion = lazyPage(() => import("@/pages/Motion"), "Motion")
@@ -56,6 +58,7 @@ export type RouteEntry = {
 export const ROUTES: RouteEntry[] = [
   { path: "/",            label: "Home",    icon: IconHome,            Component: Home },
   { path: "/demos",       label: "Demos",   icon: IconSparkles,        Component: Demos },
+  { path: "/dialkit",     label: "Dialkit", icon: IconAdjustments,     Component: DialkitGallery },
   { path: "/colors",      label: "Color",   icon: IconPalette,         Component: Colors },
   { path: "/typography",  label: "Type",    icon: IconTypography,      Component: Typography },
   { path: "/motion",      label: "Motion",  icon: IconBounceRight,     Component: Motion },

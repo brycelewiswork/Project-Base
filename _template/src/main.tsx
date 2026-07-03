@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "@/components/ui/sonner"
-import { DialRoot } from "dialkit"
+import { DialRoot } from "@/components/dialkit"
 import { Agentation } from "agentation"
 import { PerfHud } from "@/components/ui/perf-hud"
 import App from "./App"
 import { initTypeSystem } from "@/lib/typography"
 import { initColorSystem } from "@/lib/colors"
 import "./index.css"
-import "dialkit/styles.css"
+import "@/components/dialkit/theme.css"
 
 initTypeSystem()
 initColorSystem()

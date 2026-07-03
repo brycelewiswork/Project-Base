@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useDialKit, DialStore } from "dialkit"
+import { useDialKit, DialStore } from "@/components/dialkit"
 import { IconX } from "@tabler/icons-react"
 import { LiquidGlass } from "@/components/ui/liquid-glass"
 import {

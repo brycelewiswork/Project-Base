@@ -19,6 +19,7 @@ import colorEditor from "./color-editor"
 import dialkit from "./dialkit"
 import agentation from "./agentation"
 import perfHud from "./perf-hud"
+import canvasToolbar from "./canvas-toolbar"
 
 /**
  * Single source of truth for the Demos page. Adding a library to the template
@@ -48,6 +49,7 @@ export const DEMOS: DemoEntry[] = [
   dialkit,
   agentation,
   perfHud,
+  canvasToolbar,
 
   // Infrastructure — appears in the stack grid; no live demo by design.
   { lib: "Vite 8", role: "bundler" },

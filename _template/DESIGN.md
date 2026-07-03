@@ -127,6 +127,16 @@ framed around [dialkit](CLAUDE.md) (`useDialKit`) but apply to any control UI.
   `Settings`, `Options`. If you can't name the group after a thing, the grouping
   is wrong. 2–7 controls per group; when it grows past that or mixes meanings,
   split into more specific groups (`Flow Motion` / `Flow Geometry`).
+- **Grouping is free and expected — nest, don't flatten.** A nested object becomes
+  a titled, collapsible section; multi-line controls (gradient, curves, vector, …)
+  are each their own collapsible unit. A flat wall of controls is a smell — if two
+  controls tune the same thing, they share a section.
+- **Reset is automatic and deviation-aware — never hand-build it.** Each section, each
+  multi-line control, and the panel toolbar surface a ↺ **only while something has
+  drifted from its config default**; clicking it restores just that scope. Sliders
+  reset on double-click (no icon). It's derived from the defaults you already pass —
+  don't add reset buttons for it. Reserve an `action` button for *semantic* resets
+  (re-randomize a seed, clear a layer), which are a different thing.
 - **Pick the control by the value's *shape*, not its look.** One entity that owns
   a color *and* its opacity is one control, not a color picker plus a stray
   opacity slider. A gradient is one gradient control, not two stops. Typography is
@@ -190,9 +200,11 @@ unlabeled inside one bank, and never title a group just `Color`.
   focus, anchor, offset. Never wire a pad to animation, physics, pointer, or
   timeline state just because the value happens to have `x`/`y`. Authored ≠
   observed.
-- **Curve interpolation follows intent:** monotone for depth / response / mask /
-  threshold curves (overshoot would be a bug), smooth for creative tone curves
-  (overshoot is the point).
+- **Curve interpolation is monotone cubic (PCHIP)** — smooth through the points but
+  never overshooting between them, the way Photoshop/Lightroom curves behave. Good
+  default for tone / response / mask / threshold curves alike. If you ever genuinely
+  need overshoot (a creative spline that bulges past a point), that's a bespoke
+  renderer, not the `curves` control.
 - **Short text vs long text are different controls:** a single-line input for
   labels/names/tokens (commit while typing for content, on blur for settings);
   a multiline editor for anything that can get long or structured (prompts, CSS,
@@ -202,6 +214,39 @@ unlabeled inside one bank, and never title a group just `Color`.
 "drop a file here" prompts painted onto the canvas — those belong in the panel.
 Direct-manipulation handles (drag a gradient stop, a focus point) are the one
 exception: keep them textless, tokenized, bound to state, and out of any export.
+
+### The control catalog — reach for which
+
+Our dialkit is forked into the template ([src/components/dialkit](CLAUDE.md)) and
+extended with richer control types. Pick by the *value's shape*; the config is what
+you pass to `useDialKit("Panel", { … })`.
+
+| Control | `useDialKit` config | Reach for it when | Not for |
+|---|---|---|---|
+| **Slider** | `[def, min, max, step?]` or a bare number | one scalar the user sweeps | a value *pair* (use two, or a future range control) |
+| **Toggle** | `true` / `false` | a boolean mode; name it for the setting (`Glow`, not `Enable Glow`) | one-of-many (use a select) |
+| **Select** | `{ type: "select", options }` | a finite named choice | a live color/number — those have their own controls |
+| **Color** | `{ type: "color" }` or a hex string | one solid color | a gradient (use gradient); color + opacity as one entity (coming: `colorOpacity`) |
+| **Text** | `{ type: "text" }` or a string | a short label / name / token | long or multiline content |
+| **Spring / Easing** | `{ type: "spring" }` / `{ type: "easing" }` | tuning motion feel; bake settled values into `motion.ts` | — |
+| **Vector** | `{ type: "vector", default: { x, y } }` | an **authored** 2-axis param — light direction, focus, anchor, offset (value is normalized [-1,1]) | animation / physics / pointer state that merely happens to have x/y |
+| **Gradient** | `{ type: "gradient", default: { gradientType, angle, stops } }` | any adjustable gradient; consume it with `gradientToCss(value)` | faking a gradient out of two separate color controls |
+| **Range input** | `{ type: "rangeInput", default: { start, end } }` | a precisely-typed lower/upper bound or from/to pair | a value you *sweep* (use a slider, or a future range slider) |
+| **Color collection** | `{ type: "colorCollection", default: ["#…"] }` | an editable bank of colors the user grows/shrinks (palette, accents, beads) | a fixed set of distinct roles (Fill/Stroke — use separate colors) |
+| **Palette** | `{ type: "palette", default: { family, shade } }` | a constrained design-token color (family + shade); resolve with `paletteHex(value)` | free hex entry (use color) |
+| **Font picker** | `{ type: "fontPicker", default: { fontId, fontWeight, … } }` | a whole text style (family/weight/size/case/color); resolve with `fontStyle(value)` | splitting typography across neighbouring controls |
+| **Curves** | `{ type: "curves", default: { variant, rgb, r, g, b } }` | tone / response / color-grade remapping (`variant: 'rgb'` adds R/G/B tabs); sample with `sampleCurve(pts, x)` | something a single slider expresses more simply |
+| **Image picker** | `{ type: "imagePicker", default: [] }` | uploading a set of source images (thumbnail grid) | putting the uploader on the canvas — it lives in the panel |
+| **Folder** | a nested object `{ … }` (`_collapsed: true` to start closed) | grouping controls by product entity — a collapsible section with its own deviation-aware ↺ | — |
+| **Button** | `{ type: "action" }` (handle via `onAction`) | a *semantic* section command (re-randomize a seed, clear a layer) | restore-to-default — that's the automatic per-control / section / panel ↺, not something you wire |
+
+**When the control you need doesn't exist yet** — a two-thumb range slider, a
+segmented control in config, a layers tree — that absence is the signal to build the
+next one, not to fake it with primitives. The pattern is fixed and repeatable: add the
+store seam (type guard → `parseConfig`/`flattenValues`/`ResolvedValues`/normalize), a
+`case` in `dialkit/components/Panel.tsx`'s render switch, and a component that draws
+from `controlStyles.ts` + the `--dial-*` tokens. All the controls above are worked
+examples to copy; `scaffold`-style store seams keep them uniform.
 
 ## Anti-patterns
 

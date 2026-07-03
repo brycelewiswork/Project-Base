@@ -13,7 +13,7 @@ import {
  * whatever input mode the designer prefers.
  */
 
-export type PickerMode = "hex" | "rgb" | "css" | "hsl" | "hsb"
+export type PickerMode = "hex" | "rgb" | "css" | "hsl" | "hsb" | "okl"
 
 export type Oklch4 = { mode: "oklch"; l: number; c: number; h?: number; alpha?: number }
 
@@ -83,6 +83,8 @@ export function formatInMode(o: Oklch4, mode: PickerMode): string {
       const v = round((hsv.v ?? 0) * 100, 0)
       return `hsb(${h}, ${s}%, ${v}%)`
     }
+    case "okl":
+      return oklchCss(o)
   }
 }
 

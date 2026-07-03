@@ -58,4 +58,15 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
+  // Vendored dialkit (forked from joshpuckett/dialkit, MIT — we own + extend it in
+  // place). Its internals use `any` and the react-hooks@7 refs/effect patterns the
+  // template already tolerates as warnings elsewhere; demote `any` to warn here too
+  // so a re-sync from upstream never breaks the lint gate. Our own extensions (the
+  // new control components) are written to the strict standard regardless.
+  {
+    files: ['src/components/dialkit/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
 ])

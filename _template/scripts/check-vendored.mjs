@@ -51,6 +51,8 @@ const VENDORED = [
   "src/components/ui/color-thief.tsx",
   "src/components/ui/perf-hud.tsx",
   "src/components/shaders/**",
+  // Vendored dialkit (forked from joshpuckett/dialkit, MIT — owned + extended)
+  "src/components/dialkit/**",
   // Claude proxy
   "src/lib/anthropic.ts",
   // Reference system pages

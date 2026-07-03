@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useDialKit } from "dialkit"
+import { useDialKit } from "@/components/dialkit"
 import { DemoSection } from "@/components/DemoSection"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"

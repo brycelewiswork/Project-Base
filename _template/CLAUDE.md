@@ -74,7 +74,7 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
 - **colorthief** v3.x for color extraction from images — `getColorSync(img)` for dominant color, `getPaletteSync(img, { colorCount, colorSpace: 'oklch' })` for a palette, `getSwatchesSync(img)` for semantic swatches (Vibrant/Muted/DarkVibrant/DarkMuted/LightVibrant/LightMuted). In React, use the `useImagePalette(ref, options)` hook from [src/components/ui/color-thief.tsx](src/components/ui/color-thief.tsx). Color harmony (complementary, analogous, triadic, split-complementary) is exposed via the inline `harmonies(hex)` utility in the same file — no extra dep. Pairs naturally with `<LinearBlur tint={dominant.hex()}>` for the Apple Music-style image-into-color blend.
 - **Recharts** v3 via shadcn's `ChartContainer` — declarative charts (area, bar, radial, sparkline). SVG output styled with CSS variable tokens. Install new chart types: `pnpm dlx shadcn@latest add chart`.
 - **visx** (`@visx/shape`, `@visx/scale`, `@visx/group`) — low-level SVG primitives for custom visuals Recharts can't express (radial arcs, bespoke gauges). Use as an escape hatch, not the default.
-- **dialkit** (Josh Puckett) — floating control panel for live-tuning UI values. `useDialKit("Panel name", { foo: [default, min, max], bar: { type: "spring", ... }, color: { type: "color" } })` auto-generates sliders, toggles, color pickers, spring/easing editors with keyboard shortcuts. `<DialRoot />` is mounted in `main.tsx` outside the squircled app shell. Use as the per-sketch tweak overlay — the canonical tuning surfaces still live on `/typography`, `/motion`, `/spacing`, `/breakpoints`. Tune live → bake settled values into `src/lib/motion.ts` tokens. JSON export available. For *how to structure* a panel — grouping by entity, choosing the control by the value's shape, labels, hide-don't-disable, live-during-drag — see [DESIGN.md](DESIGN.md) → **Designing control panels**.
+- **dialkit** (Josh Puckett) — floating control panel for live-tuning UI values. `useDialKit("Panel name", { foo: [default, min, max], bar: { type: "spring", ... }, color: { type: "color" } })` auto-generates sliders, toggles, color pickers, spring/easing editors with keyboard shortcuts. `<DialRoot />` is mounted in `main.tsx` outside the squircled app shell. **Forked into the template** at [src/components/dialkit](src/components/dialkit) (MIT — we own + extend it; import from `@/components/dialkit`, not the npm package). Beyond the stock primitives (slider, toggle, select, color, text, spring/easing) it ships eight richer control types, each with a `{ type: "…" }` config: **vector** (authored X/Y pad, normalized [-1,1]), **gradient** (type/angle/draggable stops → `gradientToCss(value)`), **rangeInput** (two-field bound), **colorCollection** (editable hex bank), **palette** (family+shade token → `paletteHex(value)`), **fontPicker** (family/weight/size/case/color → `fontStyle(value)`), **curves** (RGB/R/G/B tone-curve editor → `sampleCurve(pts, x)`), and **imagePicker** (upload-thumbnail grid). See [DESIGN.md](DESIGN.md) → **The control catalog** for when to reach for which. Adding another = store seam + a `case` in `dialkit/components/Panel.tsx` + a component drawing from `dialkit/components/controlStyles.ts` (shared `--dial-*` tokens); every control routes color editing through the shared `ColorField`. **Responsive:** the panel floats in a corner on tablet/desktop (≥640px, clamped so it never overflows); below 640px it becomes a full-width bottom sheet with a backdrop (collapsed = a FAB bubble, drag disabled) — handled in `DialRoot` + a `@media` block in `theme.css`. Use as the per-sketch tweak overlay — the canonical tuning surfaces still live on `/typography`, `/motion`, `/spacing`, `/breakpoints`. Tune live → bake settled values into `src/lib/motion.ts` tokens. JSON export available. For *how to structure* a panel — grouping by entity, choosing the control by the value's shape, labels, hide-don't-disable, live-during-drag — see [DESIGN.md](DESIGN.md) → **Designing control panels**.
 - **agentation** — in-app visual feedback for AI agents. `<Agentation />` is mounted dev-only in `main.tsx` (gated by `import.meta.env.DEV`); toggle the toolbar with `Ctrl+Shift+F`. The user clicks any element to drop a structured annotation (CSS selector, Vite source path + line, React tree, computed styles, optional `intent`/`severity`). Modes: Elements, Text, Multi-select/Area, Animation (press `P` to freeze a frame mid-spring), Layout. The agentation MCP server is registered in `.mcp.json`; Claude has 9 tools — `agentation_list_sessions`, `agentation_get_session`, `agentation_get_pending`, `agentation_get_all_pending`, `agentation_acknowledge`, `agentation_resolve`, `agentation_dismiss`, `agentation_reply`, `agentation_watch_annotations`.
   - **Workflow split:** dialkit = numeric tuning the user does themselves. Agentation = structural / judgmental feedback handed to Claude.
   - **The watch loop:** when the user says *"start the watch loop"* (or similar), call `agentation_watch_annotations` repeatedly; for each annotation acknowledge → make the fix → `agentation_resolve` with a one-line summary. Use `agentation_reply` for clarifying questions instead of switching to chat. Markers clear on the user's screen as you resolve.
@@ -215,6 +215,7 @@ accidental deletion/rename):
 - **Color & type systems:** `src/lib/colors.ts`, `src/lib/color-tokens.ts`, `src/lib/color-convert.ts`, `src/lib/typography.ts`
 - **Measurement / text:** `src/lib/pretext.ts`, `src/components/ui/tight-text.tsx`, `src/components/ui/accordion.tsx`
 - **Infra components:** `src/components/ui/progressive-blur.tsx`, `src/components/ui/color-thief.tsx`, `src/components/ui/perf-hud.tsx`, `src/components/shaders/**`
+- **Vendored dialkit** (forked, owned): `src/components/dialkit/**` — extend it (new control types, restyle) deliberately; don't casually rewrite the upstream store/panel internals
 - **Claude proxy:** `src/lib/anthropic.ts`
 - **Reference system pages:** `Colors`, `Typography`, `Motion`, `Spacing`, `Breakpoints`
 - **Build / scaffolding:** `vite.config.ts`, `scripts/**`
@@ -237,6 +238,45 @@ plan, not a document):
 Then build it, and verify against the reference in the browser (Tier 1–3 above). For a **Figma
 URL**, read the actual file via the Figma MCP (nodes, variables, components) — don't eyeball a
 screenshot. Keep the study lightweight, but do it before writing motion/interaction from a reference.
+
+## Choosing a renderer
+
+These sketches are canvas/shader-heavy, so pick the render tech from the *output*, not from
+convenience. The choice is **provisional until the Perf HUD stays green** under the heaviest real
+inputs (see Performance below) — if it janks, change the strategy, don't lower quality.
+
+| Layer | Reach for | Ours |
+|---|---|---|
+| Text, editable labels, accessible/structured low-count markup | **DOM** | plain React |
+| Crisp vectors, lines, icons, foreground geometry, drag handles, hit targets | **SVG** | React SVG / visx |
+| Medium raster compositing, text-to-canvas, simple procedural, export passes | **Canvas 2D** | `<canvas>` |
+| Dense pixels, shaders, image processing, high-res procedural, big particle fields, heavy animated backgrounds | **WebGL / WebGPU** | three · r3f · drei · postprocessing · paper-shaders · use-shader-fx |
+
+- **Mix layers by semantics** — a dense shader *background*, an SVG/DOM *foreground* + *editing handles*, and an *export composite* can each use different tech. A dense raster background does **not** justify rasterizing low-count text or vector foreground.
+- **Heavy per-pixel work** (shader-like, noise/texture, filter, halftone, mesh, image processing) → evaluate **WebGL/WebGPU before** settling on CPU Canvas 2D. Don't keep Canvas 2D "by default" and then make it look fast by downsampling or testing a tiny input.
+- Don't force WebGL just because a sketch is visually rich, and don't keep Canvas 2D just because the primitive is text/vector — decide from the Perf HUD's worst frame at the heaviest real values.
+- **Editing handles** (drag a gradient stop, a focus point) are textless DOM/SVG overlays bound to state and **excluded from any export** (see DESIGN.md → canvas is output only).
+- Text/vector output stays native — never render text into an offscreen canvas and upscale it.
+
+## Performance — keeping the canvas smooth
+
+Two kinds of control, two concerns:
+- **Workload controls** change render cost — output size, resolution scale, sample count, density, particle count, blur radius, shader complexity, iterations, quality, timeline playback, keyframe scrub. **Watch these on the Perf HUD.**
+- **Ordinary controls** must never freeze input, break slider drag, or cause canvas zoom/offset jumps.
+
+**Renderer patterns** (r3f / shader / Canvas 2D):
+- Initialize contexts, programs, shaders, pipelines, textures, and big buffers **once** — not per render.
+- On a control change, **update uniforms / stable buffers** — don't rebuild the scene, re-decode media, or re-lay-out glyphs.
+- **Cache** decoded media and expensive derived inputs; don't re-decode every change.
+- **Coalesce** high-frequency preview work to `requestAnimationFrame`; split lightweight live feedback from heavier refinement — but the canvas must still update *during* a slider drag, never only on release.
+- **Cancel** stale async renders and scheduled frames (on cleanup). During pan/zoom/drag, suspend/coalesce non-essential animation, then resume without changing playback state or jumping the viewport.
+
+**The rule that matters most — don't fake fast by lowering quality.** Never pass by silently
+downsampling, dropping render scale, blurring, or testing a toy input. Fix the path first (uniforms,
+caches, rAF-coalesce, cancel-stale, move work off the React render, reuse GPU resources) — or, if the
+ceiling is genuinely real, expose the trade-off as a *visible* control. Test with **realistic heavy
+inputs** (1080p+ media, long text, max density), not toy values. Run the perf pass when you first
+have it working or when something feels janky (verification **Tier 3**).
 
 ## Conventions
 

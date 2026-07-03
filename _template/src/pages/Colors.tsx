@@ -324,8 +324,8 @@ function SwatchRow({
             >
               <ColorPicker
                 value={value}
-                onConfirm={(v) => { onChange(v); setOpen(false) }}
-                onCancel={() => setOpen(false)}
+                onChange={(v) => onChange(v)}
+                onClose={() => setOpen(false)}
               />
             </Popover.Popup>
           </Popover.Positioner>
