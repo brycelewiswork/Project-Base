@@ -225,7 +225,7 @@ you pass to `useDialKit("Panel", { … })`.
 |---|---|---|---|
 | **Slider** | `[def, min, max, step?]` or a bare number | one scalar the user sweeps | a value *pair* (use two, or a future range control) |
 | **Toggle** | `true` / `false` | a boolean mode; name it for the setting (`Glow`, not `Enable Glow`) | one-of-many (use a select) |
-| **Select** | `{ type: "select", options }` | a finite named choice | a live color/number — those have their own controls |
+| **Select** | `{ type: "select", options }` | a finite named choice — renders as a labeled *row* (SelectControl); the same menu also opens from the boxed *field* form (SelectField) used for sub-selects inside compound controls | a live color/number — those have their own controls |
 | **Color** | `{ type: "color" }` or a hex string | one solid color | a gradient (use gradient); color + opacity as one entity (coming: `colorOpacity`) |
 | **Text** | `{ type: "text" }` or a string | a short label / name / token | long or multiline content |
 | **Spring / Easing** | `{ type: "spring" }` / `{ type: "easing" }` | tuning motion feel; bake settled values into `motion.ts` | — |

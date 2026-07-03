@@ -89,6 +89,7 @@ export function SelectField({ value, options, onChange, disabled, triggerStyle }
           {selected?.label ?? value}
         </span>
         <motion.svg
+          className="dialkit-select-chevron"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -97,7 +98,6 @@ export function SelectField({ value, options, onChange, disabled, triggerStyle }
           strokeLinejoin="round"
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ type: 'spring', visualDuration: 0.2, bounce: 0.15 }}
-          style={{ width: 14, height: 14, flexShrink: 0, color: 'var(--dial-text-tertiary)' }}
         >
           <path d={ICON_CHEVRON} />
         </motion.svg>

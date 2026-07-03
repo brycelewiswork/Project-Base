@@ -2,6 +2,7 @@ import { type CSSProperties } from 'react';
 import { ColorField } from './ColorField';
 import { ScrubNumber } from './ScrubNumber';
 import { FIELD, selectOnFocus } from './controlStyles';
+import { hex6, withAlphaOf } from './hexUtils';
 
 /**
  * ColorCell — the one color cell used everywhere a color lives inside another
@@ -23,15 +24,15 @@ interface ColorCellProps {
 }
 
 export function ColorCell({ color, onColorChange, opacity, onOpacityChange, swatchSize = 18, style }: ColorCellProps) {
-  // Show the hex without the leading `#` (visual clutter) but always store it with
-  // one, so downstream consumers keep receiving a valid `#RRGGBB`.
+  // Show the 6-digit RGB only — no leading `#`, and never the alpha byte (opacity is
+  // its own field / the split chip). Edits keep whatever opacity the color carried.
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, ...FIELD, padding: '0 4px', ...style }}>
       <ColorField value={color} onChange={onColorChange} opacity={opacity} onOpacityChange={onOpacityChange} size={swatchSize} />
       <input
-        value={color.replace(/^#/, '')}
+        value={hex6(color).replace(/^#/, '')}
         spellCheck={false}
-        onChange={(e) => onColorChange('#' + e.target.value.replace(/#/g, ''))}
+        onChange={(e) => onColorChange(withAlphaOf(e.target.value, color))}
         onFocus={selectOnFocus}
         style={{
           flex: 1,

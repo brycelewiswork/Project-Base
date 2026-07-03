@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ColorField } from './ColorField';
 import { selectOnFocus } from './controlStyles';
+import { hex6, withAlphaOf } from './hexUtils';
 import { HelpDot } from './HelpDot';
 
 interface ColorControlProps {
@@ -19,18 +20,19 @@ const HEX_COLOR_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
  */
 export function ColorControl({ label, value, onChange, help }: ColorControlProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(value);
+  // Edited/displayed as 6-digit RGB; the color's opacity (alpha) is never shown here.
+  const [editValue, setEditValue] = useState(hex6(value));
 
   useEffect(() => {
-    if (!isEditing) setEditValue(value);
+    if (!isEditing) setEditValue(hex6(value));
   }, [value, isEditing]);
 
   function handleTextSubmit() {
     setIsEditing(false);
     if (HEX_COLOR_REGEX.test(editValue)) {
-      onChange(editValue);
+      onChange(withAlphaOf(editValue, value)); // keep the existing opacity
     } else {
-      setEditValue(value);
+      setEditValue(hex6(value));
     }
   }
 
@@ -39,7 +41,7 @@ export function ColorControl({ label, value, onChange, help }: ColorControlProps
       handleTextSubmit();
     } else if (e.key === 'Escape') {
       setIsEditing(false);
-      setEditValue(value);
+      setEditValue(hex6(value));
     }
   }
 
@@ -60,7 +62,7 @@ export function ColorControl({ label, value, onChange, help }: ColorControlProps
           />
         ) : (
           <span className="dialkit-color-hex" onClick={() => setIsEditing(true)}>
-            {(value ?? '').replace(/^#/, '').toUpperCase()}
+            {hex6(value).replace(/^#/, '')}
           </span>
         )}
         <ColorField value={value} onChange={onChange} size={20} />

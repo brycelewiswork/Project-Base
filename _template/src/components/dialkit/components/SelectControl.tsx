@@ -25,6 +25,14 @@ function normalizeOptions(options: SelectOption[]): { value: string; label: stri
   );
 }
 
+/**
+ * SelectControl — the `select` *control type*: a full-width **labeled row** (label
+ * left, value + chevron right), matching the panel's other row controls (slider,
+ * toggle, color). For a sub-select **inside a compound control** — a boxed field
+ * that sits beside other FIELD inputs (font weight, gradient type) — use SelectField.
+ * Both open the same styled menu (`dialkit-select-dropdown` / `-option`); they only
+ * differ in trigger shape so each matches its neighbours.
+ */
 export function SelectControl({ label, value, options, onChange, help }: SelectControlProps) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
