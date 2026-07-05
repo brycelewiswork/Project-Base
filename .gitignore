@@ -4,6 +4,10 @@ _template/.vite
 _template/.turbo
 _template/*.tsbuildinfo
 
+# local env / secrets — never commit
+.env.local
+.env.*.local
+
 # editor temp/swap files
 *.tmp.*
 

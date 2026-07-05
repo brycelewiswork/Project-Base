@@ -130,7 +130,8 @@
       "Bash(curl -s http://localhost:5173/)",
       "Bash(curl -s -o /dev/null -w \"src/main.tsx: HTTP %{http_code}\\\\n\" http://localhost:5173/src/main.tsx)",
       "PowerShell(git pull)",
-      "WebFetch(domain:coss.com)"
+      "WebFetch(domain:coss.com)",
+      "WebFetch(domain:devblogs.microsoft.com)"
     ]
   }
 }
