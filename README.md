@@ -11,9 +11,10 @@ and say something like:
 
 (Swap `~/Projects` for wherever you want it.) Claude will clone the repo, read its
 setup instructions ([`CLAUDE.md`](CLAUDE.md)), run `./setup.sh`, start the dev
-server, and hand you back the URL to open. The only thing it can't install for you
-is Node.js itself — if it's missing, Claude will point you to [nodejs.org](https://nodejs.org)
-(grab the **LTS** installer), and you re-run once it's done.
+server, and hand you back the URL to open. If Node.js isn't installed yet, Claude
+will offer to install it for you — on a Mac it can do this with [Homebrew](https://brew.sh)
+(it'll ask first) — or point you to the [nodejs.org](https://nodejs.org) **LTS**
+installer if you'd rather.
 
 Prefer to do it yourself? The manual steps are below.
 

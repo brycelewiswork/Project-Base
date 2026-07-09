@@ -20,10 +20,18 @@ Run these from the repo root (the folder containing this file):
    `setup.sh` checks Node.js (needs **≥ 20.19**), enables **pnpm** via Corepack,
    and installs the template's dependencies. It's safe to re-run.
 
-   - **If it reports Node is missing or too old:** relay its exact instructions to
-     the user and **stop until they've installed Node** — don't try to install
-     Node.js system-wide yourself unless they explicitly ask you to. Once they've
-     installed it, re-run `./setup.sh`.
+   - **If it reports Node is missing or too old:**
+     - **On macOS**, offer to install it for them with [Homebrew](https://brew.sh),
+       and do it once they say yes (it may prompt for their Mac login password):
+       - If Homebrew isn't installed yet, install it first via the official command
+         at https://brew.sh, then run `brew install node`.
+       - If Node is just outdated, `brew upgrade node`.
+       - Then re-run `./setup.sh`.
+     - **On Windows, or if they'd rather not use Homebrew**, relay setup's
+       instructions (install the **LTS** from https://nodejs.org) and stop until
+       they've done it, then re-run `./setup.sh`.
+     - Always **ask before** installing system software — confirm, then proceed;
+       just don't do it silently.
 
 2. **Start the dev server:**
    ```bash
@@ -37,19 +45,32 @@ Run these from the repo root (the folder containing this file):
 
 That's a complete setup. Everything below is optional / for later.
 
-## Optional: AI-powered demos (bring your own key)
+## Optional: AI-powered demos (bring your own Anthropic key)
 
-A few demos call the Claude API. They're inert until the user adds **their own**
-Anthropic key — this repo ships none. Only do this if they ask:
+**Do not bring this up during setup.** It has nothing to do with getting the app
+running, and most sketches don't need it. Only walk through it if the user
+*explicitly* asks about AI features, the Claude API, or setting up an API key.
 
-```bash
-cp _template/.env.example _template/.env.local
-# then put their key after ANTHROPIC_API_KEY= in _template/.env.local
-cd _template && pnpm test:anthropic   # verifies the key with one tiny live call
-```
+When they do ask, here's the whole thing:
 
-Never paste in a key from anywhere else. The key is read server-side only and
-`.env.local` is gitignored — it never enters git or the browser bundle.
+1. **Get a key.** Sign in at https://console.anthropic.com → **API keys** (left
+   sidebar) → **Create Key** → copy the value (it starts with `sk-ant-`). Notes to
+   pass along:
+   - This is an **Anthropic API** key tied to the console account and its own
+     billing — it is **not** the same as their Claude Code / Claude app login, and
+     it requires API credit on that account.
+   - This repo ships **no** key; they must use their own.
+2. **Add it to the project:**
+   ```bash
+   cp _template/.env.example _template/.env.local
+   # then paste the key after ANTHROPIC_API_KEY= in _template/.env.local
+   ```
+3. **Verify it:** `cd _template && pnpm test:anthropic` — one tiny live call that
+   prints ✅ or ❌.
+
+Never paste in a key from anywhere else or reuse someone else's. The key is read
+**server-side only** and `.env.local` is gitignored — it never enters git or the
+browser bundle.
 
 ## Making a new sketch
 
