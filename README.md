@@ -2,6 +2,21 @@
 
 Personal scaffold for fast, high-fidelity React sketches.
 
+## Easiest setup: let Claude Code do it
+
+If you have **Claude Code**, you don't need to follow any steps by hand. Open it
+and say something like:
+
+> **Clone `https://github.com/brycelewiswork/Project-Base` into `~/Projects` and set it up so I can view it in my browser.**
+
+(Swap `~/Projects` for wherever you want it.) Claude will clone the repo, read its
+setup instructions ([`CLAUDE.md`](CLAUDE.md)), run `./setup.sh`, start the dev
+server, and hand you back the URL to open. The only thing it can't install for you
+is Node.js itself — if it's missing, Claude will point you to [nodejs.org](https://nodejs.org)
+(grab the **LTS** installer), and you re-run once it's done.
+
+Prefer to do it yourself? The manual steps are below.
+
 ## Getting started (from zero)
 
 New to this? These steps take you from nothing installed to the app running in
