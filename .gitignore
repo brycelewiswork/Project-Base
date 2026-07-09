@@ -8,6 +8,9 @@ _template/*.tsbuildinfo
 .env.local
 .env.*.local
 
+# Claude Code personal/machine-specific settings (permissions allowlist, paths)
+.claude/settings.local.json
+
 # editor temp/swap files
 *.tmp.*
 

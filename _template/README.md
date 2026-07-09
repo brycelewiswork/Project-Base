@@ -5,11 +5,11 @@ A suite of tools and primitives to make launching into high fidelity work easier
 ## Quick start
 
 ```bash
-npm install
-npm run dev
+pnpm install   # only needed the first time (a spawned sketch is already installed)
+pnpm dev
 ```
 
-Open `http://localhost:5173`. The grey dot on the right edge is the navigation — hover to expand.
+Open the `Local:` URL it prints — usually `http://localhost:5173`. The grey dot on the right edge is the navigation — hover to expand.
 
 ## What's inside
 
@@ -46,23 +46,20 @@ This template lives inside `Project-Base/_template/`. Don't edit it directly —
 
 From the `Project-Base/` directory:
 
-```powershell
-.\new-project.ps1 my-project-name
+```bash
+./new-project.sh my-project-name      # macOS / Linux
+.\new-project.ps1 my-project-name     # Windows
 ```
 
-This copies `_template/` into a sibling folder (`../my-project-name/`), renames the package, initializes git, and opens VS Code. The new project is fully independent — edit freely without affecting the template.
+This copies `_template/` into a sibling folder (`../my-project-name/`), renames the package, runs `pnpm install`, and initializes git. The new project is fully independent — edit freely without affecting the template.
 
 **Flags:**
-- `-Clean` — skip copying `node_modules` (runs `npm install` instead)
-- `-NoGit` — skip git init
-- `-NoOpen` — skip opening VS Code
-- `-Path <dir>` — override target parent directory
-
-If `node_modules` doesn't exist yet (fresh clone of Project-Base), run `npm install` inside `_template/` first.
+- `--path <dir>` (`-Path` on Windows) — override the target parent directory
+- `--no-git` (`-NoGit` on Windows) — skip git init
 
 Once your project is spawned:
 
-1. **Run `npm run dev`**
+1. **Run `pnpm dev`**
 2. **Start building in `src/pages/Home.tsx`** — this is your canvas. The system pages stay in the nav for reference.
 4. **Use the design system** — don't invent new values:
    - Colors: `bg-surface`, `text-label`, `border-stroke-faint`, `bg-blue-500`, etc. See `/colors`
@@ -71,7 +68,7 @@ Once your project is spawned:
    - Motion: `import { SPRING, EASE, DURATION } from "@/lib/motion"`. See `/motion` for presets.
    - Shadows: `shadow="sm"` on `<Card>` or `<Squircle>`. See Demos for examples.
 5. **Add pages** in `src/pages/` and register routes in `src/App.tsx`
-6. **Add shadcn components** with `npx shadcn@latest add <name>`, then restyle (see CLAUDE.md for the checklist)
+6. **Add shadcn components** with `pnpm dlx shadcn@latest add <name>`, then restyle (see CLAUDE.md for the checklist)
 
 ## Design system architecture
 
@@ -112,8 +109,8 @@ src/
 ## Commands
 
 ```bash
-npm run dev      # Vite dev server
-npm run build    # TypeScript check + production build
-npm run lint     # ESLint
-npm run preview  # Serve production build locally
+pnpm dev      # Vite dev server
+pnpm build    # TypeScript check + production build
+pnpm lint     # ESLint
+pnpm preview  # Serve production build locally
 ```
