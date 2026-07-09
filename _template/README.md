@@ -111,6 +111,6 @@ src/
 ```bash
 pnpm dev      # Vite dev server
 pnpm build    # TypeScript check + production build
-pnpm lint     # ESLint
+pnpm lint     # oxlint
 pnpm preview  # Serve production build locally
 ```

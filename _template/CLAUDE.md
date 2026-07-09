@@ -391,24 +391,34 @@ doc before generating code that uses them — don't guess the surface.
 
 ```
 pnpm dev              # start vite dev server
-pnpm build            # tsc -b (TS 7 native) && vite build
+pnpm build            # tsc -b && vite build
 pnpm typecheck        # tsc -b --noEmit — TypeScript 7 native, the source of truth
-pnpm lint             # eslint .
+pnpm lint             # oxlint
 pnpm check:vendored   # verify the foundational-file inventory (Tier 4 gate)
 pnpm preview          # serve the production build
 ```
 
-**TypeScript 7 (the native Go compiler) is the type-check and build compiler.** It ships as stable
-`typescript@7`, installed under the `typescript-native` alias and invoked by explicit path
-(`node ./node_modules/typescript-native/bin/tsc`) from the `typecheck` and `build` scripts — so those
-gates are the source of truth for whether the code type-checks. It's a pure type-checker here (Vite
-still does all transpiling); the config is TS 7-clean (`bundler` resolution, `esnext`, `strict`,
-`noEmit`, project refs).
+**TypeScript 7 (the native Go compiler) is the one and only TypeScript.** It's `typescript@7`
+(stable), so plain `tsc` — used by `typecheck` and `build` — is the native compiler and the source of
+truth for whether the code type-checks. It's a pure type-checker here (Vite still does all
+transpiling); the config is TS 7-clean (`bundler` resolution, `esnext`, `strict`, `noEmit`, project
+refs). No TS 6 remains — the editor language service runs on TS 7 too.
 
-**Why a second TypeScript is still installed.** `typescript-eslint` (and the editor language service)
-consume TypeScript's *JS programmatic API*, which the native port doesn't fully expose yet — running
-ESLint against TS 7 crashes (`typescript-estree` reads internals the Go build omits). So the pinned
-`typescript@~6.0.2` stays as the plain `typescript` dep purely to feed ESLint and the editor. Collapse
-everything onto a single `typescript@7` — drop the `~6.0.2` pin and the `typescript-native` alias — the
-moment `typescript-eslint` ships a release that accepts TS 7 (its `typescript` peer is still `<6.1.0`
-as of this writing).
+**Linting is [oxlint](https://oxc.rs)** (VoidZero/Oxc — the same toolchain family as Vite's Rolldown +
+Oxc transform), configured in [.oxlintrc.json](.oxlintrc.json). It has its own Rust TypeScript parser,
+so it doesn't depend on the `typescript` package at all — which is *why* the project can run pure TS 7
+(ESLint's `typescript-eslint` can't consume TS 7 yet; oxlint sidesteps that entirely and is ~50× faster).
+Notes:
+- Rule names use oxlint's plugin prefixes: `typescript/*`, `react/*` (e.g. `react/exhaustive-deps`,
+  `react/rules-of-hooks`, `react/only-export-components`). The config mirrors the old ESLint intent —
+  correctness rules at `error`, the animation-pattern false-positives demoted to `warn`.
+- **`eslint-disable` comments still work.** oxlint honors `// eslint-disable-next-line <rule>`
+  directives and maps the old plugin names (`@typescript-eslint/no-explicit-any` →
+  `typescript/no-explicit-any`, `react-hooks/exhaustive-deps` → `react/exhaustive-deps`), so existing
+  inline suppressions are kept as-is. New suppressions may use either the `eslint-disable-*` or
+  `oxlint-disable-*` form.
+- A few react-hooks@7-only rules (`set-state-in-effect`, `static-components`, `refs`) have no oxlint
+  equivalent yet; they simply don't run. They were `warn`-only here anyway.
+- **Type-aware linting is available but not on** — `oxlint --type-aware` (via `tsgolint`, which runs on
+  typescript-go / TS 7) adds rules like `no-floating-promises`. Enable it deliberately if a sketch wants
+  deeper semantic checks; the default `pnpm lint` stays syntax-only + fast.
