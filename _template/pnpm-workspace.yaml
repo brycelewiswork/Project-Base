@@ -8,13 +8,14 @@ allowBuilds:
   esbuild: true
   msw: true
 
-# TS 7 native-preview (the Go port) ships as nightly `*-dev.*` builds that are
-# always fresher than the minimumReleaseAge cooldown. Exclude the whole family
-# by glob so it installs without re-pinning every time the nightly bumps. This
-# is a TRIAL of the `typecheck:fast` script — drop this line (and the dep) if we
-# abandon the native port, or replace with stable `typescript@7` once it lands.
+# TypeScript is our type-check/build compiler and we want new releases without
+# waiting out the global minimumReleaseAge cooldown. Exclude the `typescript`
+# package and TS 7's platform-native binaries (`@typescript/typescript-*`) by
+# glob so `pnpm install` never stalls on a fresh TS release — version-agnostic,
+# so patch bumps keep working without re-listing every triple.
 minimumReleaseAgeExclude:
-  - '@typescript/native-preview*'
+  - typescript
+  - '@typescript/typescript-*'
 
 # Build a flat, npm-style node_modules (no .pnpm symlink layout). This template's
 # code assumes npm-style resolution and imports a few transitive deps directly

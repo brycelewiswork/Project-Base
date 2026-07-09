@@ -391,20 +391,24 @@ doc before generating code that uses them — don't guess the surface.
 
 ```
 pnpm dev              # start vite dev server
-pnpm build            # tsc -b && vite build
-pnpm typecheck        # tsc -b --noEmit (TypeScript 6.0 — source of truth)
-pnpm typecheck:fast   # tsgo -b --noEmit (TS 7 native Go port — ~3x faster here, trial)
+pnpm build            # tsc -b (TS 7 native) && vite build
+pnpm typecheck        # tsc -b --noEmit — TypeScript 7 native, the source of truth
 pnpm lint             # eslint .
 pnpm check:vendored   # verify the foundational-file inventory (Tier 4 gate)
 pnpm preview          # serve the production build
 ```
 
-**`typecheck:fast` is a trial of the TypeScript 7 native compiler** (`@typescript/native-preview`,
-the Go port — `tsc` rewritten for ~10x speed on large codebases; ~3x on this small one). It's a
-pure type-checker here (Vite still does all transpiling), and the config is already TS 7-clean
-(`bundler` resolution, `esnext`, `strict`, `noEmit`, project refs), so it's a drop-in. The pinned
-`typescript@~6.0.2` stays the source of truth that ESLint and the editor consume until TS 7 ships
-stable (its programmatic API isn't final until 7.1, so `typescript-eslint` can't consume it yet).
-Plan: once stable `typescript@7` lands, make it the default `typecheck` and drop the native-preview
-dep + the `minimumReleaseAgeExclude` glob in `pnpm-workspace.yaml`. If results ever diverge, trust
-`pnpm typecheck` (6.0), not the nightly.
+**TypeScript 7 (the native Go compiler) is the type-check and build compiler.** It ships as stable
+`typescript@7`, installed under the `typescript-native` alias and invoked by explicit path
+(`node ./node_modules/typescript-native/bin/tsc`) from the `typecheck` and `build` scripts — so those
+gates are the source of truth for whether the code type-checks. It's a pure type-checker here (Vite
+still does all transpiling); the config is TS 7-clean (`bundler` resolution, `esnext`, `strict`,
+`noEmit`, project refs).
+
+**Why a second TypeScript is still installed.** `typescript-eslint` (and the editor language service)
+consume TypeScript's *JS programmatic API*, which the native port doesn't fully expose yet — running
+ESLint against TS 7 crashes (`typescript-estree` reads internals the Go build omits). So the pinned
+`typescript@~6.0.2` stays as the plain `typescript` dep purely to feed ESLint and the editor. Collapse
+everything onto a single `typescript@7` — drop the `~6.0.2` pin and the `typescript-native` alias — the
+moment `typescript-eslint` ships a release that accepts TS 7 (its `typescript` peer is still `<6.1.0`
+as of this writing).
