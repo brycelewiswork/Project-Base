@@ -9,6 +9,8 @@ import {
   TOP_LEVEL_ROUTES,
   COMPONENT_ROUTES,
   COMPONENTS_BASE_PATH,
+  SHOW_SKETCH_NAV,
+  isSystemRoute,
   type RouteIcon,
 } from "@/routes"
 import {
@@ -235,9 +237,14 @@ function RouteFallback() {
 }
 
 export default function App() {
+  const { pathname } = useLocation()
+  // The built-in nav is template chrome, not part of a sketch. It always shows on
+  // the design-system reference routes so they stay browsable, but on the sketch
+  // surface (Home / sketch-owned routes) it's hidden unless this sketch opts in.
+  const navVisible = SHOW_SKETCH_NAV || isSystemRoute(pathname)
   return (
     <div className="min-h-svh bg-surface text-label">
-      <SideNav />
+      {navVisible && <SideNav />}
 
       <main className="relative z-base">
         <Suspense fallback={<RouteFallback />}>

@@ -98,6 +98,15 @@ $indexPath = Join-Path $target 'index.html'
 $html = (Get-Content $indexPath -Raw) -replace '<title>.*?</title>', "<title>$Name</title>"
 [System.IO.File]::WriteAllText($indexPath, $html, $utf8NoBom)
 
+# Launch the sketch clean: hide the template's built-in nav (the grey dot) on the
+# sketch surface so it isn't floating over a fresh prototype. The design-system
+# reference routes (/colors, /demos, …) still show it, and dialkit stays hidden
+# until the sketch registers a panel — so both chrome surfaces are opt-in. Flip
+# SHOW_SKETCH_NAV back to true in src/routes.tsx if this sketch wants the nav.
+$routesPath = Join-Path $target 'src\routes.tsx'
+$routes = (Get-Content $routesPath -Raw) -replace 'export const SHOW_SKETCH_NAV = true', 'export const SHOW_SKETCH_NAV = false'
+[System.IO.File]::WriteAllText($routesPath, $routes, $utf8NoBom)
+
 # Install with pnpm — hard-links from the shared global store, so this is fast
 # once the store is warm and adds almost no disk per project.
 Write-Host "  pnpm install..."

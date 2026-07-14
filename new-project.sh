@@ -95,6 +95,14 @@ node -e '
 # --- rename in index.html <title> ------------------------------------------
 perl -0777 -pi -e "s|<title>.*?</title>|<title>$NAME</title>|s" "$TARGET/index.html"
 
+# --- launch clean: hide the built-in nav on the sketch surface -------------
+# The template's grey-dot nav shouldn't float over a fresh prototype. Flip
+# SHOW_SKETCH_NAV off; the design-system reference routes (/colors, /demos, …)
+# still show it, and dialkit stays hidden until the sketch registers a panel, so
+# both chrome surfaces are opt-in. Set it back to true in src/routes.tsx if this
+# sketch wants the nav.
+perl -0777 -pi -e "s|export const SHOW_SKETCH_NAV = true|export const SHOW_SKETCH_NAV = false|" "$TARGET/src/routes.tsx"
+
 # --- install with pnpm -----------------------------------------------------
 # Hard-links from the shared global store, so this is fast once the store is
 # warm and adds almost no disk per project.

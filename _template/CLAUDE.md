@@ -182,6 +182,28 @@ Reference pages documenting the design system. Visit during `pnpm dev`:
 - `/breakpoints` — responsive breakpoint scale, live viewport indicator, reflow demo, container widths
 - `/demos` — inventory of every installed library with working demos
 
+## Template chrome is opt-in for a sketch
+
+A fresh sketch should launch **clean** — its prototype at `/`, nothing floating
+over it. The two built-in overlays are gated so they only appear when a sketch
+actually wants them:
+
+- **The nav** (the grey dot on the right edge, in [App.tsx](src/App.tsx)) is
+  controlled by `SHOW_SKETCH_NAV` in [routes.tsx](src/routes.tsx). The template
+  ships it `true` (project-base's own landing keeps the nav for browsing the
+  design system); `new-project.ps1` / `new-project.sh` flip it to `false` in
+  every spawn, so a new sketch's `/` has no nav dot. The design-system reference
+  routes (`system: true` in `ROUTES` — `/colors`, `/demos`, the component
+  gallery, …) **always** show the nav via `isSystemRoute()`, so they stay
+  browsable regardless. **To give this sketch the nav** (e.g. a multi-view
+  sketch that navigates between its own pages), set `SHOW_SKETCH_NAV = true`; a
+  route your sketch owns is unmarked (no `system` flag), so it counts as the
+  sketch surface.
+- **Dialkit** ([DialRoot](src/components/dialkit/components/DialRoot.tsx), mounted
+  in `main.tsx`) renders `null` until a sketch registers a panel via
+  `useDialKit(...)`. It's already opt-in — nothing to toggle. Call `useDialKit`
+  and the panel appears; don't, and there's no overlay.
+
 ## Verifying changes — classify before you edit
 
 Before editing, size the change by **blast radius** (not line count) and run only the
