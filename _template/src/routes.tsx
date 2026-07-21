@@ -15,6 +15,9 @@ import {
   IconBoxMultiple,
   IconDroplet,
   IconAdjustments,
+  IconGridDots,
+  IconRulerMeasure,
+  IconStack2,
 } from "@tabler/icons-react"
 import { lazy } from "react"
 import { Home } from "@/pages/Home"
@@ -35,6 +38,9 @@ const Typography = lazyPage(() => import("@/pages/Typography"), "Typography")
 const Motion = lazyPage(() => import("@/pages/Motion"), "Motion")
 const Spacing = lazyPage(() => import("@/pages/Spacing"), "Spacing")
 const Breakpoints = lazyPage(() => import("@/pages/Breakpoints"), "Breakpoints")
+const Foundations = lazyPage(() => import("@/pages/Foundations"), "Foundations")
+const Grid = lazyPage(() => import("@/pages/Grid"), "Grid")
+const Clamp = lazyPage(() => import("@/pages/Clamp"), "Clamp")
 const Icons = lazyPage(() => import("@/pages/Icons"), "Icons")
 const SliderPage = lazyPage(() => import("@/pages/components/SliderPage"), "SliderPage")
 const ButtonPage = lazyPage(() => import("@/pages/components/ButtonPage"), "ButtonPage")
@@ -69,10 +75,13 @@ export const ROUTES: RouteEntry[] = [
   { path: "/demos",       label: "Demos",   icon: IconSparkles,        system: true, Component: Demos },
   { path: "/dialkit",     label: "Dialkit", icon: IconAdjustments,     system: true, Component: DialkitGallery },
   { path: "/colors",      label: "Color",   icon: IconPalette,         system: true, Component: Colors },
+  { path: "/foundations", label: "Fluid",   icon: IconStack2,          system: true, Component: Foundations },
   { path: "/typography",  label: "Type",    icon: IconTypography,      system: true, Component: Typography },
   { path: "/motion",      label: "Motion",  icon: IconBounceRight,     system: true, Component: Motion },
-  { path: "/spacing",     label: "Spacing", icon: IconSpacingVertical, system: true, Component: Spacing },
+  { path: "/spacing",     label: "Space",   icon: IconSpacingVertical, system: true, Component: Spacing },
   { path: "/breakpoints", label: "Layout",  icon: IconLayoutGrid,      system: true, Component: Breakpoints },
+  { path: "/grid",        label: "Grid",    icon: IconGridDots,        system: true, Component: Grid },
+  { path: "/clamp",       label: "Clamp",   icon: IconRulerMeasure,    system: true, Component: Clamp },
   { path: "/icons",       label: "Icons",   icon: IconIcons,           system: true, Component: Icons },
 
   { path: "/components/badge",     label: "Badge",     icon: IconTag,                     group: "components", system: true, Component: BadgePage },

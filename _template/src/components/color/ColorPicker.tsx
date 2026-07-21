@@ -137,7 +137,7 @@ export function ColorPicker({ value, onChange, onClose }: Props) {
 
   return (
     <div
-      className="flex flex-col gap-2.5 w-[256px] p-3 pt-1.5 select-none"
+      className="flex flex-col gap-2.5 w-[256px] p-inset-xs pt-1.5 select-none"
       onKeyDown={(e) => { if (e.key === "Escape") onClose?.() }}
     >
       {/* Icon bar — close only */}
@@ -223,7 +223,7 @@ export function ColorPicker({ value, onChange, onClose }: Props) {
       {/* Mode dropdown + unified value pill (components + alpha, one outline) */}
       <div className="flex items-center gap-1.5">
         <Select.Root value={mode} onValueChange={(m) => setMode(m as PickerMode)} modal={false}>
-          <Select.Trigger className="h-8 shrink-0 inline-flex items-center gap-1 rounded-lg bg-fill-tertiary text-xs font-medium pl-2.5 pr-1.5 cursor-pointer inset-ring-1 inset-ring-stroke-faint focus:outline-none text-label">
+          <Select.Trigger className="h-8 shrink-0 inline-flex items-center gap-inline-3xs rounded-lg bg-fill-tertiary text-xs font-medium pl-2.5 pr-1.5 cursor-pointer inset-ring-1 inset-ring-stroke-faint focus:outline-none text-label">
             <Select.Value>{(m) => String(m).toUpperCase()}</Select.Value>
             <Select.Icon>
               <IconChevronDown size={12} stroke={2} className="text-label-secondary" />
@@ -238,7 +238,7 @@ export function ColorPicker({ value, onChange, onClose }: Props) {
                     cornerRadius={SQUIRCLE_RADIUS.md}
                     shadow="md"
                     {...props}
-                    className="rounded-md bg-surface-secondary inset-ring-1 inset-ring-stroke-faint py-1 min-w-[72px]"
+                    className="rounded-md bg-surface-secondary inset-ring-1 inset-ring-stroke-faint py-inset-3xs min-w-[72px]"
                   />
                 )}
               >
@@ -246,7 +246,7 @@ export function ColorPicker({ value, onChange, onClose }: Props) {
                   <Select.Item
                     key={m}
                     value={m}
-                    className="flex items-center justify-between gap-2 px-2.5 py-1 text-xs text-label cursor-pointer outline-none data-highlighted:bg-fill-quaternary"
+                    className="flex items-center justify-between gap-inline-2xs px-2.5 py-inset-3xs text-xs text-label cursor-pointer outline-none data-highlighted:bg-fill-quaternary"
                   >
                     <Select.ItemText>{m.toUpperCase()}</Select.ItemText>
                     <Select.ItemIndicator>
@@ -548,7 +548,7 @@ function NumericText({
         if (e.key === "Enter") { commit((e.target as HTMLInputElement).value); onClose() }
         else if (e.key === "Escape") { onClose() }
       }}
-      className={`h-full bg-transparent text-xs px-2 tabular-nums focus:outline-none focus-within:bg-fill-tertiary selection:bg-label/20 ${flex ? "flex-1 min-w-0" : ""}`}
+      className={`h-full bg-transparent text-xs px-inset-2xs tabular-nums focus:outline-none focus-within:bg-fill-tertiary selection:bg-label/20 ${flex ? "flex-1 min-w-0" : ""}`}
       spellCheck={false}
     />
   )

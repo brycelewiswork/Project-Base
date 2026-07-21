@@ -7,12 +7,12 @@ import { DialRoot } from "@/components/dialkit"
 import { Agentation } from "agentation"
 import { PerfHud } from "@/components/ui/perf-hud"
 import App from "./App"
-import { initTypeSystem } from "@/lib/typography"
+import { initFluidSystem } from "@/lib/fluid"
 import { initColorSystem } from "@/lib/colors"
 import "./index.css"
 import "@/components/dialkit/theme.css"
 
-initTypeSystem()
+initFluidSystem()
 initColorSystem()
 
 createRoot(document.getElementById("root")!).render(

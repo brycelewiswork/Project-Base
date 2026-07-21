@@ -152,7 +152,7 @@ function AnimatedPreview({ preset }: { preset: Preset }) {
   }, [])
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-stack-2xs">
       <CurveGraph curve={preset.curve} dot={dot} />
       <div ref={trackRef} className="relative h-8">
         <div className="absolute inset-x-3.5 top-1/2 h-px bg-stroke-faint" />
@@ -169,7 +169,7 @@ function PresetCard({ preset }: { preset: Preset }) {
   const [key, setKey] = useState(0)
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-stack-2xs">
       <div className="flex items-center justify-between">
         <div>
           <div className="text-xs font-medium text-label">{preset.name}</div>
@@ -201,7 +201,7 @@ function DurationBar({ name, value }: { name: string; value: number }) {
   }, [key])
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-inline-xs">
       <div className="w-16 shrink-0">
         <div className="text-xs font-medium text-label">{name}</div>
         <div className="text-[10px] text-label-secondary font-mono">{value}s</div>
@@ -227,7 +227,7 @@ export function Motion() {
 
       {GROUPS.map((g) => (
         <Section key={g.title} title={g.title} description={g.desc}>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-x-inline-m gap-y-stack-l lg:grid-cols-3">
             {g.presets.map((p) => (
               <PresetCard key={p.name} preset={p} />
             ))}
@@ -236,7 +236,7 @@ export function Motion() {
       ))}
 
       <Section title="Durations" description="Timing tokens in seconds — shown with linear easing">
-        <div className="space-y-3">
+        <div className="space-y-stack-xs">
           {Object.entries(DURATION).map(([name, value]) => (
             <DurationBar key={name} name={name} value={value} />
           ))}

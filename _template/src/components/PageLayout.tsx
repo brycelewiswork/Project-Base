@@ -8,7 +8,7 @@ import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 
 export function PageShell({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("mx-auto max-w-4xl px-6 py-12 space-y-16", className)}>
+    <div className={cn("mx-auto max-w-4xl px-inset-m py-inset-xl space-y-stack-2xl", className)}>
       {children}
     </div>
   )
@@ -18,7 +18,7 @@ export function PageHeader({ title, description }: { title: string; description:
   return (
     <div>
       <h1 className="text-h3 text-label">{title}</h1>
-      <p className="text-body text-label-secondary mt-1">{description}</p>
+      <p className="text-body text-label-secondary mt-stack-3xs">{description}</p>
     </div>
   )
 }
@@ -39,7 +39,7 @@ export function Section({
   bare?: boolean
 }) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-stack-xs">
       <SectionHeader title={title} description={description} />
       {bare ? children : (
         <SectionCard noPadding={noPadding} className={className}>
@@ -76,7 +76,7 @@ export function SectionCard({
       shadowClassName="block w-full"
       className={cn(
         "w-full rounded-xl bg-surface-secondary inset-ring-1 inset-ring-stroke-faint",
-        !noPadding && "p-8 space-y-6",
+        !noPadding && "p-inset-l space-y-stack-m",
         className,
       )}
     >

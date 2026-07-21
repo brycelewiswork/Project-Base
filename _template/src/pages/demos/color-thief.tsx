@@ -19,7 +19,7 @@ function Swatch({ color, active, onClick }: { color: Color; active: boolean; onC
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center gap-2 rounded-md border px-2 py-1 text-xs transition-colors ${
+      className={`flex items-center gap-inline-2xs rounded-md border px-inset-2xs py-inset-3xs text-xs transition-colors ${
         active ? "border-label" : "border-stroke-faint/60 hover:border-label/40"
       }`}
     >
@@ -31,7 +31,7 @@ function Swatch({ color, active, onClick }: { color: Color; active: boolean; onC
 
 function HarmonyChip({ label, hex }: { label: string; hex: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-md border border-stroke-faint/60 p-2 text-xs">
+    <div className="flex items-center gap-inline-2xs rounded-md border border-stroke-faint/60 p-inset-2xs text-xs">
       <span className="size-6 rounded-sm" style={{ backgroundColor: hex }} />
       <div className="flex flex-col">
         <span className="text-[10px] text-label-secondary">{label}</span>
@@ -77,9 +77,9 @@ function ColorFromImageDemo() {
         <code> &lt;LinearBlur tint=&hellip;&gt;</code> for the Apple Music-style blend.
       </p>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <div className="text-xs font-medium text-label-secondary">Try a sample</div>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <div className="grid grid-cols-3 gap-gutter-2xs sm:grid-cols-6">
           {ALBUM_SAMPLES.map((sample) => {
             const active = src === sample.src
             return (
@@ -101,7 +101,7 @@ function ColorFromImageDemo() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-gutter-s sm:grid-cols-2">
         <div className="relative h-56 overflow-hidden rounded-xl bg-label/5">
           <img
             ref={imgRef}
@@ -115,12 +115,12 @@ function ColorFromImageDemo() {
           ) : null}
         </div>
         <div
-          className="relative flex flex-col gap-2 overflow-hidden rounded-xl p-4 transition-colors duration-300"
+          className="relative flex flex-col gap-stack-2xs overflow-hidden rounded-xl p-inset-s transition-colors duration-300"
           style={{ backgroundColor: activeHex, color: textOn(activeHex) }}
         >
           <div className="font-mono text-xs opacity-70">selected color</div>
           <div className="font-mono text-2xl">{activeHex.toUpperCase()}</div>
-          <div className="mt-auto flex flex-col gap-1 text-xs">
+          <div className="mt-auto flex flex-col gap-stack-3xs text-xs">
             <div>
               dominant: <span className="font-mono">{dominant?.hex() ?? "—"}</span>
             </div>
@@ -131,18 +131,18 @@ function ColorFromImageDemo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <div className="text-xs font-medium text-label-secondary">Palette ({palette?.length ?? 0})</div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-gutter-2xs">
           {(palette ?? []).map((c) => (
             <Swatch key={c.hex()} color={c} active={activeHex === c.hex()} onClick={() => setUserPickedHex(c.hex())} />
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <div className="text-xs font-medium text-label-secondary">Semantic swatches</div>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <div className="grid grid-cols-3 gap-gutter-2xs sm:grid-cols-6">
           {(["Vibrant", "Muted", "DarkVibrant", "DarkMuted", "LightVibrant", "LightMuted"] as const).map((role) => {
             const sw = swatches?.[role]
             return (
@@ -150,7 +150,7 @@ function ColorFromImageDemo() {
                 key={role}
                 type="button"
                 onClick={() => sw && setUserPickedHex(sw.color.hex())}
-                className="flex flex-col items-center gap-1 rounded-md border border-stroke-faint/60 p-2 text-[10px] transition-colors hover:bg-surface-tertiary/40 disabled:opacity-40"
+                className="flex flex-col items-center gap-stack-3xs rounded-md border border-stroke-faint/60 p-inset-2xs text-[10px] transition-colors hover:bg-surface-tertiary/40 disabled:opacity-40"
                 disabled={!sw}
               >
                 <div className="size-10 rounded-md" style={{ backgroundColor: sw?.color.hex() ?? "transparent" }} />
@@ -161,11 +161,11 @@ function ColorFromImageDemo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <div className="text-xs font-medium text-label-secondary">
           Harmonies from <span className="font-mono">{activeHex}</span>
         </div>
-        <div className="grid gap-2 sm:grid-cols-4">
+        <div className="grid gap-gutter-2xs sm:grid-cols-4">
           <HarmonyChip label="complementary" hex={harmoniesOfActive.complementary} />
           <HarmonyChip label="analogous" hex={harmoniesOfActive.analogous[0]} />
           <HarmonyChip label="analogous" hex={harmoniesOfActive.analogous[1]} />
@@ -173,7 +173,7 @@ function ColorFromImageDemo() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 text-sm">
+      <div className="flex items-center gap-inline-xs text-sm">
         <label className="cursor-pointer underline">
           Drop your own image
           <input type="file" accept="image/*" onChange={handleFile} className="hidden" />

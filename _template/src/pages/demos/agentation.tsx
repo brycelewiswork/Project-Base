@@ -12,7 +12,7 @@ function AgentationDemo() {
         agentation MCP server (registered in <code>.mcp.json</code>) exposes the
         queue to Claude.
       </p>
-      <ul className="text-body text-label-secondary space-y-1 pl-4 list-disc marker:text-label-tertiary">
+      <ul className="text-body text-label-secondary space-y-stack-3xs pl-inset-s list-disc marker:text-label-tertiary">
         <li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> — toggle the toolbar</li>
         <li><kbd>P</kbd> — pause animations (annotate a specific frame of a spring)</li>
         <li><kbd>L</kbd> — layout mode</li>

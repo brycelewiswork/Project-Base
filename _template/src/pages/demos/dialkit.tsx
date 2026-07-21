@@ -52,7 +52,7 @@ function DialkitDemo() {
         resets only what has drifted from its default. Tune here, then bake settled values into{" "}
         <code>src/lib/motion.ts</code>. See <code>DESIGN.md → Designing control panels</code> for the control catalog.
       </p>
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-inline-m">
         <motion.div
           style={{
             width: v.box.size,

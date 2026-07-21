@@ -9,6 +9,8 @@ import gsap from "./gsap"
 import router from "./router"
 import zustand from "./zustand"
 import sonner from "./sonner"
+import select from "./select"
+import tabs from "./tabs"
 import recharts from "./recharts"
 import visx from "./visx"
 import skeleton from "./skeleton"
@@ -39,6 +41,8 @@ export const DEMOS: DemoEntry[] = [
   router,
   zustand,
   sonner,
+  select,
+  tabs,
   recharts,
   visx,
   skeleton,

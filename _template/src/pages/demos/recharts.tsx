@@ -44,8 +44,8 @@ function RechartsDemo() {
         Declarative charts via shadcn/ui's ChartContainer. SVG output, CSS variable theming, dark mode for free.
       </p>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-gutter-m">
+        <div className="space-y-stack-2xs">
           <div>
             <h3 className="text-sm font-medium text-label">Area chart</h3>
             <p className="text-xs text-label-secondary">Gradient fill with tooltip</p>
@@ -67,7 +67,7 @@ function RechartsDemo() {
           </ChartContainer>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-stack-2xs">
           <div>
             <h3 className="text-sm font-medium text-label">Grouped bars</h3>
             <p className="text-xs text-label-secondary">Two series, auto-legend via config</p>
@@ -84,7 +84,7 @@ function RechartsDemo() {
           </ChartContainer>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-stack-2xs">
           <div>
             <h3 className="text-sm font-medium text-label">Radial gauge</h3>
             <p className="text-xs text-label-secondary">Score out of 100</p>
@@ -108,12 +108,12 @@ function RechartsDemo() {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-stack-2xs">
           <div>
             <h3 className="text-sm font-medium text-label">Sparkline</h3>
             <p className="text-xs text-label-secondary">Compact inline chart, no axes</p>
           </div>
-          <div className="flex items-end gap-3">
+          <div className="flex items-end gap-inline-xs">
             <span className="text-3xl font-semibold text-label tabular-nums">247</span>
             <ChartContainer config={sparkConfig} className="h-12 flex-1">
               <AreaChart data={sparkData} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>

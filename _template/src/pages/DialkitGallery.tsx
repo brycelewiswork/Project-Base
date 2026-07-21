@@ -82,9 +82,9 @@ export function DialkitGallery() {
   )
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12">
+    <div className="mx-auto max-w-2xl px-inset-m py-inset-xl">
       <h1 className="text-title-2 font-semibold text-label">Dialkit — every control</h1>
-      <p className="mt-2 text-body text-label-secondary">
+      <p className="mt-stack-2xs text-body text-label-secondary">
         The panel floats <strong className="text-label">top-right</strong>. It's wired with every control type
         (both the tuple/boolean shorthands and the object forms), a couple of help <code>?</code> dots, folder
         sections, and translucent fills that should render the split chip. Scan it for visual bugs and consistency;
@@ -92,7 +92,7 @@ export function DialkitGallery() {
       </p>
 
       {/* Live previews driven by the panel */}
-      <div className="mt-8 grid grid-cols-2 gap-4">
+      <div className="mt-stack-l grid grid-cols-2 gap-gutter-s">
         <Preview label="fill (gradient)">
           <div className="h-24 w-full" style={{ borderRadius: SQUIRCLE_RADIUS.lg, background: gradientToCss(v.fill) }} />
         </Preview>
@@ -112,9 +112,9 @@ export function DialkitGallery() {
       </div>
 
       {/* Resolved values — should never show a raw config object */}
-      <div className="mt-8">
-        <div className="mb-2 text-caption font-medium uppercase tracking-wide text-label-tertiary">Resolved values</div>
-        <pre className="overflow-auto rounded-lg bg-surface-secondary p-4 text-caption leading-relaxed text-label-secondary">
+      <div className="mt-stack-l">
+        <div className="mb-stack-2xs text-caption font-medium uppercase tracking-wide text-label-tertiary">Resolved values</div>
+        <pre className="overflow-auto rounded-lg bg-surface-secondary p-inset-s text-caption leading-relaxed text-label-secondary">
           {JSON.stringify(v, null, 2)}
         </pre>
       </div>

@@ -12,7 +12,7 @@ function PerfHudDemo() {
         second. A single 60ms frame reads as a visible hitch even when average FPS
         looks fine, so <code>worst</code> is the real jank signal, not FPS.
       </p>
-      <ul className="text-body text-label-secondary space-y-1 pl-4 list-disc marker:text-label-tertiary">
+      <ul className="text-body text-label-secondary space-y-stack-3xs pl-inset-s list-disc marker:text-label-tertiary">
         <li><code>fps</code> — smoothed steady-state frame rate</li>
         <li><code>worst</code> — longest frame gap in the last ~1s (the jank detector)</li>
         <li><code>blocks</code> — main-thread long tasks (&gt;50ms) in the last ~1s</li>

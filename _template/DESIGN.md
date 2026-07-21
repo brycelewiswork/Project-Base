@@ -74,7 +74,15 @@ Rules that live above the token layer.
   `font-bold` (700+) is rare and reserved for display moments.
 - **Mono is mandatory for:** numbers in tables, code snippets, CSS values
   (`var(--surface)`), tokens, dimensions (`24px`, `1.5rem`), keyboard hints.
-- The live scale lives at `/typography`. Don't restate it here.
+- **The scale is fluid.** Type and space use Utopia-style `clamp()` — sizes
+  interpolate between a small-screen and large-screen setting rather than
+  snapping at breakpoints, so hierarchy and rhythm stay proportional at any
+  width. Reach for the semantic role tokens (`text-body`/`text-heading`,
+  `p-inset-*`, `gap-stack-*`) over raw numeric spacing; they alias a single
+  tunable primitive scale, so retuning one place reflows the whole sketch.
+- The live scale lives at `/typography` (type) and `/spacing` (space), with
+  `/grid` and `/clamp` for layout. Tune per-sketch there; bake with Copy CSS.
+  Don't restate the numbers here.
 
 ## Color rationale
 

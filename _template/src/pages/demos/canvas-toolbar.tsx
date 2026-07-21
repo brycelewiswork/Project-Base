@@ -15,7 +15,7 @@ function DemoCard({ bright }: { bright: boolean }) {
         transition: "filter 0.25s ease",
       }}
     >
-      <div className="text-center px-8 select-none">
+      <div className="text-center px-inset-l select-none">
         <div className="text-3xl font-semibold tracking-tight">Canvas Stage</div>
         <div className="mt-1.5 text-sm text-white/85">⌘ / Ctrl + scroll to zoom · drag to pan</div>
       </div>

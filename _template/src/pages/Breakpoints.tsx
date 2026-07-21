@@ -83,9 +83,9 @@ function TextReflowSection() {
         </Link>
         .
       </div>
-      <div className="grid gap-3">
+      <div className="grid gap-gutter-xs">
         {reflows.map((r) => (
-          <div key={r.label} className="flex items-baseline gap-4">
+          <div key={r.label} className="flex items-baseline gap-inline-s">
             <div className="w-32 shrink-0">
               <div className="text-body font-medium text-label">{r.label}</div>
               <div className="font-mono text-body text-label-tertiary tabular-nums">
@@ -93,7 +93,7 @@ function TextReflowSection() {
               </div>
             </div>
             <div
-              className="rounded-md bg-fill-secondary p-3 text-body text-label-secondary"
+              className="rounded-md bg-fill-secondary p-inset-xs text-body text-label-secondary"
               style={{ width: r.width - 32 }}
             >
               {REFLOW_SAMPLE}
@@ -110,7 +110,7 @@ function TextReflowSection() {
 
 function ActiveBadge() {
   return (
-    <span className="ml-2 inline-block rounded-full bg-green-500 px-1.5 py-0.5 text-[9px] font-bold text-white-100 leading-none">
+    <span className="ml-inline-2xs inline-block rounded-full bg-green-500 px-1.5 py-0.5 text-[9px] font-bold text-white-100 leading-none">
       ACTIVE
     </span>
   )
@@ -129,13 +129,13 @@ export function Breakpoints() {
 
       {/* ── Live Viewport ── */}
       <Section title="Current Viewport" description="Resize your browser to see the active breakpoint change">
-          <div className="flex items-baseline gap-4">
+          <div className="flex items-baseline gap-inline-s">
             <span className="text-h1 text-label tabular-nums">{vw}px</span>
             <span className="text-h5 text-blue-500 uppercase">{activeName}</span>
           </div>
 
           {/* Visual bar showing position across breakpoints */}
-          <div className="mt-4 relative h-8 rounded-lg bg-fill-secondary overflow-hidden">
+          <div className="mt-stack-s relative h-8 rounded-lg bg-fill-secondary overflow-hidden">
             {BREAKPOINTS.slice(1).map((bp) => {
               const pct = Math.min((bp.px / 1920) * 100, 100)
               return (
@@ -162,10 +162,10 @@ export function Breakpoints() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-surface-tertiary text-left text-xs text-label-secondary">
-                <th className="px-4 py-2.5 font-medium w-20">Prefix</th>
-                <th className="px-4 py-2.5 font-medium w-24">Min-width</th>
-                <th className="px-4 py-2.5 font-medium w-20">rem</th>
-                <th className="px-4 py-2.5 font-medium">Description</th>
+                <th className="px-inset-s py-2.5 font-medium w-20">Prefix</th>
+                <th className="px-inset-s py-2.5 font-medium w-24">Min-width</th>
+                <th className="px-inset-s py-2.5 font-medium w-20">rem</th>
+                <th className="px-inset-s py-2.5 font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -177,19 +177,19 @@ export function Breakpoints() {
                     activeName === bp.name ? "bg-blue-500/8" : i % 2 === 0 ? "bg-surface-secondary" : "bg-surface"
                   )}
                 >
-                  <td className="px-4 py-2.5">
+                  <td className="px-inset-s py-2.5">
                     <span className="font-mono text-xs font-semibold text-label">
                       {bp.name === "base" ? "—" : `${bp.name}:`}
                     </span>
                     {activeName === bp.name && <ActiveBadge />}
                   </td>
-                  <td className="px-4 py-2.5 font-mono text-xs text-label-secondary tabular-nums">
+                  <td className="px-inset-s py-2.5 font-mono text-xs text-label-secondary tabular-nums">
                     {bp.px === 0 ? "0" : `${bp.px}px`}
                   </td>
-                  <td className="px-4 py-2.5 font-mono text-xs text-label-secondary tabular-nums">
+                  <td className="px-inset-s py-2.5 font-mono text-xs text-label-secondary tabular-nums">
                     {bp.rem}rem
                   </td>
-                  <td className="px-4 py-2.5 text-xs text-label-secondary">{bp.desc}</td>
+                  <td className="px-inset-s py-2.5 text-xs text-label-secondary">{bp.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -199,10 +199,10 @@ export function Breakpoints() {
       {/* ── Reflow Demo ── */}
       <Section title="Reflow Demo" description="This grid adapts at each breakpoint — resize the browser to see it reflow">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter-s">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="rounded-xl bg-surface-tertiary p-4 space-y-2">
-              <div className="flex items-center gap-3">
+            <div key={i} className="rounded-xl bg-surface-tertiary p-inset-s space-y-stack-2xs">
+              <div className="flex items-center gap-inline-xs">
                 <div className="size-9 rounded-lg bg-fill-secondary shrink-0" />
                 <div className="space-y-1.5 flex-1">
                   <div className="h-3.5 rounded bg-label/20" style={{ width: `${60 + (i * 7) % 30}%` }} />
@@ -215,7 +215,7 @@ export function Breakpoints() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-label-secondary">
+        <div className="flex items-center gap-inline-xs text-xs text-label-secondary">
           <span className="font-mono font-medium">Currently:</span>
           <span className="sm:hidden font-medium text-blue-500">1 column (base)</span>
           <span className="hidden sm:inline lg:hidden font-medium text-blue-500">2 columns (sm)</span>
@@ -225,11 +225,11 @@ export function Breakpoints() {
       </Section>
 
       {/* ── Container Widths ── */}
-      <Section title="Container Widths" description="Tailwind max-width utilities used for page and content containers" className="space-y-2">
+      <Section title="Container Widths" description="Tailwind max-width utilities used for page and content containers" className="space-y-stack-2xs">
           {CONTAINERS.map((c) => {
             const pct = (c.px / 1280) * 100
             return (
-              <div key={c.name} className="flex items-center gap-4">
+              <div key={c.name} className="flex items-center gap-inline-s">
                 <div className="w-24 shrink-0 text-right">
                   <div className="font-mono text-xs font-semibold text-label">{c.name}</div>
                   <div className="font-mono text-[10px] text-label-secondary">{c.px}px</div>
@@ -251,7 +251,7 @@ export function Breakpoints() {
       <TextReflowSection />
 
       {/* ── Usage Patterns ── */}
-      <Section title="Usage Patterns" description="Common responsive patterns using mobile-first prefixes" className="space-y-4">
+      <Section title="Usage Patterns" description="Common responsive patterns using mobile-first prefixes" className="space-y-stack-s">
           {[
             { pattern: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3", desc: "Card grid that reflows from 1 → 2 → 3 columns" },
             { pattern: "hidden md:block", desc: "Show element only on tablets and up" },
@@ -260,8 +260,8 @@ export function Breakpoints() {
             { pattern: "flex-col sm:flex-row", desc: "Stack on mobile, horizontal on wider screens" },
             { pattern: "max-w-4xl mx-auto px-6", desc: "Centered content container with side padding" },
           ].map((p) => (
-            <div key={p.pattern} className="flex items-start gap-4">
-              <code className="shrink-0 rounded bg-fill-secondary px-2 py-1 font-mono text-[11px] text-label">
+            <div key={p.pattern} className="flex items-start gap-inline-s">
+              <code className="shrink-0 rounded bg-fill-secondary px-inset-2xs py-inset-3xs font-mono text-[11px] text-label">
                 {p.pattern}
               </code>
               <span className="text-xs text-label-secondary pt-0.5">{p.desc}</span>

@@ -29,7 +29,7 @@ export function SliderPage() {
 
       {/* ── Preview ── */}
       <DocSection title="Preview" description="Default single-value slider at 40%">
-        <DocPreview className="flex-col gap-6 w-full">
+        <DocPreview className="flex-col gap-stack-m w-full">
           <div className="w-full max-w-sm">
             <Slider value={single} onValueChange={setSingle} />
           </div>
@@ -41,8 +41,8 @@ export function SliderPage() {
 
       {/* ── Anatomy ── */}
       <DocSection title="Anatomy" description="Three layers: track, indicator (active fill), and thumb">
-        <DocCard className="p-6 space-y-6">
-          <div className="space-y-3">
+        <DocCard className="p-inset-m space-y-stack-m">
+          <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Track</span>
               <span className="font-mono text-[11px] text-label-secondary">bg-fill-tertiary</span>
@@ -50,7 +50,7 @@ export function SliderPage() {
             <div className="h-1.5 rounded-full bg-fill-tertiary" />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Indicator (active fill)</span>
               <span className="font-mono text-[11px] text-label-secondary">bg-blue-500</span>
@@ -60,7 +60,7 @@ export function SliderPage() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Thumb</span>
               <span className="font-mono text-[11px] text-label-secondary">bg-blue-500, shadow-xs, ring-blue-500/30</span>
@@ -76,7 +76,7 @@ export function SliderPage() {
 
       {/* ── Examples ── */}
       <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample title="Single value" value={`${single[0]}`} code={`<Slider value={[${single[0]}]} />`}>
             <Slider min={0} max={100} value={single} onValueChange={setSingle} />
           </DocExample>

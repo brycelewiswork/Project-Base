@@ -12,7 +12,7 @@ function ZustandDemo() {
       <p className="text-body text-label-secondary">
         Tiny global store at <code className="font-mono">src/store/useCounterStore.ts</code>.
       </p>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-inline-xs">
         <span className="font-mono text-3xl tabular-nums">{count}</span>
         <Button onClick={inc}>Increment</Button>
         <Button variant="outline" onClick={reset}>Reset</Button>

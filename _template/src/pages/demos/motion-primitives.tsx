@@ -33,9 +33,9 @@ function MotionPrimitivesDemo() {
         — all 32 are installed and importable from <code>@/components/ui/</code>.
       </p>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">TextEffect — blur reveal</span>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-inline-xs">
           <TextEffect key={textKey} per="word" as="p" preset="blur" className="text-lg font-medium">
             Every detail is an opportunity for polish.
           </TextEffect>
@@ -45,18 +45,18 @@ function MotionPrimitivesDemo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">TextShimmer</span>
         <TextShimmer className="text-lg font-medium" duration={1.5}>
           Shimmering highlight sweep
         </TextShimmer>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">
           AnimatedNumber — tune duration / stagger / blur / travel in the dialkit panel
         </span>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-inline-xs">
           <AnimatedNumber
             value={num}
             format={(n) => n.toLocaleString()}
@@ -75,7 +75,7 @@ function MotionPrimitivesDemo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">InfiniteSlider</span>
         <InfiniteSlider gap={12} speed={20}>
           {["motion", "gsap", "zustand", "sonner", "colorthief", "squircle", "tailwind", "shadcn", "vite", "react"].map(
@@ -86,8 +86,8 @@ function MotionPrimitivesDemo() {
         </InfiniteSlider>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
+      <div className="grid gap-gutter-s sm:grid-cols-2">
+        <div className="flex flex-col gap-stack-2xs">
           <span className="text-xs font-medium text-label-secondary">Tilt</span>
           <Tilt rotationFactor={8} springOptions={SPRING.snappy}>
             <div className="flex h-28 items-center justify-center rounded-xl bg-label/5 text-sm text-label-secondary">
@@ -95,7 +95,7 @@ function MotionPrimitivesDemo() {
             </div>
           </Tilt>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-stack-2xs">
           <span className="text-xs font-medium text-label-secondary">GlowEffect</span>
           <div className="relative flex h-28 items-center justify-center rounded-xl bg-label/5 text-sm text-label-secondary">
             <GlowEffect colors={["#0894FF", "#C959DD", "#FF2E54", "#FF9004"]} mode="colorShift" />
@@ -104,7 +104,7 @@ function MotionPrimitivesDemo() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">InView — scroll to reveal</span>
         <InView
           variants={{
@@ -124,7 +124,7 @@ function MotionPrimitivesDemo() {
         <summary className="cursor-pointer text-label-secondary hover:text-label">
           All 32 installed components
         </summary>
-        <div className="mt-2 flex flex-wrap gap-1">
+        <div className="mt-stack-2xs flex flex-wrap gap-gutter-3xs">
           {[
             "accordion", "animated-background", "animated-group", "animated-number",
             "border-trail", "carousel", "cursor", "dialog", "disclosure", "dock",

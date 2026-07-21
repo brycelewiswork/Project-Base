@@ -53,7 +53,7 @@ export function CardPage() {
 
       {/* ── Examples ── */}
       <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample title="Default size" value='size="default"' code='<Card>…</Card>'>
             <Card>
               <CardHeader>
@@ -125,7 +125,7 @@ export function CardPage() {
               <CardContent>
                 <p className="text-body text-label-secondary">Footer has a top border and muted background.</p>
               </CardContent>
-              <CardFooter className="justify-end gap-2">
+              <CardFooter className="justify-end gap-inline-2xs">
                 <Button variant="ghost" size="sm">Cancel</Button>
                 <Button size="sm">Save</Button>
               </CardFooter>

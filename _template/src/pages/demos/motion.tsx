@@ -11,7 +11,7 @@ function MotionDemo() {
       <p className="text-body text-label-secondary">
         React animation primitives — springs, transforms, layout, gesture.
       </p>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-inline-s">
         <motion.div
           className="flex h-16 w-16 items-center justify-center bg-label text-surface"
           style={{ borderRadius: SQUIRCLE_RADIUS.xl }}

@@ -10,6 +10,63 @@
 
 @theme inline {
     --spacing: 0.25rem;
+    /* ── SEMANTIC space roles — alias the fluid primitives in :root. Each is a
+       bare var() so overriding the primitive at runtime updates the utility live.
+       Roles are a naming convention (Tailwind keys utilities by property, not
+       axis): p-inset-* for padding, space-y-stack-* / gap-y-* for vertical gaps,
+       space-x-inline-* / gap-x-* for horizontal gaps, gap-gutter-* for grid. ── */
+    --spacing-inset-5xs: var(--space-5xs);
+    --spacing-inset-4xs: var(--space-4xs);
+    --spacing-inset-3xs: var(--space-3xs);
+    --spacing-inset-2xs: var(--space-2xs);
+    --spacing-inset-xs: var(--space-xs);
+    --spacing-inset-s: var(--space-s);
+    --spacing-inset-m: var(--space-m);
+    --spacing-inset-l: var(--space-l);
+    --spacing-inset-xl: var(--space-xl);
+    --spacing-inset-2xl: var(--space-2xl);
+    --spacing-inset-3xl: var(--space-3xl);
+    --spacing-inset-4xl: var(--space-4xl);
+    --spacing-inset-5xl: var(--space-5xl);
+    --spacing-stack-5xs: var(--space-5xs);
+    --spacing-stack-4xs: var(--space-4xs);
+    --spacing-stack-3xs: var(--space-3xs);
+    --spacing-stack-2xs: var(--space-2xs);
+    --spacing-stack-xs: var(--space-xs);
+    --spacing-stack-s: var(--space-s);
+    --spacing-stack-m: var(--space-m);
+    --spacing-stack-l: var(--space-l);
+    --spacing-stack-xl: var(--space-xl);
+    --spacing-stack-2xl: var(--space-2xl);
+    --spacing-stack-3xl: var(--space-3xl);
+    --spacing-stack-4xl: var(--space-4xl);
+    --spacing-stack-5xl: var(--space-5xl);
+    --spacing-inline-5xs: var(--space-5xs);
+    --spacing-inline-4xs: var(--space-4xs);
+    --spacing-inline-3xs: var(--space-3xs);
+    --spacing-inline-2xs: var(--space-2xs);
+    --spacing-inline-xs: var(--space-xs);
+    --spacing-inline-s: var(--space-s);
+    --spacing-inline-m: var(--space-m);
+    --spacing-inline-l: var(--space-l);
+    --spacing-inline-xl: var(--space-xl);
+    --spacing-inline-2xl: var(--space-2xl);
+    --spacing-inline-3xl: var(--space-3xl);
+    --spacing-inline-4xl: var(--space-4xl);
+    --spacing-inline-5xl: var(--space-5xl);
+    --spacing-gutter-5xs: var(--space-5xs);
+    --spacing-gutter-4xs: var(--space-4xs);
+    --spacing-gutter-3xs: var(--space-3xs);
+    --spacing-gutter-2xs: var(--space-2xs);
+    --spacing-gutter-xs: var(--space-xs);
+    --spacing-gutter-s: var(--space-s);
+    --spacing-gutter-m: var(--space-m);
+    --spacing-gutter-l: var(--space-l);
+    --spacing-gutter-xl: var(--space-xl);
+    --spacing-gutter-2xl: var(--space-2xl);
+    --spacing-gutter-3xl: var(--space-3xl);
+    --spacing-gutter-4xl: var(--space-4xl);
+    --spacing-gutter-5xl: var(--space-5xl);
     --breakpoint-sm: 40rem;
     --breakpoint-md: 48rem;
     --breakpoint-lg: 64rem;
@@ -459,18 +516,41 @@
 
 
 :root {
-    /* ── Type scale (base=14px, ratio=1.2 Minor Third) ── */
-    --type-base: 14;
-    --type-ratio: 1.2;
-    --type-h1: 2.614rem;
-    --type-h2: 2.178rem;
-    --type-h3: 1.815rem;
-    --type-h4: 1.513rem;
-    --type-h5: 1.26rem;
-    --type-h6: 1.05rem;
-    --type-body: 0.875rem;
-    --type-sm: 0.813rem;
-    --type-xs: 0.75rem;
+    /* ── Fluid type + space PRIMITIVE tokens ──────────────────────────────
+       Utopia-style clamp() scale, source of truth = src/lib/fluid.ts. These
+       baked defaults (Comfortable: base 16→18px, ratio 1.2→1.25, viewport
+       360→1240) render with no JS; `applyFluid()` overrides them live when a
+       sketch tunes the scale on /typography, /spacing, /grid, or /clamp.
+       Primitives live in plain :root (NOT a Tailwind namespace) so they emit
+       no utilities — the semantic role aliases in @theme inline do that. ── */
+    --type-step--2: clamp(0.6944rem, 0.684rem + 0.0465vw, 0.72rem);
+    --type-step--1: clamp(0.8333rem, 0.806rem + 0.1213vw, 0.9rem);
+    --type-step-0: clamp(1rem, 0.9489rem + 0.2273vw, 1.125rem);
+    --type-step-1: clamp(1.2rem, 1.1156rem + 0.375vw, 1.4063rem);
+    --type-step-2: clamp(1.44rem, 1.31rem + 0.5778vw, 1.7578rem);
+    --type-step-3: clamp(1.728rem, 1.536rem + 0.8532vw, 2.1973rem);
+    --type-step-4: clamp(2.0736rem, 1.7983rem + 1.2235vw, 2.7466rem);
+    --type-step-5: clamp(2.4883rem, 2.1017rem + 1.7181vw, 3.4333rem);
+
+    --space-3xs: clamp(0.25rem, 0.2372rem + 0.0568vw, 0.2813rem);
+    --space-2xs: clamp(0.5rem, 0.4744rem + 0.1136vw, 0.5625rem);
+    --space-xs: clamp(0.75rem, 0.7116rem + 0.1705vw, 0.8438rem);
+    --space-s: clamp(1rem, 0.9489rem + 0.2273vw, 1.125rem);
+    --space-m: clamp(1.5rem, 1.4233rem + 0.3409vw, 1.6875rem);
+    --space-l: clamp(2rem, 1.8977rem + 0.4545vw, 2.25rem);
+    --space-xl: clamp(3rem, 2.8466rem + 0.6818vw, 3.375rem);
+    --space-2xl: clamp(4rem, 3.7955rem + 0.9091vw, 4.5rem);
+    --space-3xl: clamp(6rem, 5.6932rem + 1.3636vw, 6.75rem);
+    --space-3xs-2xs: clamp(0.25rem, 0.1222rem + 0.5682vw, 0.5625rem);
+    --space-2xs-xs: clamp(0.5rem, 0.3594rem + 0.625vw, 0.8438rem);
+    --space-xs-s: clamp(0.75rem, 0.5966rem + 0.6818vw, 1.125rem);
+    --space-s-m: clamp(1rem, 0.7188rem + 1.25vw, 1.6875rem);
+    --space-m-l: clamp(1.5rem, 1.1932rem + 1.3636vw, 2.25rem);
+    --space-l-xl: clamp(2rem, 1.4375rem + 2.5vw, 3.375rem);
+    --space-xl-2xl: clamp(3rem, 2.3864rem + 2.7273vw, 4.5rem);
+    --space-2xl-3xl: clamp(4rem, 2.875rem + 5vw, 6.75rem);
+
+    /* Type meta — consumed by the base layer; overridden live by fluid.ts */
     --type-weight-heading: 600;
     --type-weight-body: 400;
     --type-lh-heading: 1.2;
@@ -1075,7 +1155,7 @@
     }
   body {
     @apply bg-surface text-label;
-    font-size: var(--type-body);
+    font-size: var(--type-step-0);
     line-height: var(--type-lh-body);
     letter-spacing: var(--type-ls-body);
     font-weight: var(--type-weight-body);
@@ -1091,22 +1171,32 @@
     line-height: var(--type-lh-heading);
     letter-spacing: var(--type-ls-heading);
     }
-  small { font-size: var(--type-sm); }
+  small { font-size: var(--type-step--1); }
   p, li, dd, blockquote, figcaption, small, caption, label {
     text-wrap: pretty;
     }
 }
 
 @layer utilities {
-  .text-h1 { font-size: var(--type-h1); }
-  .text-h2 { font-size: var(--type-h2); }
-  .text-h3 { font-size: var(--type-h3); }
-  .text-h4 { font-size: var(--type-h4); }
-  .text-h5 { font-size: var(--type-h5); }
-  .text-h6 { font-size: var(--type-h6); }
-  .text-body { font-size: var(--type-body); }
-  .text-sm { font-size: var(--type-sm); }
-  .text-xs { font-size: var(--type-xs); }
+  /* SEMANTIC type roles — alias fluid step primitives. Hand-written (not via the
+     Tailwind --text-* namespace) on purpose: (1) `text-label` is already a COLOR
+     utility, so the small role is `text-eyebrow`, not `text-label`; (2) native
+     --text-* ships a coupled default line-height — these emit font-size only, so
+     the 176 text-sm/text-xs call sites keep their existing line-height. */
+  .text-display { font-size: var(--type-step-5); }
+  .text-h1      { font-size: var(--type-step-5); }
+  .text-heading { font-size: var(--type-step-4); }
+  .text-h2      { font-size: var(--type-step-4); }
+  .text-h3      { font-size: var(--type-step-3); }
+  .text-title   { font-size: var(--type-step-2); }
+  .text-h4      { font-size: var(--type-step-2); }
+  .text-h5      { font-size: var(--type-step-1); }
+  .text-body    { font-size: var(--type-step-0); }
+  .text-h6      { font-size: var(--type-step-0); }
+  .text-caption { font-size: var(--type-step--1); }
+  .text-sm      { font-size: var(--type-step--1); }
+  .text-eyebrow { font-size: var(--type-step--2); }
+  .text-xs      { font-size: var(--type-step--2); }
 }
 
 /* Dialkit patches:

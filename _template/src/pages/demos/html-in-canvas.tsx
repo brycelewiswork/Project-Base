@@ -139,9 +139,9 @@ function HtmlInCanvasDemo() {
       </p>
 
       {supported === false ? (
-        <div className="rounded-xl border border-stroke-faint bg-surface-secondary p-4 text-sm">
+        <div className="rounded-xl border border-stroke-faint bg-surface-secondary p-inset-s text-sm">
           <div className="font-medium text-label">API not available in this browser.</div>
-          <div className="mt-1 text-label-secondary">
+          <div className="mt-stack-3xs text-label-secondary">
             In origin trial as of Chrome 148–150 (May 2026) — for localhost you still need the
             flag. In any Chromium browser (Chrome / Edge / Brave 1.89+ / Canary), open{" "}
             <code className="font-mono">chrome://flags/#canvas-draw-element</code>, set it to{" "}
@@ -169,11 +169,11 @@ function HtmlInCanvasDemo() {
                   Typing still works while the canvas distorts the rendering.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col gap-3">
+              <CardContent className="flex flex-col gap-stack-xs">
                 <input
                   type="text"
                   placeholder="Your name"
-                  className="w-full rounded-md bg-fill-secondary px-3 py-2 text-sm text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"
+                  className="w-full rounded-md bg-fill-secondary px-inset-xs py-inset-2xs text-sm text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"
                 />
                 <Button size="sm" onClick={() => toast.success("Form is real DOM!")}>
                   Submit
@@ -184,7 +184,7 @@ function HtmlInCanvasDemo() {
         </canvas>
       </div>
 
-      <label className="flex items-center gap-3 text-sm">
+      <label className="flex items-center gap-inline-xs text-sm">
         <span className="w-20 text-label-secondary">amplitude</span>
         <Slider
           min={0}

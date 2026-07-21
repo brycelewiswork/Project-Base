@@ -64,14 +64,14 @@ export function AccordionPage() {
         title="Why it exists"
         description="Motion springs can't actually animate to `auto`. Accordion fixes that with predicted heights."
       >
-        <div className="space-y-3 text-body text-label-secondary">
+        <div className="space-y-stack-xs text-body text-label-secondary">
           <p>
             Most accordion components transition <code>height: 0</code> →{" "}
             <code>height: auto</code>. Frameworks like Motion fake this by reading the
             auto-resolved pixel height at the start of the transition and animating to that fixed
             number — but it means:
           </p>
-          <ul className="list-disc pl-5 space-y-1">
+          <ul className="list-disc pl-inset-s space-y-stack-3xs">
             <li>Springs can't truly overshoot — they're animating to a frozen target.</li>
             <li>If the body's content reflows during the animation (image loads, font swap), the
               transition snaps.</li>
@@ -90,13 +90,13 @@ export function AccordionPage() {
         title="Width-responsive"
         description="No bodyWidth prop is set — the component measures its container with ResizeObserver and re-runs Pretext on resize. Drag the browser to see it adapt."
       >
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-gutter-m lg:grid-cols-2">
           <div>
-            <div className="text-xs font-medium text-label-secondary mb-3">narrow column</div>
+            <div className="text-xs font-medium text-label-secondary mb-stack-xs">narrow column</div>
             <Accordion items={COMPACT_ITEMS} variant="flat" defaultExpanded="3" />
           </div>
           <div>
-            <div className="text-xs font-medium text-label-secondary mb-3">wider column</div>
+            <div className="text-xs font-medium text-label-secondary mb-stack-xs">wider column</div>
             <Accordion items={COMPACT_ITEMS} variant="flat" defaultExpanded="3" />
           </div>
         </div>

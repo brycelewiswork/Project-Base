@@ -12,7 +12,7 @@ function SonnerDemo() {
         shadow renders from each toast&apos;s clipped silhouette. Same pattern is available on
         Card &amp; Button via the <code>shadow</code> prop.
       </p>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-gutter-2xs">
         <Button size="sm" onClick={() => toast("Hello, sketcher")}>Toast</Button>
         <Button size="sm" variant="outline" onClick={() => toast.success("Saved")}>Success</Button>
         <Button size="sm" variant="outline" onClick={() => toast.error("Something broke")}>

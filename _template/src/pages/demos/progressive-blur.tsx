@@ -41,7 +41,7 @@ function ProgressiveBlurDemo() {
         <code>strength</code> + <code>steps</code> for a computed geometric ramp.
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-gutter-s sm:grid-cols-2">
         <BlurStage label='<LinearBlur side="top" />'>
           <LinearBlur side="top" strength={strength} falloffPercentage={falloff} />
         </BlurStage>
@@ -62,8 +62,8 @@ function ProgressiveBlurDemo() {
         </BlurStage>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="flex items-center gap-3 text-sm">
+      <div className="grid gap-gutter-xs sm:grid-cols-2">
+        <label className="flex items-center gap-inline-xs text-sm">
           <span className="w-20 text-label-secondary">strength</span>
           <Slider
             min={0}
@@ -75,7 +75,7 @@ function ProgressiveBlurDemo() {
           />
           <span className="w-12 text-right font-mono text-xs">{strength}px</span>
         </label>
-        <label className="flex items-center gap-3 text-sm">
+        <label className="flex items-center gap-inline-xs text-sm">
           <span className="w-20 text-label-secondary">falloff</span>
           <Slider
             min={10}
@@ -89,7 +89,7 @@ function ProgressiveBlurDemo() {
         </label>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-stack-2xs">
         <span className="text-xs font-medium text-label-secondary">
           Explicit multi-stop via <code>blurLevels=[1, 2, 4, 32]</code>
         </span>

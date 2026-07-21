@@ -152,8 +152,8 @@ const GROUPS: IconGroup[] = [
 export function Icons() {
   return (
     <div className="min-h-svh bg-surface text-label">
-      <PageShell className="space-y-0! flex flex-col gap-8">
-        <header className="flex items-start justify-between gap-6">
+      <PageShell className="space-y-0! flex flex-col gap-stack-l">
+        <header className="flex items-start justify-between gap-inline-m">
           <div className="max-w-xl">
             <PageHeader
               title="Icons"
@@ -164,7 +164,7 @@ export function Icons() {
             href="https://tabler.io/icons"
             target="_blank"
             rel="noreferrer"
-            className="shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-sm text-label-secondary hover:text-label hover:bg-fill-quaternary transition-colors"
+            className="shrink-0 inline-flex items-center gap-1.5 h-8 px-inset-xs rounded-md text-sm text-label-secondary hover:text-label hover:bg-fill-quaternary transition-colors"
           >
             Browse all <IconArrowUpRight size={14} stroke={2} />
           </a>
@@ -172,11 +172,11 @@ export function Icons() {
 
         {GROUPS.map((group) => (
           <Section key={group.title} title={group.title} bare>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-gutter-xs sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {group.icons.map(({ name, Icon }) => (
                 <div
                   key={name}
-                  className="flex items-center gap-3 rounded-xl bg-surface-secondary p-3 inset-ring-1 inset-ring-stroke-faint"
+                  className="flex items-center gap-inline-xs rounded-xl bg-surface-secondary p-inset-xs inset-ring-1 inset-ring-stroke-faint"
                 >
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-fill-quaternary text-label">
                     <Icon size={28} stroke={1.75} />

@@ -562,33 +562,33 @@ export function ShadersPage() {
   ]
 
   return (
-    <PageShell className="space-y-0! flex flex-col gap-12">
+    <PageShell className="space-y-0! flex flex-col gap-stack-xl">
       <PageHeader
         title="Shaders"
         description="Five tiers of WebGL/canvas effects — from drop-in catalog to custom GLSL to WebGPU. Reach for whichever fits the moment."
       />
 
       {/* Tier decision tree */}
-      <SectionCard className="space-y-4">
+      <SectionCard className="space-y-stack-s">
         <div className="text-xs font-medium text-label-secondary">When to reach for what</div>
-        <ol className="grid gap-2 text-sm text-label sm:grid-cols-2">
-          <li className="flex items-start gap-3">
+        <ol className="grid gap-gutter-2xs text-sm text-label sm:grid-cols-2">
+          <li className="flex items-start gap-inline-xs">
             <Badge variant="secondary" className="font-mono shrink-0">1</Badge>
             <span><span className="font-medium">Paper Shaders</span> — does the catalog already have it? Drop in, set props, done.</span>
           </li>
-          <li className="flex items-start gap-3">
+          <li className="flex items-start gap-inline-xs">
             <Badge variant="secondary" className="font-mono shrink-0">2</Badge>
             <span><span className="font-medium">Shadertoy paste</span> — copy a fragment shader from shadertoy.com and run it as-is.</span>
           </li>
-          <li className="flex items-start gap-3">
+          <li className="flex items-start gap-inline-xs">
             <Badge variant="secondary" className="font-mono shrink-0">3</Badge>
             <span><span className="font-medium">R3F + shaderMaterial</span> — write custom GLSL with uniforms and full 3D scene access.</span>
           </li>
-          <li className="flex items-start gap-3">
+          <li className="flex items-start gap-inline-xs">
             <Badge variant="secondary" className="font-mono shrink-0">4</Badge>
             <span><span className="font-medium">Postprocessing chain</span> — bloom, chromatic aberration, vignette, noise on any R3F scene.</span>
           </li>
-          <li className="flex items-start gap-3">
+          <li className="flex items-start gap-inline-xs">
             <Badge variant="secondary" className="font-mono shrink-0">5</Badge>
             <span><span className="font-medium">use-shader-fx / TSL</span> — advanced FX hooks and WebGPU-capable node shaders.</span>
           </li>
@@ -605,7 +605,7 @@ export function ShadersPage() {
         <p className="text-sm text-label-secondary">
           Zero-dependency canvas shaders. Each tile is a single React component with live, prop-bound controls.
         </p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-gutter-m sm:grid-cols-2 lg:grid-cols-3">
           {PAPER_CATALOG.map((entry) => (
             <PaperTile key={entry.title} entry={entry} />
           ))}
@@ -623,7 +623,7 @@ export function ShadersPage() {
           Paste any Shadertoy GLSL into the <code className="font-mono text-xs">fs</code> prop on <code className="font-mono text-xs">&lt;ShadertoyEmbed&gt;</code>. A tiny in-tree runner ({" "}
           <code className="font-mono text-xs">components/shaders/ShadertoyEmbed.tsx</code>) wires up <code className="font-mono text-xs">iTime</code>, <code className="font-mono text-xs">iResolution</code>, <code className="font-mono text-xs">iMouse</code>, and <code className="font-mono text-xs">iFrame</code>.
         </p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-gutter-m sm:grid-cols-2">
           <ShaderTile
             title="Drifting starfield"
             caption="Layered 3D value noise"
@@ -653,7 +653,7 @@ export function ShadersPage() {
         <p className="text-sm text-label-secondary">
           Define a shader material with typed uniforms once, then use it like any three.js material. Animate uniforms inside <code className="font-mono text-xs">useFrame</code>.
         </p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-gutter-m sm:grid-cols-2">
           <ShaderTile
             title="Animated radial shader"
             caption="Custom fragment on a fullscreen quad"
@@ -688,7 +688,7 @@ export function ShadersPage() {
         <p className="text-sm text-label-secondary">
           Stack effects in an <code className="font-mono text-xs">&lt;EffectComposer&gt;</code>. The chain renders bottom-to-top.
         </p>
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-gutter-m">
           <ShaderTile
             title="Bloom · chromatic · vignette · grain"
             caption="Live-tuned PostFX over a spinning torus knot"
@@ -715,13 +715,13 @@ export function ShadersPage() {
         <p className="text-sm text-label-secondary">
           When you outgrow the tiers above, two more roads are open. Both are installed and ready.
         </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-gutter-s sm:grid-cols-2">
           <Squircle
             as="div"
             cornerRadius={SQUIRCLE_RADIUS.xl}
-            className="rounded-xl bg-surface inset-ring-1 inset-ring-stroke-faint p-5 space-y-3"
+            className="rounded-xl bg-surface inset-ring-1 inset-ring-stroke-faint p-inset-s space-y-stack-xs"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <IconSparkles size={16} stroke={2} className="text-label-secondary" />
               <span className="text-sm font-medium text-label">use-shader-fx</span>
             </div>
@@ -729,7 +729,7 @@ export function ShadersPage() {
               Pre-built fluid sims, noise textures, FBO blending, and morph particles as React hooks.
               Each hook returns <code className="font-mono text-[11px]">[update, setParams, texture]</code> ready to wire into any material's uniforms.
             </p>
-            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-3 text-[11px] font-mono text-label">
+            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-[11px] font-mono text-label">
 {`const [updateFluid, setFluid, fluidTex] = useFluid({ size: 512, dpr: 1 })
 useFrame(({ gl, scene, camera }) => {
   const tex = updateFluid(gl)
@@ -741,16 +741,16 @@ useFrame(({ gl, scene, camera }) => {
           <Squircle
             as="div"
             cornerRadius={SQUIRCLE_RADIUS.xl}
-            className="rounded-xl bg-surface inset-ring-1 inset-ring-stroke-faint p-5 space-y-3"
+            className="rounded-xl bg-surface inset-ring-1 inset-ring-stroke-faint p-inset-s space-y-stack-xs"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <IconArrowRight size={16} stroke={2} className="text-label-secondary" />
               <span className="text-sm font-medium text-label">TSL — three.js shading language</span>
             </div>
             <p className="text-[13px] text-label-secondary">
               Write node-graph shaders in TypeScript that compile to both WebGL <em>and</em> WebGPU. Stable in three r184. Renderer-agnostic, automatic optimization.
             </p>
-            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-3 text-[11px] font-mono text-label">
+            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-[11px] font-mono text-label">
 {`import { mix, time, uv, vec3 } from 'three/tsl'
 import { MeshBasicNodeMaterial } from 'three/webgpu'
 

@@ -1,330 +1,327 @@
 import { useState } from "react"
-import { IconRestore } from "@tabler/icons-react"
-import { cn } from "@/lib/utils"
-import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
-import { Slider } from "@/components/ui/slider"
+import { IconPlus, IconMinus, IconX, IconArrowRight } from "@tabler/icons-react"
 import { PageShell, PageHeader, Section } from "@/components/PageLayout"
+import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
+import { Button } from "@/components/ui/button"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
+import {
+  useFluidConfig,
+  useViewportWidth,
+  PageActions,
+  FoundationRef,
+  FluidWedge,
+} from "@/pages/_fluid-controls"
+import {
+  computeSpaceScale,
+  resolveClamp,
+  exportFluidCss,
+  activeSpaceKeys,
+  SPACE_STEP_ORDER,
+  SPACE_ROLE_NAMES,
+  SPACE_DOWN_KEYS,
+  SPACE_UP_KEYS,
+  type SpaceStepKey,
+} from "@/lib/fluid"
 
-const SCALE = [
-  { token: "space-1", step: 1, px: 4, rem: "0.25", use: "Icon-to-label, badge padding" },
-  { token: "space-2", step: 2, px: 8, rem: "0.5", use: "Button padding, list item gaps" },
-  { token: "space-3", step: 3, px: 12, rem: "0.75", use: "Nav padding, card header gaps" },
-  { token: "space-4", step: 4, px: 16, rem: "1", use: "Card padding, section inner gaps" },
-  { token: "space-5", step: 5, px: 20, rem: "1.25", use: "Comfortable subsection separation" },
-  { token: "space-6", step: 6, px: 24, rem: "1.5", use: "Page horizontal padding, nav gaps" },
-  { token: "space-8", step: 8, px: 32, rem: "2", use: "Section padding" },
-  { token: "space-10", step: 10, px: 40, rem: "2.5", use: "Section dividers" },
-  { token: "space-12", step: 12, px: 48, rem: "3", use: "Major section gaps" },
-  { token: "space-16", step: 16, px: 64, rem: "4", use: "Page vertical padding" },
-] as const
+const ROLE_BLURB: Record<string, string> = {
+  inset: "Padding inside a container — p-inset-*",
+  stack: "Vertical gaps between stacked elements — space-y-stack-* / gap-y-*",
+  inline: "Horizontal gaps in a row — space-x-inline-* / gap-x-*",
+  gutter: "Grid / wrapping-flex gaps — gap-gutter-*",
+}
 
-const PAIRINGS = [
-  { context: "Page container", horizontal: "6 (24px)", vertical: "16 (64px)" },
-  { context: "Section gap", horizontal: "—", vertical: "12 (48px)" },
-  { context: "Within section", horizontal: "6 (24px)", vertical: "6 (24px)" },
-  { context: "Card padding", horizontal: "4 (16px)", vertical: "4 (16px)" },
-  { context: "Card compact", horizontal: "3 (12px)", vertical: "3 (12px)" },
-  { context: "Element gap", horizontal: "4 (16px)", vertical: "4 (16px)" },
-  { context: "Dense list", horizontal: "2 (8px)", vertical: "2 (8px)" },
-  { context: "Tight (icons)", horizontal: "1 (4px)", vertical: "1 (4px)" },
-] as const
-
-const RED = "var(--color-red-500)"
-
-function MeasureLine({ size, label, vertical, className }: {
-  size: number
-  label: string
-  vertical?: boolean
-  className?: string
+/** Round-icon ± button (matches the Type page's scale controls). */
+function StepButton({ kind, onClick, disabled, title }: {
+  kind: "add" | "remove"; onClick: () => void; disabled?: boolean; title: string
 }) {
-  if (vertical) {
-    return (
-      <div className={cn("flex flex-col items-center", className)} style={{ height: size }}>
-        <div style={{ width: 8, height: 1, backgroundColor: RED }} />
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <div style={{ width: 1, flex: 1, backgroundColor: RED }} />
-          <span className="px-1 py-0.5 text-[9px] font-bold leading-none whitespace-nowrap" style={{ color: RED }}>
-            {label}
-          </span>
-          <div style={{ width: 1, flex: 1, backgroundColor: RED }} />
-        </div>
-        <div style={{ width: 8, height: 1, backgroundColor: RED }} />
-      </div>
-    )
-  }
-
   return (
-    <div className={cn("flex flex-row items-center", className)} style={{ width: size }}>
-      <div className="h-full" style={{ width: 1, minHeight: 16, backgroundColor: RED }} />
-      <div className="flex-1 flex flex-row items-center justify-center">
-        <div style={{ height: 1, flex: 1, backgroundColor: RED }} />
-        <span className="px-1.5 py-0.5 text-[9px] font-bold leading-none whitespace-nowrap" style={{ color: RED }}>
-          {label}
-        </span>
-        <div style={{ height: 1, flex: 1, backgroundColor: RED }} />
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      className="flex size-6 items-center justify-center rounded-full text-label-secondary inset-ring-1 inset-ring-stroke-strong transition-colors hover:bg-fill-secondary hover:text-label disabled:pointer-events-none disabled:opacity-30"
+    >
+      {kind === "add" ? <IconPlus size={13} stroke={2.5} /> : <IconMinus size={13} stroke={2.5} />}
+    </button>
+  )
+}
+
+/** Utopia-style step badge (a filled circle with the step key). */
+function StepBadge({ children }: { children: string }) {
+  return (
+    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-label/85 px-1.5 font-mono text-[10px] font-semibold text-surface">
+      {children}
+    </span>
+  )
+}
+
+/** One pair row: badges (lo ··· hi), @min/@max labels, and the fluid wedge. */
+function PairRow({ tokenKey, minPx, maxPx, scale, onRemove }: {
+  tokenKey: string; minPx: number; maxPx: number; scale: number; onRemove?: () => void
+}) {
+  const [lo, hi] = tokenKey.split("-")
+  return (
+    <div className="flex items-center gap-4 border-b border-stroke-faint/40 py-3 last:border-0">
+      <div className="flex w-24 shrink-0 items-center gap-1.5">
+        <StepBadge>{lo}</StepBadge>
+        <span className="text-label-tertiary">···</span>
+        <StepBadge>{hi}</StepBadge>
       </div>
-      <div className="h-full" style={{ width: 1, minHeight: 16, backgroundColor: RED }} />
+      <div className="min-w-0 flex-1">
+        <div className="mb-1.5 flex items-center justify-between font-mono text-[10px] text-label-secondary">
+          <span>{minPx}px</span>
+          <span>{maxPx}px</span>
+        </div>
+        <FluidWedge minPx={minPx} maxPx={maxPx} scale={scale} />
+      </div>
+      {onRemove && (
+        <button onClick={onRemove} title="Remove pair" className="shrink-0 text-label-secondary transition-colors hover:text-label">
+          <IconX size={14} stroke={2} />
+        </button>
+      )}
     </div>
   )
 }
 
+/** A compact step picker (active keys only) for the custom-pair builder. */
+function PairSelect({ value, keys, onChange }: {
+  value: SpaceStepKey; keys: SpaceStepKey[]; onChange: (v: SpaceStepKey) => void
+}) {
+  const items = Object.fromEntries(keys.map((k) => [k, k]))
+  return (
+    <Select items={items} value={value} onValueChange={(v) => v && onChange(v as SpaceStepKey)}>
+      <SelectTrigger className="w-20"><SelectValue /></SelectTrigger>
+      <SelectContent>
+        {keys.map((k) => <SelectItem key={k} value={k}>{k}</SelectItem>)}
+      </SelectContent>
+    </Select>
+  )
+}
+
 export function Spacing() {
-  const [pagePad, setPagePad] = useState(24)
-  const [cardPad, setCardPad] = useState(16)
-  const [sectionGap, setSectionGap] = useState(48)
-  const [elementGap, setElementGap] = useState(16)
+  const { cfg, patchSpace, save, reset } = useFluidConfig()
+  const vw = useViewportWidth()
+  const scale = computeSpaceScale(cfg)
+  const keys = activeSpaceKeys(cfg.space)
+
+  const setMultiplier = (key: string, v: number) =>
+    patchSpace({ multipliers: { ...cfg.space.multipliers, [key]: v } })
+  const stepControls = {
+    addUp: () => patchSpace({ up: Math.min(cfg.space.up + 1, SPACE_UP_KEYS.length) }),
+    removeUp: () => patchSpace({ up: Math.max(cfg.space.up - 1, 0) }),
+    addDown: () => patchSpace({ down: Math.min(cfg.space.down + 1, SPACE_DOWN_KEYS.length) }),
+    removeDown: () => patchSpace({ down: Math.max(cfg.space.down - 1, 0) }),
+  }
+
+  // Custom-pair builder (a pair that jumps more than one step, e.g. s → l).
+  const [pairFrom, setPairFrom] = useState<SpaceStepKey>("s")
+  const [pairTo, setPairTo] = useState<SpaceStepKey>("l")
+  const addCustomPair = () => {
+    if (pairFrom === pairTo) return
+    const [lo, hi]: [SpaceStepKey, SpaceStepKey] =
+      SPACE_STEP_ORDER.indexOf(pairFrom) < SPACE_STEP_ORDER.indexOf(pairTo)
+        ? [pairFrom, pairTo]
+        : [pairTo, pairFrom]
+    if (cfg.space.customPairs.some(([a, b]) => a === lo && b === hi)) return
+    patchSpace({ customPairs: [...cfg.space.customPairs, [lo, hi]] })
+  }
+  const removeCustomPair = (key: string) =>
+    patchSpace({ customPairs: cfg.space.customPairs.filter(([a, b]) => `${a}-${b}` !== key) })
+
+  const desc = [...scale.singles].reverse() // largest → smallest
+  // Shared scale so every pair wedge is proportional to the biggest one.
+  const pairMaxPx = Math.max(1, ...scale.pairs.map((p) => p.maxPx), ...scale.customPairs.map((p) => p.maxPx))
+  const wedgeScale = 60 / pairMaxPx
 
   return (
     <PageShell>
-      {/* ── Header ── */}
-      <PageHeader title="Spacing" description="Base-4 grid, 8pt major grid — Apple HIG-aligned defaults" />
+      <header className="flex items-start justify-between gap-4">
+        <PageHeader
+          title="Space"
+          description="Fluid t-shirt scale (Utopia clamp), aliased to role-based semantic tokens. Each step is an editable multiple of the base."
+        />
+        <PageActions onSave={save} onReset={reset} copyText={() => exportFluidCss(cfg)} />
+      </header>
 
-      {/* ── Scale Reference ── */}
-      <Section title="Scale" description="Every spacing token with its pixel value and typical use" className="space-y-2">
-          {SCALE.map((s) => (
-            <div key={s.token} className="flex items-center gap-4">
-              <div className="w-20 shrink-0 text-right">
-                <div className="font-mono text-xs font-semibold text-label">{s.token}</div>
-                <div className="font-mono text-[10px] text-label-secondary">gap-{s.step} · p-{s.step}</div>
-              </div>
-              <MeasureLine size={Math.max(s.px, 24)} label={`${s.px}px`} />
-              <div className="flex-1 min-w-0">
-                <span className="font-mono text-[10px] text-label-secondary">{s.rem}rem</span>
-                <span className="text-xs text-label-secondary ml-2">{s.use}</span>
-              </div>
-            </div>
-          ))}
-      </Section>
+      <FoundationRef cfg={cfg} />
 
-      {/* ── Annotated Layout ── */}
-      <Section title="Annotated Layout" description="A realistic card layout with red-line annotations showing spacing tokens in context">
+      {/* ── Primitive scale (editable) ── */}
+      <Section
+        title="Primitive steps"
+        description="Every step is an editable ×multiple of the base (s = 1×). Add or remove steps with ± — the roles and tokens follow."
+        className="space-y-4"
+      >
+        <p className="text-caption text-label-secondary">
+          Resolving at <span className="font-mono font-semibold text-label">{vw}px</span> — your current viewport.
+        </p>
 
-        <Squircle
-          as="div"
-          cornerRadius={SQUIRCLE_RADIUS["2xl"]}
-          shadow="md"
-          className="relative rounded-2xl bg-surface p-0 overflow-visible"
-        >
-          {/* Top page padding */}
-          <div className="py-1">
-            <MeasureLine size={24} label="24px" vertical />
+        {/* add a larger step */}
+        <div className="flex items-center gap-3">
+          <div className="flex w-8 shrink-0 justify-end">
+            <StepButton kind="add" onClick={stepControls.addUp} disabled={cfg.space.up >= SPACE_UP_KEYS.length}
+              title="Add a larger step" />
           </div>
-
-          <div className="flex">
-            {/* Left page padding */}
-            <div className="flex items-center px-1">
-              <MeasureLine size={24} label="24px" />
-            </div>
-
-            <div className="flex-1 space-y-2">
-              {/* ── Card 1 ── */}
-              <Squircle
-                as="div"
-                cornerRadius={SQUIRCLE_RADIUS.xl}
-                shadow="xs"
-                className="rounded-xl bg-surface-secondary overflow-visible"
-              >
-                <div className="flex">
-                  {/* Card left padding annotation */}
-                  <div className="flex items-center px-0.5 py-4">
-                    <MeasureLine size={16} label="16px" />
-                  </div>
-
-                  <div className="flex-1 py-4 pr-4">
-                    {/* Title placeholder */}
-                    <div className="h-5 w-36 rounded-md bg-label/25" />
-
-                    {/* Gap: title → description */}
-                    <div className="py-0.5">
-                      <MeasureLine size={4} label="4px" vertical />
-                    </div>
-
-                    {/* Description placeholder */}
-                    <div className="h-3.5 w-56 rounded bg-label/15" />
-
-                    {/* Gap: header → content */}
-                    <div className="py-0.5">
-                      <MeasureLine size={16} label="16px" vertical />
-                    </div>
-
-                    {/* Row 1 */}
-                    <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-lg bg-surface-tertiary border border-stroke-faint" />
-                      <div className="space-y-1.5 flex-1">
-                        <div className="h-3.5 w-28 rounded bg-label/20" />
-                        <div className="h-3 w-40 rounded bg-label/10" />
-                      </div>
-                    </div>
-
-                    {/* Gap: row → row */}
-                    <div className="py-0.5">
-                      <MeasureLine size={8} label="8px" vertical />
-                    </div>
-
-                    {/* Row 2 */}
-                    <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-lg bg-surface-tertiary border border-stroke-faint" />
-                      <div className="space-y-1.5 flex-1">
-                        <div className="h-3.5 w-32 rounded bg-label/20" />
-                        <div className="h-3 w-36 rounded bg-label/10" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card bottom padding */}
-                <div className="pb-1">
-                  <MeasureLine size={16} label="16px" vertical />
-                </div>
-              </Squircle>
-
-              {/* Section gap annotation */}
-              <MeasureLine size={48} label="48px" vertical />
-
-              {/* ── Card 2 (compact) ── */}
-              <Squircle
-                as="div"
-                cornerRadius={SQUIRCLE_RADIUS.xl}
-                shadow="xs"
-                className="rounded-xl bg-surface-secondary p-3 overflow-visible"
-              >
-                <div className="h-4.5 w-28 rounded-md bg-label/25" />
-                <div className="h-3 w-44 rounded bg-label/15 mt-1.5" />
-                <div className="text-[10px] text-label-secondary font-mono mt-2">compact card — p-3 (12px)</div>
-              </Squircle>
-            </div>
-
-            {/* Right page padding */}
-            <div className="flex items-center px-1">
-              <MeasureLine size={24} label="24px" />
-            </div>
-          </div>
-
-          {/* Bottom page padding */}
-          <div className="py-1">
-            <MeasureLine size={24} label="24px" vertical />
-          </div>
-        </Squircle>
-      </Section>
-
-      {/* ── Interactive Tuner ── */}
-      <section className="space-y-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-h6 text-label">Tuner</h2>
-            <p className="text-body text-label-secondary mt-0.5">Drag sliders to see how spacing values affect a live layout</p>
-          </div>
-          <button
-            onClick={() => { setPagePad(24); setCardPad(16); setSectionGap(48); setElementGap(16) }}
-            className="size-7 shrink-0 rounded-md bg-surface-tertiary flex items-center justify-center text-label-secondary hover:text-label hover:bg-fill-primary transition-colors cursor-pointer"
-            title="Reset to defaults"
-          >
-            <IconRestore size={14} stroke={2} />
-          </button>
+          <span className="text-caption text-label-secondary">larger</span>
         </div>
 
-        <div className="grid grid-cols-[240px_1fr] gap-6">
-          {/* Controls */}
-          <div className="space-y-5">
-            {[
-              { label: "Page padding", value: pagePad, set: setPagePad, min: 8, max: 48 },
-              { label: "Card padding", value: cardPad, set: setCardPad, min: 4, max: 32 },
-              { label: "Section gap", value: sectionGap, set: setSectionGap, min: 16, max: 80 },
-              { label: "Element gap", value: elementGap, set: setElementGap, min: 2, max: 24 },
-            ].map((ctrl) => (
-              <div key={ctrl.label}>
-                <div className="flex items-baseline justify-between mb-1.5">
-                  <span className="text-xs font-medium text-label">{ctrl.label}</span>
-                  <span className="font-mono text-xs font-semibold text-label tabular-nums">{ctrl.value}px</span>
+        <div className="space-y-2">
+          {desc.map((s, i) => {
+            const isBase = s.key === "s"
+            const isLargest = i === 0 && !isBase
+            const isSmallest = i === desc.length - 1 && !isBase
+            const px = resolveClamp(s, vw)
+            return (
+              <div key={s.key} className={cn("flex items-center gap-3", isBase && "rounded-md bg-blue-500/6")}>
+                <div className="flex w-8 shrink-0 justify-end">
+                  {isLargest && <StepButton kind="remove" onClick={stepControls.removeUp} title="Remove largest step" />}
+                  {isSmallest && <StepButton kind="remove" onClick={stepControls.removeDown} title="Remove smallest step" />}
                 </div>
-                <Slider
-                  min={ctrl.min}
-                  max={ctrl.max}
-                  step={2}
-                  value={[ctrl.value]}
-                  onValueChange={(v) => ctrl.set(Array.isArray(v) ? v[0] : v)}
-                />
+                <div className={cn("w-10 shrink-0 text-right font-mono text-caption font-semibold", isBase ? "text-label" : "text-label")}>
+                  {s.key}
+                </div>
+                <div className="w-16 shrink-0">
+                  {isBase ? (
+                    <span className="block text-right font-mono text-[11px] text-label-secondary">×1 base</span>
+                  ) : (
+                    <div className="flex items-center justify-end gap-0.5">
+                      <span className="font-mono text-[11px] text-label-secondary">×</span>
+                      <input
+                        type="number"
+                        value={s.mult}
+                        min={0.05}
+                        max={20}
+                        step={0.05}
+                        onChange={(e) => {
+                          const n = parseFloat(e.target.value)
+                          if (!Number.isNaN(n)) setMultiplier(s.key, n)
+                        }}
+                        aria-label={`${s.key} multiplier`}
+                        className="w-12 rounded-md bg-surface px-1 py-0.5 text-right font-mono text-[11px] tabular-nums text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus-visible:inset-ring-stroke-strong"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="h-5 shrink-0 rounded-sm bg-blue-500/70" style={{ width: Math.max(px, 2) }} />
+                <div className="min-w-0 flex-1">
+                  <span className="font-mono text-[10px] text-label">{px.toFixed(1)}px</span>
+                  <span className="ml-2 font-mono text-[10px] text-label-secondary">{s.minPx}→{s.maxPx}px</span>
+                </div>
               </div>
+            )
+          })}
+        </div>
+
+        {/* add a smaller step */}
+        <div className="flex items-center gap-3">
+          <div className="flex w-8 shrink-0 justify-end">
+            <StepButton kind="add" onClick={stepControls.addDown} disabled={cfg.space.down >= SPACE_DOWN_KEYS.length}
+              title="Add a smaller step" />
+          </div>
+          <span className="text-caption text-label-secondary">smaller</span>
+        </div>
+      </Section>
+
+      {/* ── One-up pairs ── */}
+      <Section
+        title="One-up pairs"
+        description="Fluid from the lower step's min to the upper step's max — space that grows a whole step as the viewport widens."
+      >
+        {scale.pairs.map((p) => (
+          <PairRow key={p.key} tokenKey={p.key} minPx={p.minPx} maxPx={p.maxPx} scale={wedgeScale} />
+        ))}
+      </Section>
+
+      {/* ── Custom pairs ── */}
+      <Section
+        title="Custom pairs"
+        description="A pair that jumps more than one step — space that grows a whole span as the viewport widens. Reach for these on section gaps, hero/page padding, and grid gutters. Use via var(--space-lo-hi)."
+        className="space-y-4"
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <PairSelect value={pairFrom} keys={keys} onChange={setPairFrom} />
+          <IconArrowRight size={16} className="shrink-0 text-label-secondary" />
+          <PairSelect value={pairTo} keys={keys} onChange={setPairTo} />
+          <Button variant="outline" size="sm" onClick={addCustomPair}>
+            <IconPlus size={14} stroke={2} /> Add pair
+          </Button>
+        </div>
+
+        {scale.customPairs.length === 0 ? (
+          <p className="text-caption text-label-secondary">
+            No custom pairs yet. Pair two steps (e.g. <span className="font-mono text-label">s → l</span>) for space that climbs faster on wide screens.
+          </p>
+        ) : (
+          <div>
+            {scale.customPairs.map((p) => (
+              <PairRow key={p.key} tokenKey={p.key} minPx={p.minPx} maxPx={p.maxPx} scale={wedgeScale}
+                onRemove={() => removeCustomPair(p.key)} />
             ))}
           </div>
+        )}
+      </Section>
 
-          {/* Live preview */}
-          <Squircle
-            as="div"
-            cornerRadius={SQUIRCLE_RADIUS["2xl"]}
-            shadow="md"
-            className="rounded-2xl bg-surface overflow-visible"
-            style={{ padding: pagePad }}
-          >
-            <Squircle
-              as="div"
-              cornerRadius={SQUIRCLE_RADIUS.xl}
-              shadow="xs"
-              className="rounded-xl bg-surface-secondary"
-              style={{ padding: cardPad }}
-            >
-              <div className="h-4.5 w-32 rounded-md bg-label/25" />
-              <div className="h-3 w-48 rounded bg-label/15" style={{ marginTop: elementGap / 2 }} />
-              <div style={{ marginTop: elementGap }}>
-                <div className="flex" style={{ gap: elementGap / 2 }}>
-                  <div className="size-9 rounded-lg bg-surface-tertiary border border-stroke-faint shrink-0" />
-                  <div className="flex-1" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <div className="h-3.5 w-24 rounded bg-label/20" />
-                    <div className="h-3 w-32 rounded bg-label/10" />
+      {/* ── Semantic roles ── */}
+      <Section
+        title="Semantic roles"
+        description="Which primitive sizes each role exposes. Pick the role by intent; the utility's property picks the axis."
+        className="space-y-6"
+      >
+        {SPACE_ROLE_NAMES.map((role) => (
+          <div key={role} className="space-y-2">
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-caption font-semibold text-label">{role}</span>
+              <span className="text-caption text-label-secondary">{ROLE_BLURB[role]}</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {keys.map((size) => (
+                <span key={size} className="rounded-md bg-fill-quinary px-2 py-1 font-mono text-[10px] text-label-secondary">
+                  {role}-{size}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </Section>
+
+      {/* ── Live layout (real role utilities → genuinely fluid) ── */}
+      <Section
+        title="Live layout"
+        description="Built from the role utilities — resize the window to watch padding and gaps flow."
+        bare
+      >
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS["2xl"]} shadow="md"
+          className="rounded-2xl bg-surface p-inset-l">
+          <div className="flex flex-col gap-stack-m">
+            <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} shadow="xs"
+              className="rounded-xl bg-surface-secondary p-inset-m">
+              <div className="flex flex-col gap-stack-2xs">
+                <div className="h-5 w-40 rounded-md bg-label/25" />
+                <div className="h-3.5 w-56 rounded bg-label/15" />
+              </div>
+              <div className="mt-stack-m flex flex-col gap-stack-xs">
+                {[0, 1].map((r) => (
+                  <div key={r} className="flex items-center gap-inline-s">
+                    <div className="size-9 shrink-0 rounded-lg bg-surface-tertiary border border-stroke-faint" />
+                    <div className="flex flex-1 flex-col gap-stack-2xs">
+                      <div className="h-3.5 w-28 rounded bg-label/20" />
+                      <div className="h-3 w-40 rounded bg-label/10" />
+                    </div>
                   </div>
-                </div>
-                <div className="flex" style={{ gap: elementGap / 2, marginTop: elementGap / 2 }}>
-                  <div className="size-9 rounded-lg bg-surface-tertiary border border-stroke-faint shrink-0" />
-                  <div className="flex-1" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <div className="h-3.5 w-28 rounded bg-label/20" />
-                    <div className="h-3 w-36 rounded bg-label/10" />
-                  </div>
-                </div>
+                ))}
               </div>
             </Squircle>
-
-            <div style={{ height: sectionGap }} />
-
-            <Squircle
-              as="div"
-              cornerRadius={SQUIRCLE_RADIUS.xl}
-              shadow="xs"
-              className="rounded-xl bg-surface-secondary"
-              style={{ padding: cardPad }}
-            >
-              <div className="h-4.5 w-36 rounded-md bg-label/25" />
-              <div className="h-3 w-40 rounded bg-label/15" style={{ marginTop: elementGap / 2 }} />
-            </Squircle>
-          </Squircle>
-        </div>
-      </section>
-
-      {/* ── Recommended Pairings ── */}
-      <Section title="Recommended Pairings" description="Which token to use where" noPadding>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-surface-tertiary text-left text-xs text-label-secondary">
-                <th className="px-4 py-2.5 font-medium">Context</th>
-                <th className="px-4 py-2.5 font-medium">Horizontal</th>
-                <th className="px-4 py-2.5 font-medium">Vertical</th>
-              </tr>
-            </thead>
-            <tbody>
-              {PAIRINGS.map((p, i) => (
-                <tr
-                  key={p.context}
-                  className={cn(
-                    "border-t border-stroke-faint",
-                    i % 2 === 0 ? "bg-surface-secondary" : "bg-surface"
-                  )}
-                >
-                  <td className="px-4 py-2.5 text-label font-medium">{p.context}</td>
-                  <td className="px-4 py-2.5 font-mono text-xs text-label-secondary">{p.horizontal}</td>
-                  <td className="px-4 py-2.5 font-mono text-xs text-label-secondary">{p.vertical}</td>
-                </tr>
+            <div className="grid gap-gutter-m sm:grid-cols-2">
+              {[0, 1].map((c) => (
+                <Squircle key={c} as="div" cornerRadius={SQUIRCLE_RADIUS.xl} shadow="xs"
+                  className="rounded-xl bg-surface-secondary p-inset-s">
+                  <div className="h-4.5 w-28 rounded-md bg-label/25" />
+                  <div className="mt-stack-2xs h-3 w-36 rounded bg-label/15" />
+                </Squircle>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
+        </Squircle>
       </Section>
     </PageShell>
   )

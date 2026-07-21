@@ -90,7 +90,7 @@ export function DocCard({
 
 export function DocPreview({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <DocCard className={cn("p-8 flex items-center justify-center", className)}>
+    <DocCard className={cn("p-inset-l flex items-center justify-center", className)}>
       {children}
     </DocCard>
   )
@@ -112,7 +112,7 @@ export function DocExample({
   children: React.ReactNode
 }) {
   return (
-    <DocCard className="p-5 space-y-4">
+    <DocCard className="p-inset-s space-y-stack-s">
       <div className="flex items-baseline justify-between">
         <span className="text-body font-semibold text-label">{title}</span>
         {value && <span className="font-mono text-xs text-label-secondary tabular-nums">{value}</span>}
@@ -142,10 +142,10 @@ export function DocPropsTable({ props }: { props: PropDef[] }) {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-surface-tertiary text-left text-xs text-label-secondary">
-            <th className="px-4 py-2.5 font-medium">Prop</th>
-            <th className="px-4 py-2.5 font-medium">Type</th>
-            <th className="px-4 py-2.5 font-medium">Default</th>
-            <th className="px-4 py-2.5 font-medium">Description</th>
+            <th className="px-inset-s py-2.5 font-medium">Prop</th>
+            <th className="px-inset-s py-2.5 font-medium">Type</th>
+            <th className="px-inset-s py-2.5 font-medium">Default</th>
+            <th className="px-inset-s py-2.5 font-medium">Description</th>
           </tr>
         </thead>
         <tbody>
@@ -157,10 +157,10 @@ export function DocPropsTable({ props }: { props: PropDef[] }) {
                 i % 2 === 0 ? "bg-surface-secondary" : "bg-surface",
               )}
             >
-              <td className="px-4 py-2.5 font-mono text-xs font-medium text-label">{row.prop}</td>
-              <td className="px-4 py-2.5 font-mono text-[11px] text-label-secondary">{row.type}</td>
-              <td className="px-4 py-2.5 font-mono text-[11px] text-label-secondary">{row.default}</td>
-              <td className="px-4 py-2.5 text-xs text-label-secondary">{row.description}</td>
+              <td className="px-inset-s py-2.5 font-mono text-xs font-medium text-label">{row.prop}</td>
+              <td className="px-inset-s py-2.5 font-mono text-[11px] text-label-secondary">{row.type}</td>
+              <td className="px-inset-s py-2.5 font-mono text-[11px] text-label-secondary">{row.default}</td>
+              <td className="px-inset-s py-2.5 text-xs text-label-secondary">{row.description}</td>
             </tr>
           ))}
         </tbody>
@@ -181,9 +181,9 @@ export type TokenDef = {
 
 export function DocTokens({ tokens }: { tokens: TokenDef[] }) {
   return (
-    <DocCard className="p-5 space-y-3">
+    <DocCard className="p-inset-s space-y-stack-xs">
       {tokens.map((t) => (
-        <div key={t.utility} className="flex items-center gap-4">
+        <div key={t.utility} className="flex items-center gap-inline-s">
           <div
             className="size-6 rounded-md border border-stroke-faint shrink-0"
             style={{ backgroundColor: t.swatch }}
@@ -211,8 +211,8 @@ export function DocAccessibility({ items }: { items: A11yDef[] }) {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-surface-tertiary text-left text-xs text-label-secondary">
-            <th className="px-4 py-2.5 font-medium w-40">Interaction</th>
-            <th className="px-4 py-2.5 font-medium">Behavior</th>
+            <th className="px-inset-s py-2.5 font-medium w-40">Interaction</th>
+            <th className="px-inset-s py-2.5 font-medium">Behavior</th>
           </tr>
         </thead>
         <tbody>
@@ -224,8 +224,8 @@ export function DocAccessibility({ items }: { items: A11yDef[] }) {
                 i % 2 === 0 ? "bg-surface-secondary" : "bg-surface",
               )}
             >
-              <td className="px-4 py-2.5 font-mono text-xs font-medium text-label">{row.interaction}</td>
-              <td className="px-4 py-2.5 text-xs text-label-secondary">{row.behavior}</td>
+              <td className="px-inset-s py-2.5 font-mono text-xs font-medium text-label">{row.interaction}</td>
+              <td className="px-inset-s py-2.5 text-xs text-label-secondary">{row.behavior}</td>
             </tr>
           ))}
         </tbody>
@@ -245,9 +245,9 @@ export type GuidelineDef = {
 
 export function DocGuidelines({ items }: { items: GuidelineDef[] }) {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-gutter-s">
       {items.map((g, i) => (
-        <DocCard key={i} className="p-4 space-y-2">
+        <DocCard key={i} className="p-inset-s space-y-stack-2xs">
           <span
             className={cn(
               "text-xs font-bold uppercase",
@@ -276,14 +276,14 @@ export type SourceDef = {
 
 export function DocSource({ source }: { source: SourceDef }) {
   return (
-    <DocCard className="p-5 space-y-2">
+    <DocCard className="p-inset-s space-y-stack-2xs">
       {([
         ["File", source.file],
         ["Install", source.install],
         ["Primitive", source.primitive],
         ["Import", source.import],
       ] as const).map(([label, value]) => (
-        <div key={label} className="flex items-baseline gap-3">
+        <div key={label} className="flex items-baseline gap-inline-xs">
           <span className="text-xs text-label-secondary w-16 shrink-0">{label}</span>
           <code className="text-xs font-mono text-label">{value}</code>
         </div>

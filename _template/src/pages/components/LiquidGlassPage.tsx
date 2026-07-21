@@ -217,7 +217,7 @@ function ExampleTile({
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center overflow-hidden rounded-2xl p-8 pb-10",
+        "relative flex items-center justify-center overflow-hidden rounded-2xl p-inset-l pb-inset-l",
         !isImage && backdrop.theme,
         !isImage && backdrop.surface,
         !isImage && "inset-ring-1 inset-ring-stroke-faint",
@@ -233,7 +233,7 @@ function ExampleTile({
           : undefined
       }
     >
-      <div className="flex w-full max-w-[260px] flex-col gap-4">
+      <div className="flex w-full max-w-[260px] flex-col gap-stack-s">
         {/* Spherical icon button — anchored right, button-height. */}
         <div className="flex justify-end">
           <LiquidGlass
@@ -256,7 +256,7 @@ function ExampleTile({
           radius={28}
           {...glassProps}
           className={cn(
-            "flex aspect-square w-full flex-col items-center justify-center gap-1",
+            "flex aspect-square w-full flex-col items-center justify-center gap-stack-3xs",
             text,
           )}
         >
@@ -307,13 +307,13 @@ function ModeSection({
   // Group all light backdrops, then all dark, each in its own complete grid.
   const groups: GlassTone[] = ["light", "dark"]
   return (
-    <section className="space-y-4">
+    <section className="space-y-stack-s">
       <SectionHeader
         title={mode[0].toUpperCase() + mode.slice(1)}
         description={MODE_BLURB[mode]}
       />
       {groups.map((tone) => (
-        <div key={tone} className="grid gap-4 sm:grid-cols-2">
+        <div key={tone} className="grid gap-gutter-s sm:grid-cols-2">
           {BACKDROPS.filter((b) => b.theme === tone).map((b) => (
             <ExampleTile
               key={b.key}
@@ -566,12 +566,12 @@ export function LiquidGlassPage() {
         />
       ))}
 
-      <section className="space-y-4">
+      <section className="space-y-stack-s">
         <SectionHeader
           title="Current settings"
           description="Live, persisted values for all 8 presets. Paste into GLASS_DEFAULTS in src/components/ui/glass-modes.ts to lock in the global defaults."
         />
-        <pre className="overflow-x-auto rounded-xl bg-surface-secondary p-4 font-mono text-xs text-label inset-ring-1 inset-ring-stroke-faint">
+        <pre className="overflow-x-auto rounded-xl bg-surface-secondary p-inset-s font-mono text-xs text-label inset-ring-1 inset-ring-stroke-faint">
           {settings}
         </pre>
       </section>

@@ -27,15 +27,15 @@ function SkeletonDemo() {
         the skeleton fill — adapts to light and dark mode automatically.
       </p>
 
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center gap-inline-xs mb-stack-2xs">
         <Button size="sm" variant="outline" onClick={() => setLoaded((v) => !v)}>
           {loaded ? "Show skeleton" : "Show loaded"}
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-gutter-s">
         <div>
-          <div className="text-[10px] text-label-secondary font-mono mb-2">
+          <div className="text-[10px] text-label-secondary font-mono mb-stack-2xs">
             {loaded ? "Loaded" : "SkeletonCard"}
           </div>
           {loaded ? (
@@ -44,15 +44,15 @@ function SkeletonDemo() {
                 <CardTitle>Notification settings</CardTitle>
                 <CardDescription>Manage alerts and updates</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-3">
+              <CardContent className="space-y-stack-xs">
+                <div className="flex items-center gap-inline-xs">
                   <div className="size-8 rounded-full bg-blue-500 flex items-center justify-center text-white-100 text-xs font-bold">JD</div>
                   <div>
                     <div className="text-sm font-medium text-label">Jane Doe</div>
                     <div className="text-xs text-label-secondary">jane@example.com</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-inline-xs">
                   <div className="size-8 rounded-full bg-green-500 flex items-center justify-center text-white-100 text-xs font-bold">AS</div>
                   <div>
                     <div className="text-sm font-medium text-label">Alex Smith</div>
@@ -66,27 +66,27 @@ function SkeletonDemo() {
           )}
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-stack-s">
           <div>
-            <div className="text-[10px] text-label-secondary font-mono mb-2">Primitives</div>
-            <div className="rounded-xl border border-stroke-faint bg-surface-secondary p-4 space-y-4">
-              <div className="space-y-1">
+            <div className="text-[10px] text-label-secondary font-mono mb-stack-2xs">Primitives</div>
+            <div className="rounded-xl border border-stroke-faint bg-surface-secondary p-inset-s space-y-stack-s">
+              <div className="space-y-stack-3xs">
                 <div className="text-[9px] text-label-secondary font-mono">SkeletonHeading</div>
                 <SkeletonHeading />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-stack-3xs">
                 <div className="text-[9px] text-label-secondary font-mono">SkeletonText lines=3</div>
                 <SkeletonText lines={3} />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-stack-3xs">
                 <div className="text-[9px] text-label-secondary font-mono">SkeletonAvatar sm / md / lg</div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-inline-xs">
                   <SkeletonAvatar size="sm" />
                   <SkeletonAvatar size="md" />
                   <SkeletonAvatar size="lg" />
                 </div>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-stack-3xs">
                 <div className="text-[9px] text-label-secondary font-mono">SkeletonImage</div>
                 <SkeletonImage />
               </div>

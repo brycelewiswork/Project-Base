@@ -36,8 +36,8 @@ const PRETEXT_ACCORDION_ITEMS = [
 
 function PretextAccordionDemo() {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-2">
+    <div className="flex flex-col gap-stack-xs">
+      <div className="flex items-baseline justify-between gap-inline-2xs">
         <span className="text-body font-medium text-label-secondary">Springy accordion</span>
         <span className="text-body text-label-tertiary">
           <Link to="/components/accordion" className="underline">full component docs →</Link>
@@ -50,16 +50,16 @@ function PretextAccordionDemo() {
 
 function PretextChatDemo() {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-2">
+    <div className="flex flex-col gap-stack-xs">
+      <div className="flex items-baseline justify-between gap-inline-2xs">
         <span className="text-body font-medium text-label-secondary">Tight chat bubbles</span>
         <span className="text-body text-label-tertiary">
           left = vanilla <code>max-width</code> &nbsp;·&nbsp; right = <code>&lt;TightText&gt;</code>
         </span>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-gutter-s sm:grid-cols-2">
         {(["vanilla", "tight"] as const).map((mode) => (
-          <div key={mode} className="flex flex-col gap-2 rounded-xl bg-fill-secondary p-3">
+          <div key={mode} className="flex flex-col gap-stack-2xs rounded-xl bg-fill-secondary p-inset-xs">
             {CHAT_MESSAGES.map((m, i) => {
               const mine = m.from === "me"
               const inner =
@@ -71,7 +71,7 @@ function PretextChatDemo() {
               return (
                 <div key={i} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`rounded-2xl px-3 py-1.5 text-body leading-snug inset-ring-1 ${
+                    className={`rounded-2xl px-inset-xs py-1.5 text-body leading-snug inset-ring-1 ${
                       mine
                         ? "bg-blue-500 text-white-100 inset-ring-transparent"
                         : "bg-surface text-label inset-ring-stroke-faint"
@@ -112,28 +112,28 @@ function PretextHeightProbeDemo() {
   )
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-2">
+    <div className="flex flex-col gap-stack-xs">
+      <div className="flex items-baseline justify-between gap-inline-2xs">
         <span className="text-body font-medium text-label-secondary">Live height probe</span>
         <span className="text-body font-mono text-label-tertiary">
           {measured ? `${measured.lineCount} lines · ${measured.height}px` : "…"}
         </span>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+      <div className="flex flex-col gap-stack-xs sm:flex-row sm:items-start">
         <textarea
           ref={probeRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="h-32 flex-1 resize-none rounded-md bg-fill-secondary px-3 py-2 text-body text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"
+          className="h-32 flex-1 resize-none rounded-md bg-fill-secondary px-inset-xs py-inset-2xs text-body text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"
         />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-stack-2xs">
           <div
-            className="rounded-md bg-surface p-3 text-body text-label inset-ring-1 inset-ring-stroke-faint"
+            className="rounded-md bg-surface p-inset-xs text-body text-label inset-ring-1 inset-ring-stroke-faint"
             style={{ width, whiteSpace: "pre-wrap" }}
           >
             {text}
           </div>
-          <label className="flex items-center gap-2 text-body">
+          <label className="flex items-center gap-inline-2xs text-body">
             <span className="text-label-secondary">width</span>
             <Slider
               min={120}

@@ -20,8 +20,8 @@ function ShadersDemo() {
         </Link>.
       </p>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 gap-gutter-m sm:grid-cols-2">
+        <div className="space-y-stack-2xs">
           <div className="text-xs font-medium text-label">Aurora pill</div>
           <div className="text-[11px] text-label-secondary">PulsingBorder + DotGrid backdrop + glass pill</div>
           <Squircle
@@ -53,7 +53,7 @@ function ShadersDemo() {
               <Squircle
                 as="div"
                 cornerRadius={999}
-                className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-md inset-ring-1 inset-ring-white/20"
+                className="flex items-center gap-inline-2xs rounded-full bg-white/10 px-inset-s py-2.5 text-sm font-medium text-white backdrop-blur-md inset-ring-1 inset-ring-white/20"
               >
                 <IconSparkles size={16} stroke={2} className="text-white/90" />
                 Ask Anything
@@ -62,7 +62,7 @@ function ShadersDemo() {
           </Squircle>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-stack-2xs">
           <div className="text-xs font-medium text-label">Dot-grid bloom</div>
           <div className="text-[11px] text-label-secondary">MeshGradient bloom over DotGrid</div>
           <Squircle

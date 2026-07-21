@@ -70,14 +70,14 @@ export function Colors() {
   }
 
   return (
-    <PageShell className="space-y-0! flex flex-col gap-10">
+    <PageShell className="space-y-0! flex flex-col gap-stack-l">
       {/* ── Header ── */}
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex items-start justify-between gap-inline-s">
         <PageHeader
           title="Color"
           description="Click any token to edit. Confirm to apply — overrides persist locally per mode. Reset reverts to base."
         />
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-inline-2xs shrink-0">
           <input
             ref={fileRef}
             type="file"
@@ -104,7 +104,7 @@ export function Colors() {
       {ALL_SECTIONS.map((section) => (
         <Section key={section.id} title={section.title} description={section.description}>
           <div className={cn(
-            "grid gap-4",
+            "grid gap-gutter-s",
             section.tokens.length <= 2 && "grid-cols-2",
             section.tokens.length === 3 && "grid-cols-3",
             section.tokens.length === 4 && "grid-cols-4",
@@ -129,7 +129,7 @@ export function Colors() {
 
       {/* ── Read-only reference: primitives, ramps, in-context demo ── */}
       <Section title="Neutral Scale" description="11-step achromatic ramp — static reference, not editable">
-        <div className="flex gap-2">
+        <div className="flex gap-inline-2xs">
           {NEUTRAL_STEPS.map(({ step, l }) => (
             <div key={step} className="flex-1 text-center">
               <div
@@ -156,13 +156,13 @@ export function Colors() {
               />
             ))}
           </div>
-          <div className="flex gap-px mt-1">
+          <div className="flex gap-px mt-stack-3xs">
             {OPACITY_STEPS.map((p) => (
               <div key={p} className="flex-1 text-center font-mono text-[7px] text-label-secondary">{p}</div>
             ))}
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-stack-s">
           <div className="font-mono text-[11px] text-label mb-1.5">White</div>
           <div className="flex gap-px rounded-lg overflow-hidden border border-stroke-faint">
             {OPACITY_STEPS.map((p) => (
@@ -178,7 +178,7 @@ export function Colors() {
       </Section>
 
       <Section title="Accent Colors" description="Apple system colors — 12 hues × 13 steps, reference only">
-        <div className="space-y-6">
+        <div className="space-y-stack-m">
           {ACCENT_HUES.map((hue) => (
             <div key={hue}>
               <div className="font-mono text-[11px] text-label mb-1.5 capitalize">{hue}</div>
@@ -208,11 +208,11 @@ export function Colors() {
       </Section>
 
       <Section title="In Context" description="All tokens working together — edits above reflect here instantly">
-        <div className="bg-surface rounded-2xl p-6">
+        <div className="bg-surface rounded-2xl p-inset-m">
           <div className="bg-surface-secondary rounded-xl border border-stroke-strong overflow-hidden">
-            <div className="p-5 pb-4">
+            <div className="p-inset-s pb-inset-s">
               <h3 className="text-label font-medium">Notification preferences</h3>
-              <p className="text-label-secondary text-sm mt-1">
+              <p className="text-label-secondary text-sm mt-stack-3xs">
                 Choose how and when you'd like to be notified.
               </p>
             </div>
@@ -225,7 +225,7 @@ export function Colors() {
                 <div
                   key={item.title}
                   className={cn(
-                    "flex items-center justify-between gap-4 px-5 py-3.5 bg-surface-tertiary",
+                    "flex items-center justify-between gap-inline-s px-inset-s py-3.5 bg-surface-tertiary",
                     i < arr.length - 1 && "border-b border-stroke-faint",
                   )}
                 >
@@ -332,9 +332,9 @@ function SwatchRow({
         </Popover.Portal>
       </Popover.Root>
 
-      <div className="mt-2 flex items-start justify-between gap-2">
+      <div className="mt-stack-2xs flex items-start justify-between gap-inline-2xs">
         <div className="space-y-0.5 min-w-0">
-          <div className="font-mono text-[11px] text-label truncate flex items-center gap-1">
+          <div className="font-mono text-[11px] text-label truncate flex items-center gap-inline-3xs">
             {token.cssVar.slice(2)}
             {edited && (
               <span title="Edited in this mode" className="inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0" />

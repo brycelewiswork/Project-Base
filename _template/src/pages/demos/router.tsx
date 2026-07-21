@@ -9,11 +9,11 @@ function RouterDemo() {
       <p className="text-body text-label-secondary">
         Multi-page sketches with <code>BrowserRouter</code> + <code>Routes</code>.
       </p>
-      <div className="flex flex-wrap items-center gap-3 text-sm">
-        <Link to="/" className="inline-flex items-center gap-1 underline">
+      <div className="flex flex-wrap items-center gap-gutter-xs text-sm">
+        <Link to="/" className="inline-flex items-center gap-inline-3xs underline">
           Home <IconArrowRight className="size-3" />
         </Link>
-        <Link to="/motion" className="inline-flex items-center gap-1 underline">
+        <Link to="/motion" className="inline-flex items-center gap-inline-3xs underline">
           Motion <IconArrowRight className="size-3" />
         </Link>
       </div>

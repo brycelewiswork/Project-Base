@@ -42,7 +42,7 @@ export function ToolbarButton({
 }
 
 function Divider() {
-  return <div className="mx-1 h-5 w-px bg-stroke-faint" />
+  return <div className="mx-inline-3xs h-5 w-px bg-stroke-faint" />
 }
 
 interface ToolbarProps {

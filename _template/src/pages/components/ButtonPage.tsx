@@ -40,7 +40,7 @@ export function ButtonPage() {
       {/* ── Preview ── */}
       <DocSection title="Preview" description="Primary buttons in a row — the most common configuration">
         <DocPreview>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-inline-xs">
             <Button onClick={() => setClickCount((c) => c + 1)}>
               Click me
             </Button>
@@ -57,7 +57,7 @@ export function ButtonPage() {
             </Button>
           </div>
           {clickCount > 0 && (
-            <p className="mt-4 font-mono text-sm text-label-secondary tabular-nums">
+            <p className="mt-stack-s font-mono text-sm text-label-secondary tabular-nums">
               clicked {clickCount} {clickCount === 1 ? "time" : "times"}
             </p>
           )}
@@ -70,13 +70,13 @@ export function ButtonPage() {
         <h3 className="text-xs font-medium text-label-secondary uppercase tracking-wider">
           Variants
         </h3>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample
             title="Default (primary)"
             value="variant=default"
             code='<Button>Save changes</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button>Save changes</Button>
             </div>
           </DocExample>
@@ -86,7 +86,7 @@ export function ButtonPage() {
             value="variant=secondary"
             code='<Button variant="secondary">Cancel</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button variant="secondary">Cancel</Button>
             </div>
           </DocExample>
@@ -96,7 +96,7 @@ export function ButtonPage() {
             value="variant=outline"
             code='<Button variant="outline">Export</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button variant="outline">
                 <IconDownload data-icon="inline-start" />
                 Export
@@ -109,7 +109,7 @@ export function ButtonPage() {
             value="variant=ghost"
             code='<Button variant="ghost">More info</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button variant="ghost">More info</Button>
             </div>
           </DocExample>
@@ -119,7 +119,7 @@ export function ButtonPage() {
             value="variant=destructive"
             code='<Button variant="destructive">Delete</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button variant="destructive">
                 <IconTrash data-icon="inline-start" />
                 Delete
@@ -132,23 +132,23 @@ export function ButtonPage() {
             value="variant=link"
             code='<Button variant="link">Learn more</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button variant="link">Learn more</Button>
             </div>
           </DocExample>
         </div>
 
         {/* -- Sizes -- */}
-        <h3 className="mt-8 text-xs font-medium text-label-secondary uppercase tracking-wider">
+        <h3 className="mt-stack-l text-xs font-medium text-label-secondary uppercase tracking-wider">
           Sizes
         </h3>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample
             title="Extra small"
             value="size=xs"
             code='<Button size="xs">Tiny</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button size="xs">Tiny</Button>
               <Button size="xs" variant="outline">Tiny outline</Button>
             </div>
@@ -159,7 +159,7 @@ export function ButtonPage() {
             value="size=sm"
             code='<Button size="sm">Small</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button size="sm">Small</Button>
               <Button size="sm" variant="outline">Small outline</Button>
             </div>
@@ -170,7 +170,7 @@ export function ButtonPage() {
             value="size=default"
             code="<Button>Default</Button>"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button>Default</Button>
               <Button variant="outline">Default outline</Button>
             </div>
@@ -181,7 +181,7 @@ export function ButtonPage() {
             value="size=lg"
             code='<Button size="lg">Large</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button size="lg">Large</Button>
               <Button size="lg" variant="outline">Large outline</Button>
             </div>
@@ -192,7 +192,7 @@ export function ButtonPage() {
             value="size=icon"
             code='<Button size="icon"><IconSettings /></Button>'
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-inline-xs">
               <Button size="icon-xs" aria-label="Add"><IconPlus /></Button>
               <Button size="icon-sm" aria-label="Add"><IconPlus /></Button>
               <Button size="icon" aria-label="Settings"><IconSettings /></Button>
@@ -205,7 +205,7 @@ export function ButtonPage() {
             value="size=icon, variant=ghost"
             code='<Button size="icon" variant="ghost">...</Button>'
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-inline-xs">
               <Button size="icon-xs" variant="ghost" aria-label="Add"><IconPlus /></Button>
               <Button size="icon-sm" variant="ghost" aria-label="Add"><IconPlus /></Button>
               <Button size="icon" variant="ghost" aria-label="Settings"><IconSettings /></Button>
@@ -215,16 +215,16 @@ export function ButtonPage() {
         </div>
 
         {/* -- States -- */}
-        <h3 className="mt-8 text-xs font-medium text-label-secondary uppercase tracking-wider">
+        <h3 className="mt-stack-l text-xs font-medium text-label-secondary uppercase tracking-wider">
           States
         </h3>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample
             title="Disabled"
             value="disabled=true"
             code="<Button disabled>Can't touch this</Button>"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button disabled>Disabled</Button>
               <Button variant="outline" disabled>Disabled</Button>
               <Button variant="ghost" disabled>Disabled</Button>
@@ -236,7 +236,7 @@ export function ButtonPage() {
             value="spinner + disabled"
             code='<Button disabled><IconLoader2 className="animate-spin" /> Saving</Button>'
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-inline-2xs">
               <Button disabled={loading} onClick={handleLoadingClick}>
                 {loading ? (
                   <>

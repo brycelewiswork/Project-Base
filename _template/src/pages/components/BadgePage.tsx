@@ -23,7 +23,7 @@ export function BadgePage() {
 
       {/* ── Preview ── */}
       <DocSection title="Preview" description="Row of badges in each variant">
-        <DocPreview className="gap-3">
+        <DocPreview className="gap-inline-xs">
           <Badge>Default</Badge>
           <Badge variant="secondary">Secondary</Badge>
           <Badge variant="outline">Outline</Badge>
@@ -33,44 +33,44 @@ export function BadgePage() {
 
       {/* ── Examples ── */}
       <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-gutter-m">
           <DocExample title="Default" value="variant=default" code='<Badge>Default</Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge>Active</Badge>
               <Badge>New</Badge>
             </div>
           </DocExample>
 
           <DocExample title="Secondary" value="variant=secondary" code='<Badge variant="secondary">Secondary</Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge variant="secondary">Category</Badge>
               <Badge variant="secondary">Tag</Badge>
             </div>
           </DocExample>
 
           <DocExample title="Outline" value="variant=outline" code='<Badge variant="outline">Outline</Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge variant="outline">Draft</Badge>
               <Badge variant="outline">Pending</Badge>
             </div>
           </DocExample>
 
           <DocExample title="Ghost" value="variant=ghost" code='<Badge variant="ghost">Ghost</Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge variant="ghost">Subtle</Badge>
               <Badge variant="ghost">Muted</Badge>
             </div>
           </DocExample>
 
           <DocExample title="With icon (start)" code='<Badge><IconStar data-icon="inline-start" /> Featured</Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge><IconStar data-icon="inline-start" /> Featured</Badge>
               <Badge variant="secondary"><IconCheck data-icon="inline-start" /> Done</Badge>
             </div>
           </DocExample>
 
           <DocExample title="With icon (end)" code='<Badge>Pro <IconBolt data-icon="inline-end" /></Badge>'>
-            <div className="flex gap-2">
+            <div className="flex gap-inline-2xs">
               <Badge>Pro <IconBolt data-icon="inline-end" /></Badge>
               <Badge variant="outline">Boost <IconBolt data-icon="inline-end" /></Badge>
             </div>

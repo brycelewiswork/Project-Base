@@ -37,11 +37,12 @@ const VENDORED = [
   "src/lib/motion.ts",
   "src/lib/utils.ts",
   "src/index.css", // @theme tokens live here
-  // Color + type systems
+  // Color + type/space systems
   "src/lib/colors.ts",
   "src/lib/color-tokens.ts",
   "src/lib/color-convert.ts",
-  "src/lib/typography.ts",
+  "src/lib/fluid.ts", // fluid type + space engine (Utopia clamp scale)
+  "src/store/useFluidStore.ts", // shared source of truth for the fluid config
   // Measurement + text
   "src/lib/pretext.ts",
   "src/components/ui/tight-text.tsx",
@@ -61,6 +62,10 @@ const VENDORED = [
   "src/pages/Motion.tsx",
   "src/pages/Spacing.tsx",
   "src/pages/Breakpoints.tsx",
+  "src/pages/Foundations.tsx",
+  "src/pages/Grid.tsx",
+  "src/pages/Clamp.tsx",
+  "src/pages/_fluid-controls.tsx",
   // Build + scaffolding
   "vite.config.ts",
   "scripts/**",
