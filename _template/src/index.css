@@ -92,6 +92,7 @@
     --shadow-xl: 0 16px 32px oklch(0 0 0 / 10%), 0 8px 16px oklch(0 0 0 / 5%);
     --shadow-2xl: 0 24px 48px oklch(0 0 0 / 14%), 0 12px 24px oklch(0 0 0 / 6%);
     --font-heading: var(--font-sans);
+    --font-body: var(--font-sans);
     --font-sans: 'DM Sans Variable', 'Geist Variable', sans-serif;
     --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -1155,6 +1156,7 @@
     }
   body {
     @apply bg-surface text-label;
+    font-family: var(--font-body);
     font-size: var(--type-step-0);
     line-height: var(--type-lh-body);
     letter-spacing: var(--type-ls-body);
@@ -1167,6 +1169,7 @@
     }
   h1, h2, h3, h4, h5, h6 {
     text-wrap: balance;
+    font-family: var(--font-heading);
     font-weight: var(--type-weight-heading);
     line-height: var(--type-lh-heading);
     letter-spacing: var(--type-ls-heading);

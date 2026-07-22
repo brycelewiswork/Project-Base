@@ -10,6 +10,8 @@ import router from "./router"
 import zustand from "./zustand"
 import sonner from "./sonner"
 import select from "./select"
+import combobox from "./combobox"
+import toggleGroup from "./toggle-group"
 import tabs from "./tabs"
 import recharts from "./recharts"
 import visx from "./visx"
@@ -42,6 +44,8 @@ export const DEMOS: DemoEntry[] = [
   zustand,
   sonner,
   select,
+  combobox,
+  toggleGroup,
   tabs,
   recharts,
   visx,

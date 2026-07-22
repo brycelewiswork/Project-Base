@@ -29,6 +29,7 @@ const roleForStep = (step: number) =>
 // Named modular-scale ratios (shown under the Type scale field, Utopia-style).
 const RATIO_NAMES: [number, string][] = [
   [1.067, "Minor Second"],
+  [1.075, "Apple"],
   [1.125, "Major Second"],
   [1.2, "Minor Third"],
   [1.25, "Major Third"],
@@ -130,8 +131,8 @@ export function Foundations() {
 
       {/* ── The six foundation values, grouped by viewport anchor ── */}
       <Section
-        title="The six values"
-        description="Each viewport anchor carries a width, a font size, and a type-scale ratio. Everything fluid interpolates between the two."
+        title="Foundation values"
+        description="Each viewport anchor carries a width, a font size, and the type-scale ratio. Detail scale is an optional gentler ratio for the sub-body steps only, so the small end can compress (Apple-style) while headings stay coarse — leave it equal to Type scale for one uniform ratio."
         className="grid gap-x-10 gap-y-8 sm:grid-cols-2"
       >
         <FoundationGroup title="Min viewport">
@@ -140,6 +141,7 @@ export function Foundations() {
           <NumberSlider label="Font size" value={cfg.base.min} min={10} max={28} step={0.5} unit="px"
             onChange={(v) => patchBase({ min: v })} />
           <RatioField label="Type scale" value={cfg.ratio.min} onChange={(v) => patchRatio({ min: v })} />
+          <RatioField label="Detail scale (below body)" value={cfg.ratio.detailMin} onChange={(v) => patchRatio({ detailMin: v })} />
         </FoundationGroup>
 
         <FoundationGroup title="Max viewport">
@@ -148,6 +150,7 @@ export function Foundations() {
           <NumberSlider label="Font size" value={cfg.base.max} min={10} max={32} step={0.5} unit="px"
             onChange={(v) => patchBase({ max: v })} />
           <RatioField label="Type scale" value={cfg.ratio.max} onChange={(v) => patchRatio({ max: v })} />
+          <RatioField label="Detail scale (below body)" value={cfg.ratio.detailMax} onChange={(v) => patchRatio({ detailMax: v })} />
         </FoundationGroup>
       </Section>
 

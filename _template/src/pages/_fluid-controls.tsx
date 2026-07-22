@@ -8,7 +8,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
-import { IconDeviceFloppy, IconRefresh, IconCopy, IconCheck } from "@tabler/icons-react"
+import { IconDeviceFloppy, IconRefresh, IconCopy, IconCheck, IconArrowBackUp } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { Slider as SliderInput } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
@@ -58,6 +58,7 @@ export function NumberSlider({
   unit,
   onChange,
   className,
+  defaultValue,
 }: {
   label: string
   value: number
@@ -67,14 +68,36 @@ export function NumberSlider({
   unit?: string
   onChange: (v: number) => void
   className?: string
+  /** When provided, a per-field revert button appears whenever `value` drifts
+   *  from this default — resets just this control (not the whole config). */
+  defaultValue?: number
 }) {
   const decimals = step < 0.01 ? 3 : step < 1 ? 2 : 0
   const clamp = (v: number) => Math.min(max, Math.max(min, v))
+  const modified =
+    defaultValue !== undefined && Math.abs(value - defaultValue) > (step ? step / 2 : 1e-9)
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <div className="flex items-baseline justify-between">
-        <label className="text-caption font-medium text-label-secondary">{label}</label>
+        <label className="text-[0.8125rem] font-medium text-label-secondary">{label}</label>
         <div className="flex items-baseline gap-1">
+          {defaultValue !== undefined && (
+            <button
+              type="button"
+              onClick={() => onChange(defaultValue)}
+              disabled={!modified}
+              aria-label={`Reset ${label} to default`}
+              title={`Reset to ${Number.isInteger(defaultValue) ? defaultValue : defaultValue.toFixed(decimals)}${unit ?? ""}`}
+              className={cn(
+                "translate-y-px rounded p-0.5 transition-colors",
+                modified
+                  ? "text-label-secondary hover:text-label"
+                  : "pointer-events-none text-label-tertiary/40"
+              )}
+            >
+              <IconArrowBackUp size={13} stroke={2} />
+            </button>
+          )}
           <input
             type="number"
             value={Number.isInteger(value) ? value : Number(value.toFixed(decimals))}
@@ -85,9 +108,9 @@ export function NumberSlider({
               const n = parseFloat(e.target.value)
               if (!Number.isNaN(n)) onChange(clamp(n))
             }}
-            className="w-14 rounded-md bg-surface px-1.5 py-0.5 text-right font-mono text-caption tabular-nums text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus-visible:inset-ring-stroke-strong"
+            className="w-16 rounded-md bg-surface px-1.5 py-0.5 text-right font-mono text-[0.8125rem] tabular-nums text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus-visible:inset-ring-stroke-strong [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
-          {unit && <span className="font-mono text-caption text-label-secondary">{unit}</span>}
+          {unit && <span className="font-mono text-[0.8125rem] text-label-secondary">{unit}</span>}
         </div>
       </div>
       <SliderInput

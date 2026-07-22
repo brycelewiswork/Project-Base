@@ -38,8 +38,12 @@ export type FluidConfig = {
   /** Base font size (px) at the min / max viewport. Drives type step 0 AND the
    *  space scale (space steps are multiples of this base). One value, not two. */
   base: { min: number; max: number }
-  /** Modular-scale ratio at the min / max viewport. */
-  ratio: { min: number; max: number }
+  /** Modular-scale ratio at the min / max viewport. `detailMin`/`detailMax` are a
+   *  separate, usually gentler ratio applied ONLY to the sub-body (negative) steps,
+   *  so the small end can compress (Apple-style: many tightly-spaced label sizes)
+   *  while the heading end stays coarse. Default them to `min`/`max` for a single
+   *  uniform ratio. Type-only — spacing derives from multipliers, not this. */
+  ratio: { min: number; max: number; detailMin: number; detailMax: number }
 
   // ── TYPE-ONLY ── refinements that shape the type scale, nothing else.
   type: {
@@ -52,6 +56,17 @@ export type FluidConfig = {
     lhBody: number
     lsHeading: number
     lsBody: number
+    /** Font family for headings / body. `DEFAULT_FONT` = the bundled DM Sans;
+     *  any other value is loaded on demand from Google Fonts. */
+    fontHeading: string
+    fontBody: string
+    /** Per-step custom role names (step number → name), keyed by step as a string.
+     *  Overrides the built-in `TYPE_ROLES` name and names otherwise-unnamed steps;
+     *  each generates a `.text-<name>` utility (injected live + emitted by Copy CSS). */
+    roleNames: Record<string, string>
+    /** Steps switched off — kept in the scale (so indices/ratio stay put) but
+     *  greyed in the Preview and excluded from the Copy CSS export. */
+    disabledSteps: number[]
   }
 
   // ── SPACE-ONLY ── each step is an editable multiple of the base; `down`/`up`
@@ -92,13 +107,17 @@ export function activeSpaceKeys(space: FluidConfig["space"]): SpaceStepKey[] {
   return [...down.reverse(), "s", ...up]
 }
 
+/** The bundled default family (DM Sans). Any other value in `fontHeading` /
+ *  `fontBody` is treated as a Google Fonts family name and loaded on demand. */
+export const DEFAULT_FONT = "DM Sans"
+
 /** Comfortable default: 16px→18px base across 360→1240, minor-third → major-third. */
 export const FLUID_DEFAULTS: FluidConfig = {
   viewport: { min: 360, max: 1240 },
   base: { min: 16, max: 18 },
-  ratio: { min: 1.2, max: 1.25 },
+  ratio: { min: 1.2, max: 1.25, detailMin: 1.075, detailMax: 1.075 },
   type: {
-    negativeSteps: 2,
+    negativeSteps: 6,
     positiveSteps: 5,
     weightHeading: 600,
     weightBody: 400,
@@ -106,6 +125,10 @@ export const FLUID_DEFAULTS: FluidConfig = {
     lhBody: 1.5,
     lsHeading: -0.02,
     lsBody: 0,
+    fontHeading: DEFAULT_FONT,
+    fontBody: DEFAULT_FONT,
+    roleNames: {},
+    disabledSteps: [],
   },
   space: {
     multipliers: { ...SPACE_MULTIPLIERS },
@@ -182,11 +205,14 @@ export type TypeStep = ClampResult & { step: number }
 export function computeTypeScale(cfg: FluidConfig): TypeStep[] {
   const { negativeSteps, positiveSteps } = cfg.type
   const { min: baseMin, max: baseMax } = cfg.base
-  const { min: ratioMin, max: ratioMax } = cfg.ratio
+  const { min: ratioMin, max: ratioMax, detailMin, detailMax } = cfg.ratio
   const steps: TypeStep[] = []
   for (let n = -negativeSteps; n <= positiveSteps; n++) {
-    const minPx = baseMin * ratioMin ** n
-    const maxPx = baseMax * ratioMax ** n
+    // Sub-body (negative) steps use the gentler detail ratio; body + headings use the main ratio.
+    const rMin = n < 0 ? detailMin : ratioMin
+    const rMax = n < 0 ? detailMax : ratioMax
+    const minPx = baseMin * rMin ** n
+    const maxPx = baseMax * rMax ** n
     steps.push({ step: n, ...calculateClamp(round(minPx, 3), round(maxPx, 3), cfg.viewport) })
   }
   return steps
@@ -317,6 +343,70 @@ export function computeGrid(grid: GridConfig, fluid: FluidConfig) {
   return { gutter, margin, maxWidthRem, fixedTemplateColumns, autoFitTemplateColumns, css }
 }
 
+/** Inject a Google Fonts stylesheet for `family` (idempotent). Uses the v1 CSS
+ *  API, which tolerantly serves whatever weights a family actually has (css2
+ *  returns 400 for a weight a font lacks — fatal for arbitrary user input).
+ *  Exported so the font picker can lazily render each option in its own face. */
+export function loadGoogleFont(family: string): void {
+  if (typeof document === "undefined") return
+  const fam = family.trim()
+  if (!fam || fam === DEFAULT_FONT) return
+  const id = `gfont-${fam.toLowerCase().replace(/\s+/g, "-")}`
+  if (document.getElementById(id)) return
+  const link = document.createElement("link")
+  link.id = id
+  link.rel = "stylesheet"
+  const name = fam.replace(/\s+/g, "+")
+  link.href = `https://fonts.googleapis.com/css?family=${name}:100,200,300,400,500,600,700,800,900&display=swap`
+  document.head.appendChild(link)
+}
+
+/** Point a `--font-*` var at the chosen family (loading it first if it's a
+ *  non-default Google font), or back at the bundled DM Sans stack. */
+function applyFontFamily(root: HTMLElement, varName: string, family: string): void {
+  const fam = family?.trim()
+  if (!fam || fam === DEFAULT_FONT) {
+    root.style.setProperty(varName, "var(--font-sans)")
+    return
+  }
+  loadGoogleFont(fam)
+  root.style.setProperty(varName, `"${fam}", var(--font-sans)`)
+}
+
+/** A user-typed role name → a valid CSS class fragment (a–z, 0–9, dashes). */
+export function sanitizeRoleName(raw: string): string {
+  return raw.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+}
+
+/** The effective role name for a step: a custom name (if set) wins, else the
+ *  built-in TYPE_ROLES role, else "" (an unnamed raw primitive). */
+export function resolveRoleName(step: number, cfg: FluidConfig): string {
+  const custom = (cfg.type.roleNames[step] ?? "").trim()
+  if (custom) return custom
+  return TYPE_ROLES.find((r) => r.step === step)?.role ?? ""
+}
+
+/** Live-inject `.text-<name>` utilities for the custom role names, so a name
+ *  typed on /typography works immediately (mirrors the font-loading pattern).
+ *  Built-in role utilities already ship statically in index.css. */
+function applyRoleUtilities(cfg: FluidConfig): void {
+  if (typeof document === "undefined") return
+  const id = "fluid-role-utilities"
+  let el = document.getElementById(id) as HTMLStyleElement | null
+  if (!el) {
+    el = document.createElement("style")
+    el.id = id
+    document.head.appendChild(el)
+  }
+  const rules: string[] = []
+  for (const [step, raw] of Object.entries(cfg.type.roleNames)) {
+    if (cfg.type.disabledSteps.includes(Number(step))) continue
+    const name = sanitizeRoleName(raw)
+    if (name) rules.push(`.text-${name} { font-size: var(--type-step-${step}); }`)
+  }
+  el.textContent = rules.join("\n")
+}
+
 /** Write the primitive tokens + type meta to the document root. */
 export function applyFluid(cfg: FluidConfig): void {
   const root = document.documentElement
@@ -336,6 +426,11 @@ export function applyFluid(cfg: FluidConfig): void {
   root.style.setProperty("--type-lh-body", String(cfg.type.lhBody))
   root.style.setProperty("--type-ls-heading", `${cfg.type.lsHeading}em`)
   root.style.setProperty("--type-ls-body", `${cfg.type.lsBody}em`)
+
+  applyFontFamily(root, "--font-heading", cfg.type.fontHeading)
+  applyFontFamily(root, "--font-body", cfg.type.fontBody)
+
+  applyRoleUtilities(cfg)
 }
 
 /** Deep-merge a persisted (possibly partial) config over the defaults. */
@@ -383,10 +478,12 @@ export function exportFluidCss(cfg: FluidConfig): string {
   const type = computeTypeScale(cfg)
   const space = computeSpaceScale(cfg)
   const { type: t } = cfg
+  // Disabled steps are excluded from the baked output entirely.
+  const disabled = new Set(t.disabledSteps)
 
   const primitives = [
     "  /* ── Fluid type primitives (steps) ── */",
-    ...type.map((s) => `  --type-step-${s.step}: ${s.css};`),
+    ...type.filter((s) => !disabled.has(s.step)).map((s) => `  --type-step-${s.step}: ${s.css};`),
     "",
     "  /* ── Fluid space primitives ── */",
     ...space.singles.map((s) => `  --space-${s.key}: ${s.css};`),
@@ -402,20 +499,46 @@ export function exportFluidCss(cfg: FluidConfig): string {
     `  --type-ls-body: ${t.lsBody}em;`,
   ].join("\n")
 
+  // Non-default fonts: a self-contained @import + the family vars.
+  const fontImports: string[] = []
+  const fontVars: string[] = []
+  for (const [family, varName] of [[t.fontHeading, "--font-heading"], [t.fontBody, "--font-body"]] as const) {
+    const fam = family?.trim()
+    if (!fam || fam === DEFAULT_FONT) continue
+    fontImports.push(`@import url("https://fonts.googleapis.com/css?family=${fam.replace(/\s+/g, "+")}:100,200,300,400,500,600,700,800,900&display=swap");`)
+    fontVars.push(`  ${varName}: "${fam}", var(--font-sans);`)
+  }
+
   const spaceKeys = activeSpaceKeys(cfg.space)
   const aliases = SPACE_ROLE_NAMES
     .flatMap((role) => spaceKeys.map((k) => `  --spacing-${role}-${k}: var(--space-${k});`))
     .join("\n")
 
-  const typeUtils = TYPE_ROLES.flatMap((r) => {
+  // Only emit role utilities whose step is actually in the active scale — a role
+  // whose step was removed (positive/negative steps shrunk) would otherwise bake a
+  // utility pointing at an undefined primitive.
+  const minStep = -cfg.type.negativeSteps
+  const maxStep = cfg.type.positiveSteps
+  const roleUtils = TYPE_ROLES.filter(
+    (r) => r.step >= minStep && r.step <= maxStep && !disabled.has(r.step)
+  ).flatMap((r) => {
     const lines = [`  .text-${r.role} { font-size: var(--type-step-${r.step}); }`]
     if (r.legacy) lines.push(`  .text-${r.legacy} { font-size: var(--type-step-${r.step}); }`)
     return lines
-  }).join("\n")
+  })
+  // Custom role names typed on /typography, for active + enabled steps only.
+  const customUtils = Object.entries(cfg.type.roleNames).flatMap(([step, raw]) => {
+    const n = Number(step)
+    const name = sanitizeRoleName(raw)
+    if (!name || n < minStep || n > maxStep || disabled.has(n)) return []
+    return [`  .text-${name} { font-size: var(--type-step-${step}); }`]
+  })
+  const typeUtils = [...roleUtils, ...customUtils].join("\n")
 
   return [
+    ...(fontImports.length ? [...fontImports, ""] : []),
     ":root {",
-    primitives,
+    fontVars.length ? [primitives, "", "  /* ── Type fonts ── */", ...fontVars].join("\n") : primitives,
     "}",
     "",
     "@theme inline {",
