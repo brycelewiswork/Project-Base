@@ -42,12 +42,20 @@ interface ColorFieldProps {
   /** Separate opacity 0–100. When given, it drives the split and the picker's alpha. */
   opacity?: number;
   onOpacityChange?: (n: number) => void;
+  /**
+   * Atomic color+opacity update. **Preferred** over the separate `onChange` +
+   * `onOpacityChange` pair whenever a consumer keeps color and opacity on the same
+   * object: the picker emits both dimensions from one edit, and firing two
+   * independent patch-merges makes the second (opacity) clobber the first (color)
+   * when each reads a stale closure of the shared value. One merged call avoids that.
+   */
+  onColorAndOpacityChange?: (hex: string, opacity: number) => void;
   size?: number;
   style?: CSSProperties;
   title?: string;
 }
 
-export function ColorField({ value, onChange, opacity, onOpacityChange, size = 26, style, title = 'Edit color' }: ColorFieldProps) {
+export function ColorField({ value, onChange, opacity, onOpacityChange, onColorAndOpacityChange, size = 26, style, title = 'Edit color' }: ColorFieldProps) {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   const base = solidHex(value);
@@ -108,8 +116,13 @@ export function ColorField({ value, onChange, opacity, onOpacityChange, size = 2
                   const parsed = parse(oklch);
                   const a = parsed?.alpha ?? 1;
                   const hex6 = (formatHex(parsed) || base).toUpperCase();
-                  if (onOpacityChange) {
-                    // Cell with a separate opacity field — split color and opacity.
+                  if (onColorAndOpacityChange) {
+                    // Cell with a separate opacity field — write both in one merged
+                    // patch so the opacity update can't clobber the color update.
+                    onColorAndOpacityChange(hex6, Math.round(a * 100));
+                  } else if (onOpacityChange) {
+                    // Fallback split (two patches — safe only if they target
+                    // independent state; prefer onColorAndOpacityChange otherwise).
                     onChange(hex6);
                     onOpacityChange(Math.round(a * 100));
                   } else {

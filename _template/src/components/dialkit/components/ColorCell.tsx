@@ -18,17 +18,23 @@ interface ColorCellProps {
   /** Pass both to show the opacity segment (0–100). Omit for a hex-only cell. */
   opacity?: number;
   onOpacityChange?: (n: number) => void;
+  /**
+   * Atomic color+opacity update for the picker. Pass this when color and opacity
+   * live on the same object so a single picker edit writes them in one patch (see
+   * ColorField — separate onColorChange/onOpacityChange would clobber each other).
+   */
+  onColorAndOpacityChange?: (hex: string, opacity: number) => void;
   swatchSize?: number;
   /** Extra wrapper styles (e.g. `flex: 1` when the cell shares a row). */
   style?: CSSProperties;
 }
 
-export function ColorCell({ color, onColorChange, opacity, onOpacityChange, swatchSize = 18, style }: ColorCellProps) {
+export function ColorCell({ color, onColorChange, opacity, onOpacityChange, onColorAndOpacityChange, swatchSize = 18, style }: ColorCellProps) {
   // Show the 6-digit RGB only — no leading `#`, and never the alpha byte (opacity is
   // its own field / the split chip). Edits keep whatever opacity the color carried.
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, ...FIELD, padding: '0 4px', ...style }}>
-      <ColorField value={color} onChange={onColorChange} opacity={opacity} onOpacityChange={onOpacityChange} size={swatchSize} />
+      <ColorField value={color} onChange={onColorChange} opacity={opacity} onOpacityChange={onOpacityChange} onColorAndOpacityChange={onColorAndOpacityChange} size={swatchSize} />
       <input
         value={hex6(color).replace(/^#/, '')}
         spellCheck={false}

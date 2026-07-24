@@ -119,6 +119,7 @@ export function FontPickerControl({ label, value, defaultValue, onChange, help }
           onColorChange={(hex) => set({ color: hex })}
           opacity={v.opacity}
           onOpacityChange={(n) => set({ opacity: n })}
+          onColorAndOpacityChange={(hex, op) => set({ color: hex, opacity: op })}
         />
       </div>
       </div>

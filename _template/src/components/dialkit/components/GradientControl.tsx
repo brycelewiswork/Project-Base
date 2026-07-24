@@ -295,6 +295,7 @@ export function GradientControl({ label, value, defaultValue, onChange, help }: 
               onColorChange={(hex) => updateStop(s.id!, { color: hex })}
               opacity={s.opacity}
               onOpacityChange={(n) => updateStop(s.id!, { opacity: n })}
+              onColorAndOpacityChange={(hex, op) => updateStop(s.id!, { color: hex, opacity: op })}
               style={{ flex: 1 }}
             />
             <button
