@@ -7,6 +7,7 @@ import { PageShell, PageHeader, Section } from "@/components/PageLayout"
 import { Button } from "@/components/ui/button"
 import { Squircle, SQUIRCLE_RADIUS } from "@/components/squircle"
 import { ColorPicker } from "@/components/color/ColorPicker"
+import { RampStudio } from "@/components/color/RampStudio"
 import { ALL_SECTIONS, type ThemeMode, type Token } from "@/lib/color-tokens"
 import { useColorOverrides } from "@/lib/colors"
 
@@ -175,6 +176,13 @@ export function Colors() {
             ))}
           </div>
         </div>
+      </Section>
+
+      <Section
+        title="Ramp Studio"
+        description="Generates 13-step families in OKLCH, in the same shape as the Apple ramps below — from a hue, or through a color you already have. Every value is authored and stored as oklch(); hex only ever appears at export, gamut-mapped. Add straight to the project's tokens, copy as CSS, or send to Figma."
+      >
+        <RampStudio />
       </Section>
 
       <Section title="Accent Colors" description="Apple system colors — 12 hues × 13 steps, reference only">

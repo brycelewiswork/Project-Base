@@ -23,6 +23,8 @@ type Props = {
   onChange: (oklchCssValue: string) => void
   /** Close the picker (X button / Enter / Escape). */
   onClose?: () => void
+  /** Which readout the mode dropdown starts on. Defaults to `hsl`. */
+  defaultMode?: PickerMode
 }
 
 const MODES: PickerMode[] = ["hex", "rgb", "css", "hsl", "hsb", "okl"]
@@ -33,13 +35,13 @@ const CHECKER = "repeating-conic-gradient(#c8c8c8 0% 25%, #ffffff 0% 50%)"
 /** Above the ColorField popover portal (which sits at ~max int) so the mode menu wins. */
 const MENU_Z = 2147483647
 
-export function ColorPicker({ value, onChange, onClose }: Props) {
+export function ColorPicker({ value, onChange, onClose, defaultMode = "hsl" }: Props) {
   // Internal HSV state — kept independent of the value prop so editing is stable.
   const [h, setH] = useState(0)
   const [s, setS] = useState(0)
   const [v, setV] = useState(0)
   const [a, setA] = useState(1)
-  const [mode, setMode] = useState<PickerMode>("hsl")
+  const [mode, setMode] = useState<PickerMode>(defaultMode)
 
   // Seed once on mount. The picker owns its state while open and applies live, so
   // re-seeding from the (self-updating) value prop mid-edit would cause jitter.
