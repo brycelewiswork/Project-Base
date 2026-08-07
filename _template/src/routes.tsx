@@ -32,7 +32,7 @@ const lazyPage = <T extends Record<string, React.ComponentType>>(
 ) => lazy(() => loader().then((m) => ({ default: m[name] })))
 
 const Demos = lazyPage(() => import("@/pages/Demos"), "Demos")
-const DialkitGallery = lazyPage(() => import("@/pages/DialkitGallery"), "DialkitGallery")
+const Inputs = lazyPage(() => import("@/pages/Inputs"), "Inputs")
 const Colors = lazyPage(() => import("@/pages/Colors"), "Colors")
 const Typography = lazyPage(() => import("@/pages/Typography"), "Typography")
 const Motion = lazyPage(() => import("@/pages/Motion"), "Motion")
@@ -73,7 +73,6 @@ export type RouteEntry = {
 export const ROUTES: RouteEntry[] = [
   { path: "/",            label: "Home",    icon: IconHome,            Component: Home },
   { path: "/demos",       label: "Demos",   icon: IconSparkles,        system: true, Component: Demos },
-  { path: "/dialkit",     label: "Dialkit", icon: IconAdjustments,     system: true, Component: DialkitGallery },
   { path: "/colors",      label: "Color",   icon: IconPalette,         system: true, Component: Colors },
   { path: "/foundations", label: "Fluid",   icon: IconStack2,          system: true, Component: Foundations },
   { path: "/typography",  label: "Type",    icon: IconTypography,      system: true, Component: Typography },
@@ -82,6 +81,7 @@ export const ROUTES: RouteEntry[] = [
   { path: "/breakpoints", label: "Layout",  icon: IconLayoutGrid,      system: true, Component: Breakpoints },
   { path: "/grid",        label: "Grid",    icon: IconGridDots,        system: true, Component: Grid },
   { path: "/clamp",       label: "Clamp",   icon: IconRulerMeasure,    system: true, Component: Clamp },
+  { path: "/inputs",      label: "Inputs",  icon: IconAdjustments,     system: true, Component: Inputs },
   { path: "/icons",       label: "Icons",   icon: IconIcons,           system: true, Component: Icons },
 
   { path: "/components/badge",     label: "Badge",     icon: IconTag,                     group: "components", system: true, Component: BadgePage },
