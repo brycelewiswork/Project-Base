@@ -162,8 +162,15 @@ function SideNav() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15, delay: 0.05 }}
-              className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl"
+              // Capped to the viewport so the menu can never grow past it —
+              // it's centred, so an uncapped menu clips off *both* ends and the
+              // items there become unreachable.
+              className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl max-h-[calc(100svh-2rem)]"
             >
+              {/* The links scroll; the theme toggle below stays pinned.
+                  `min-h-0` is what allows this flex child to shrink past its
+                  content height — without it the column just overflows again. */}
+              <div className="min-h-0 overflow-y-auto overscroll-contain">
               {TOP_LEVEL_ROUTES.map((r) => (
                 <NavLink
                   key={r.path}
@@ -215,6 +222,7 @@ function SideNav() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              </div>
 
               <div className="mt-4" />
               <ThemeToggle />
