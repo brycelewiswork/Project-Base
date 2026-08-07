@@ -129,7 +129,7 @@ Project-Base/
 ├── _template/          ← the actual scaffold (uses pnpm; node_modules hardlinks from a shared store)
 ├── setup.sh / .ps1     ← one-command bootstrap: checks Node, enables pnpm, installs deps
 ├── new-project.sh/.ps1 ← copies _template to a sibling folder, pnpm installs, git inits
-├── docs/               ← notes on experimental browser APIs
+├── docs/               ← notes on experimental browser APIs + design-system derivations
 └── README.md
 ```
 
@@ -142,6 +142,13 @@ generating code that touches them:
   real, interactive HTML *through* a canvas (scale, rotate, shade, post-process
   with WebGL/WebGPU) while the underlying DOM stays live, focusable, and
   accessible. Chromium flag only as of 2026-05.
+
+## Design-system derivations
+
+- **OKLCH ramps** ([docs/oklch-ramps.md](docs/oklch-ramps.md)) — how the 13-step
+  color scale works, why the imported Apple families are fully reproducible from
+  three numbers plus two shared curves, why they deliberately overshoot sRGB, and
+  how to get a generated family into `index.css` or Figma.
 
 ## Adding to the template
 

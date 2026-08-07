@@ -177,7 +177,7 @@ it on `/demos` in the same change — same convention as the bundled libraries.
 
 Reference pages documenting the design system. Visit during `pnpm dev`:
 
-- `/colors` — every color token (surfaces, labels, strokes, fills, accents, neutrals, black/white opacity, charts, sidebar)
+- `/colors` — every color token (surfaces, labels, strokes, fills, accents, neutrals, black/white opacity, charts, sidebar), plus the **Ramp Studio** — generates a 13-step family in the same shape as the Apple accent ramps, from a hue or through a color you already have (also tonal neutral / tinted-neutral / vibrant modes). Exports CSS token blocks, an SVG swatch sheet you drag straight into Figma, and W3C DTCG JSON for Tokens Studio. Engine in [src/lib/oklch.ts](src/lib/oklch.ts); the derivation behind the two profile curves is in [../../Project-Base/docs/oklch-ramps.md](../../Project-Base/docs/oklch-ramps.md)
 - `/foundations` — **the fluid system's root.** Owns the shared values (viewport min/max, font-size min/max, type-scale ratio min/max, and an optional detail-ratio min/max for the sub-body steps) that type + space derive from; illustrates the cascade. Set the scale here; the other four pages read it. Save + Copy CSS
 - `/typography` — fluid **type** scale (Utopia clamp): a typescale.com-style live **Preview** (type your own specimen, switch REM/PX/PT units, add/remove steps inline) plus Table/Graph views; type-only refinements (body/heading **font** — any Google family, DM Sans default — weights, line-height, tracking, each with an individual reset); primitive-step + semantic-role tables. Foundation values are read-only here (tune on /foundations)
 - `/motion` — spring and easing curve visualizations with play/replay, duration tokens
@@ -185,6 +185,8 @@ Reference pages documenting the design system. Visit during `pnpm dev`:
 - `/breakpoints` — responsive breakpoint scale, live viewport indicator, reflow demo, container widths
 - `/grid` — fluid, wrap-aware grid (auto-fit + fixed N-col) with gutters bound to the space scale; generated CSS
 - `/clamp` — general fluid-value generator (any min→max between two viewports) with a live scrubber preview
+- `/inputs` — **Inputs & Controls.** The two families side by side: the interface inputs that *ship* inside a sketch (Select, Toggle, ToggleGroup, Tabs, Command, Slider) with live examples and snippets, and the dialkit tuning controls that *don't*. Opens with a "which do I reach for" table, and carries the full dialkit control catalog — the panel is wired with every control type, so a `controlStyles.ts` restyle can be checked against the whole set at once
+- `/icons` — searchable Tabler icon browser
 - `/demos` — inventory of every installed library with working demos
 
 ## Template chrome is opt-in for a sketch
