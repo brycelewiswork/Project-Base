@@ -100,7 +100,7 @@ export function FontPickerControl({ label, value, defaultValue, onChange, help }
       <div style={{ display: 'flex', gap: 8 }}>
         <FpField title="Size">
           <div style={{ ...FIELD, padding: 0, display: 'flex', alignItems: 'center' }}>
-            <ScrubNumber value={v.fontSize} min={1} max={400} onChange={(n) => set({ fontSize: n })} />
+            <ScrubNumber ariaLabel="Font size" value={v.fontSize} min={1} max={400} onChange={(n) => set({ fontSize: n })} />
           </div>
         </FpField>
         <FpField title="Case">
@@ -115,6 +115,7 @@ export function FontPickerControl({ label, value, defaultValue, onChange, help }
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <span style={SUBLABEL}>Color</span>
         <ColorCell
+          ariaLabel="Font color"
           color={v.color}
           onColorChange={(hex) => set({ color: hex })}
           opacity={v.opacity}

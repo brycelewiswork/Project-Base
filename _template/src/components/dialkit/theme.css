@@ -14,6 +14,7 @@
   --dial-accent: #3b82f6;
   --dial-accent-hover: #2f74e6;
   --dial-accent-text: #ffffff;
+  --dial-danger: #f87171;        /* 5.82:1 on --dial-glass-bg */
 
   /* Text hierarchy - 3 levels */
   --dial-text-root: #FFFFFF;   /* Root title */
@@ -504,7 +505,6 @@
   border: none;
   border-bottom: 1px solid var(--dial-text-label);
   padding: 0 0 1px 0;
-  outline: none;
   text-align: right;
 }
 
@@ -836,7 +836,6 @@
   background: transparent;
   border: none;
   padding: 0;
-  outline: none;
   text-align: right;
   cursor: text;
 }
@@ -991,7 +990,6 @@
   background: transparent;
   border: none;
   padding: 0;
-  outline: none;
   text-transform: uppercase;
   transform: translateY(-0.5px);
 }
@@ -1138,8 +1136,21 @@
   opacity: 0.6;
 }
 
-.dialkit-preset-delete:hover {
+.dialkit-preset-delete:hover,
+.dialkit-preset-delete:focus-visible,
+.dialkit-preset-delete[data-armed="true"] {
   opacity: 1 !important;
+}
+
+/* Armed (first press): the trash icon becomes a red "Delete?" — the second press deletes. */
+.dialkit-preset-delete[data-armed="true"] {
+  width: auto;
+  padding: 0 6px;
+  color: var(--dial-danger);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .dialkit-preset-delete svg {
@@ -1194,7 +1205,6 @@
   background: var(--dial-surface);
   border: 1px solid var(--dial-border);
   border-radius: 6px;
-  outline: none;
 }
 
 .dialkit-preset-input:focus {
@@ -1298,8 +1308,6 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--dial-text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding: 4px 8px 8px;
 }
 
@@ -1353,6 +1361,7 @@
 
 /* ── Light Theme ── */
 .dialkit-root[data-theme="light"] {
+  --dial-danger: #dc2626;        /* 4.63:1 on --dial-glass-bg */
   --dial-surface: rgba(0, 0, 0, 0.04);
   --dial-surface-hover: rgba(0, 0, 0, 0.08);
   --dial-surface-active: rgba(0, 0, 0, 0.1);
@@ -1398,6 +1407,7 @@
 /* ── System preference: light ── */
 @media (prefers-color-scheme: light) {
   .dialkit-root[data-theme="system"] {
+    --dial-danger: #dc2626;
     --dial-surface: rgba(0, 0, 0, 0.04);
     --dial-surface-hover: rgba(0, 0, 0, 0.08);
     --dial-surface-active: rgba(0, 0, 0, 0.1);
@@ -1451,6 +1461,13 @@
 /* Narrow (< 768px — phones + narrow/split desktop): full-width bottom sheet +
    backdrop; collapsed = a FAB bubble. */
 @media (max-width: 767px) {
+  .dialkit-slider-input,
+  .dialkit-text-input,
+  .dialkit-color-hex-input,
+  .dialkit-preset-input {
+    font-size: 16px;
+  }
+
   .dialkit-backdrop {
     position: fixed;
     inset: 0;
@@ -1515,4 +1532,35 @@
 .dialkit-ghost-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Buttons that stand in for text that was clickable (folder titles, the hex readout,
+   preset names) — they keep the text's look and gain a keyboard path. The browser's
+   own focus ring is left alone on purpose. */
+.dialkit-unstyled-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  cursor: inherit;
+}
+.dialkit-preset-name.dialkit-unstyled-btn {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+}
+
+/* HelpDot draws at 14px; this widens the target to the 24px AA minimum without
+   changing the dot. It sits on the slider track, so it takes ~5px of drag area
+   around the "?" — the price of a target that can actually be hit on a phone. */
+.dialkit-help-dot::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
 }

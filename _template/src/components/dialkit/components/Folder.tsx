@@ -70,32 +70,64 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
           {isRoot ? (
             isOpen && (
               <div className="dialkit-folder-title-row">
-                <span className="dialkit-folder-title dialkit-folder-title-root">
-                  {title}
-                </span>
+                {inline ? (
+                  <span className="dialkit-folder-title dialkit-folder-title-root">
+                    {title}
+                  </span>
+                ) : (
+                  // The header row's onClick toggles. This gives it a keyboard path and a
+                  // name; no handler of its own — Enter/Space fire a click that bubbles
+                  // to the row exactly once.
+                  <button
+                    type="button"
+                    className="dialkit-unstyled-btn dialkit-folder-title dialkit-folder-title-root"
+                    aria-expanded={isOpen}
+                  >
+                    {title}
+                  </button>
+                )}
                 {help && <span style={{ marginLeft: 5, display: 'inline-flex' }} onClick={(e) => e.stopPropagation()}><HelpDot text={help} /></span>}
               </div>
             )
           ) : (
             <div className="dialkit-folder-title-row">
-              <span className="dialkit-folder-title">
+              <button
+                type="button"
+                className="dialkit-unstyled-btn dialkit-folder-title"
+                aria-expanded={isOpen}
+              >
                 {title}
-              </span>
+              </button>
               {help && <span style={{ marginLeft: 5, display: 'inline-flex' }} onClick={(e) => e.stopPropagation()}><HelpDot text={help} /></span>}
             </div>
           )}
-          {isRoot && !inline && (
-            <svg
-              className="dialkit-panel-icon"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path opacity="0.5" d={ICON_PANEL.path} fill="currentColor"/>
-              {ICON_PANEL.circles.map((c, i) => (
-                <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill="currentColor" stroke="currentColor" strokeWidth="1.25"/>
-              ))}
-            </svg>
-          )}
+          {isRoot && !inline && (() => {
+            const icon = (
+              <svg
+                className="dialkit-panel-icon"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path opacity="0.5" d={ICON_PANEL.path} fill="currentColor"/>
+                {ICON_PANEL.circles.map((c, i) => (
+                  <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill="currentColor" stroke="currentColor" strokeWidth="1.25"/>
+                ))}
+              </svg>
+            );
+            // Collapsed, the icon is the only thing on screen, so it is the control.
+            // Open, the title button above takes over and the icon is decoration.
+            return isOpen ? icon : (
+              <button
+                type="button"
+                className="dialkit-unstyled-btn"
+                aria-label={`Open ${title}`}
+                aria-expanded={false}
+              >
+                {icon}
+              </button>
+            );
+          })()}
           {!isRoot && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               {canReset && onReset && (
@@ -103,6 +135,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
                   type="button"
                   className="dialkit-ghost-btn"
                   title="Reset to default"
+                  aria-label={`Reset ${title} to default`}
                   onClick={(e) => { e.stopPropagation(); onReset(); }}
                   initial={{ opacity: 0, scale: 0.6 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -117,6 +150,7 @@ export function Folder({ title, children, defaultOpen = true, isRoot = false, in
                 </motion.button>
               )}
               <motion.svg
+                aria-hidden="true"
                 className="dialkit-folder-icon"
                 viewBox="0 0 24 24"
                 fill="none"

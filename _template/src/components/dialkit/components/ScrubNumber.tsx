@@ -22,9 +22,11 @@ interface ScrubNumberProps {
   /** Wrapper sizing (width/height). */
   style?: CSSProperties;
   align?: CSSProperties['textAlign'];
+  /** Accessible name. Omit only when the field already sits inside a <label>. */
+  ariaLabel?: string;
 }
 
-export function ScrubNumber({ value, onChange, min = -Infinity, max = Infinity, step = 1, suffix, disabled, style, align = 'center' }: ScrubNumberProps) {
+export function ScrubNumber({ value, onChange, min = -Infinity, max = Infinity, step = 1, suffix, disabled, style, align = 'center', ariaLabel }: ScrubNumberProps) {
   const [text, setText] = useState(String(value));
   const [editing, setEditing] = useState(false);
   const focused = useRef(false);
@@ -67,6 +69,7 @@ export function ScrubNumber({ value, onChange, min = -Infinity, max = Infinity, 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', ...style }}>
       <input
+        aria-label={ariaLabel}
         ref={inputRef}
         value={text}
         inputMode="numeric"

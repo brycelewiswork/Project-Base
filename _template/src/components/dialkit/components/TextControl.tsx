@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { selectOnFocus } from './controlStyles';
 import { HelpDot } from './HelpDot';
 
@@ -10,10 +11,12 @@ interface TextControlProps {
 }
 
 export function TextControl({ label, value, onChange, placeholder, help }: TextControlProps) {
+  const id = useId();
   return (
     <div className="dialkit-text-control">
-      <label className="dialkit-text-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>{label}<HelpDot text={help} /></label>
+      <label htmlFor={id} className="dialkit-text-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>{label}<HelpDot text={help} /></label>
       <input
+        id={id}
         type="text"
         className="dialkit-text-input"
         value={value}

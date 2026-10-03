@@ -49,7 +49,7 @@ export function ColorCollectionControl({ label, value, defaultValue, onChange, h
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
         {colors.map((c, i) => (
-          <ColorCell key={i} color={c} onColorChange={(hex) => setAt(i, hex)} />
+          <ColorCell key={i} ariaLabel={`Color ${i + 1}`} color={c} onColorChange={(hex) => setAt(i, hex)} />
         ))}
       </div>
       </div>

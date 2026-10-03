@@ -29,10 +29,10 @@ export function RangeInputControl({ label, value, defaultValue, onChange, help }
         <div style={{ display: 'flex', gap: 8 }}>
           {/* Drag left/right to scrub; click to type. */}
           <div style={{ ...NUM_FIELD, flex: 1, padding: 0, display: 'flex', alignItems: 'center' }}>
-            <ScrubNumber value={v.start} onChange={(n) => onChange({ ...v, start: n })} />
+            <ScrubNumber ariaLabel={`${label} start`} value={v.start} onChange={(n) => onChange({ ...v, start: n })} />
           </div>
           <div style={{ ...NUM_FIELD, flex: 1, padding: 0, display: 'flex', alignItems: 'center' }}>
-            <ScrubNumber value={v.end} onChange={(n) => onChange({ ...v, end: n })} />
+            <ScrubNumber ariaLabel={`${label} end`} value={v.end} onChange={(n) => onChange({ ...v, end: n })} />
           </div>
         </div>
       </div>

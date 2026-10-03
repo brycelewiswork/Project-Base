@@ -161,7 +161,7 @@ export function ImagePickerControl({ label, value, defaultValue, onChange, help 
                 }}
               >
                 <img src={src} draggable={false} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                <button type="button" title="Remove" onClick={() => removeAt(i)} style={removeOverlay}>
+                <button type="button" title="Remove" aria-label={`Remove image ${i + 1}`} onClick={() => removeAt(i)} style={removeOverlay}>
                   ✕
                 </button>
               </div>
@@ -169,6 +169,7 @@ export function ImagePickerControl({ label, value, defaultValue, onChange, help 
             <button
               type="button"
               title="Add image"
+              aria-label="Add image"
               onClick={() => inputRef.current?.click()}
               style={{ ...tile, border: '1px solid var(--dial-border)', background: 'var(--dial-surface)', color: 'var(--dial-text-tertiary)', cursor: 'pointer', display: 'grid', placeItems: 'center', fontSize: 22 }}
             >
@@ -203,6 +204,7 @@ export function ImagePickerControl({ label, value, defaultValue, onChange, help 
                 <button
                   type="button"
                   title="Remove"
+                  aria-label={`Remove image ${i + 1}`}
                   onClick={() => removeAt(i)}
                   className="dialkit-ghost-btn"
                   style={{ width: 22, height: 22, fontSize: 12, color: 'var(--dial-text-label)' }}

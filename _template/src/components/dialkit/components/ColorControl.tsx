@@ -51,6 +51,7 @@ export function ColorControl({ label, value, onChange, help }: ColorControlProps
       <div className="dialkit-color-inputs">
         {isEditing ? (
           <input
+            aria-label={`${label} hex`}
             type="text"
             className="dialkit-color-hex-input"
             value={editValue.replace(/^#/, '')}
@@ -61,9 +62,16 @@ export function ColorControl({ label, value, onChange, help }: ColorControlProps
             autoFocus
           />
         ) : (
-          <span className="dialkit-color-hex" onClick={() => setIsEditing(true)}>
+          // A button, not a clickable span, so hex editing is reachable from the keyboard.
+          // The name keeps the visible hex in it (label-in-name).
+          <button
+            type="button"
+            className="dialkit-unstyled-btn dialkit-color-hex"
+            aria-label={`Edit hex ${hex6(value).replace(/^#/, '')}`}
+            onClick={() => setIsEditing(true)}
+          >
             {hex6(value).replace(/^#/, '')}
-          </span>
+          </button>
         )}
         <ColorField value={value} onChange={onChange} size={20} />
       </div>

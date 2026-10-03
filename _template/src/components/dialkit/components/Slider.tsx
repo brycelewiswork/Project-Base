@@ -420,6 +420,7 @@ export function Slider({
 
         {showInput ? (
           <input
+            aria-label={label}
             ref={inputRef}
             type="text"
             className="dialkit-slider-input"

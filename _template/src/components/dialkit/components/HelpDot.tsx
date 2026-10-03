@@ -91,7 +91,7 @@ function HelpTooltip({ text, anchor }: { text: string; anchor: Anchor }) {
  * a control a `help` string in its config to opt in; renders nothing without one.
  */
 export function HelpDot({ text }: { text?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
 
   if (!text) return null;
@@ -104,15 +104,31 @@ export function HelpDot({ text }: { text?: string }) {
 
   return (
     <>
-      <span
+      {/* A real button: aria-label on a role-less focusable <span> isn't reliably
+          announced. The help text stays in the name rather than aria-describedby,
+          because the tooltip only renders after focus and could be read too late.
+          Escape dismisses the tooltip (WCAG 1.4.13) without closing the panel. */}
+      <button
         ref={ref}
-        tabIndex={0}
+        type="button"
+        className="dialkit-help-dot"
         aria-label={`Help: ${text}`}
         onPointerEnter={show}
         onPointerLeave={hide}
         onFocus={show}
         onBlur={hide}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' && anchor) {
+            e.stopPropagation();
+            hide();
+          }
+        }}
         style={{
+          padding: 0,
+          margin: 0,
+          appearance: 'none',
+          fontFamily: 'inherit',
           width: 14,
           height: 14,
           borderRadius: '50%',
@@ -136,7 +152,7 @@ export function HelpDot({ text }: { text?: string }) {
         }}
       >
         ?
-      </span>
+      </button>
       {anchor && createPortal(<HelpTooltip text={text} anchor={anchor} />, document.body)}
     </>
   );

@@ -13,6 +13,9 @@ interface PresetManagerProps {
 
 export function PresetManager({ panelId, presets, activePresetId }: PresetManagerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  // Deleting a preset throws away tuned values, so it takes two presses: the first
+  // arms the button (it turns into a red "Delete?"), the second deletes.
+  const [armedId, setArmedId] = useState<string | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
@@ -64,6 +67,11 @@ export function PresetManager({ panelId, presets, activePresetId }: PresetManage
 
   const handleDelete = (e: React.MouseEvent, presetId: string) => {
     e.stopPropagation();
+    if (armedId !== presetId) {
+      setArmedId(presetId);
+      return;
+    }
+    setArmedId(null);
     DialStore.deletePreset(panelId, presetId);
   };
 
@@ -107,12 +115,20 @@ export function PresetManager({ panelId, presets, activePresetId }: PresetManage
               exit={{ opacity: 0, y: 4, scale: 0.97, pointerEvents: 'none' as any }}
               transition={{ type: 'spring', visualDuration: 0.15, bounce: 0 }}
             >
+              {/* Rows keep their whole-row click; the name is a <button> with no handler
+                  of its own, so Enter/Space bubble a click to the row and select it. */}
               <div
                 className="dialkit-preset-item"
                 data-active={String(!activePresetId)}
                 onClick={() => handleSelect(null)}
               >
-                <span className="dialkit-preset-name">Version 1</span>
+                <button
+                  type="button"
+                  className="dialkit-unstyled-btn dialkit-preset-name"
+                  aria-current={!activePresetId ? 'true' : undefined}
+                >
+                  Version 1
+                </button>
               </div>
 
               {presets.map((preset) => (
@@ -122,17 +138,30 @@ export function PresetManager({ panelId, presets, activePresetId }: PresetManage
                   data-active={String(preset.id === activePresetId)}
                   onClick={() => handleSelect(preset.id)}
                 >
-                  <span className="dialkit-preset-name">{preset.name}</span>
                   <button
-                    className="dialkit-preset-delete"
-                    onClick={(e) => handleDelete(e, preset.id)}
-                    title="Delete preset"
+                    type="button"
+                    className="dialkit-unstyled-btn dialkit-preset-name"
+                    aria-current={preset.id === activePresetId ? 'true' : undefined}
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      {ICON_TRASH.map((d, i) => (
-                        <path key={i} d={d} />
-                      ))}
-                    </svg>
+                    {preset.name}
+                  </button>
+                  <button
+                    type="button"
+                    className="dialkit-preset-delete"
+                    data-armed={String(armedId === preset.id)}
+                    onClick={(e) => handleDelete(e, preset.id)}
+                    onBlur={() => setArmedId((id) => (id === preset.id ? null : id))}
+                    aria-label={armedId === preset.id ? `Confirm delete ${preset.name}` : `Delete ${preset.name}`}
+                  >
+                    {armedId === preset.id ? (
+                      'Delete?'
+                    ) : (
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {ICON_TRASH.map((d, i) => (
+                          <path key={i} d={d} />
+                        ))}
+                      </svg>
+                    )}
                   </button>
                 </div>
               ))}

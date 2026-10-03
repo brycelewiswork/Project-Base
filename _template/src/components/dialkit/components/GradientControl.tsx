@@ -269,7 +269,7 @@ export function GradientControl({ label, value, defaultValue, onChange, help }: 
         </button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        {sortedStops(stops).map((s) => (
+        {sortedStops(stops).map((s, i) => (
           <div
             key={s.id}
             onPointerDown={() => setSelectedId(s.id!)}
@@ -287,10 +287,11 @@ export function GradientControl({ label, value, defaultValue, onChange, help }: 
           >
             {/* Position — % lives in-cell (muted, inert); drag left/right to scrub. */}
             <div style={{ ...FIELD, width: 56, padding: 0, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-              <ScrubNumber value={s.pos} min={0} max={100} suffix="%" onChange={(n) => updateStop(s.id!, { pos: n })} />
+              <ScrubNumber ariaLabel={`Stop ${i + 1} position`} value={s.pos} min={0} max={100} suffix="%" onChange={(n) => updateStop(s.id!, { pos: n })} />
             </div>
             {/* Standard color cell: swatch + hex + scrubbable opacity on the right. */}
             <ColorCell
+              ariaLabel={`Stop ${i + 1} color`}
               color={s.color}
               onColorChange={(hex) => updateStop(s.id!, { color: hex })}
               opacity={s.opacity}
@@ -301,6 +302,7 @@ export function GradientControl({ label, value, defaultValue, onChange, help }: 
             <button
               type="button"
               title="Remove stop"
+              aria-label={`Remove stop ${i + 1}`}
               onClick={() => removeStop(s.id!)}
               disabled={stops.length <= 2}
               className="dialkit-ghost-btn"

@@ -117,7 +117,7 @@ export function TransitionControl({ panelId, path, label, value, onChange, help 
             <Slider label="x2" value={easing.ease[2]} onChange={(v) => updateEase(2, v)} min={0} max={1} step={0.01} />
             <Slider label="y2" value={easing.ease[3]} onChange={(v) => updateEase(3, v)} min={-1} max={2} step={0.01} />
             <Slider label="Duration" value={easing.duration} onChange={(v) => onChange({ ...easing, duration: v })} min={0.1} max={2} step={0.05} unit="s" />
-            <EaseTextInput ease={easing.ease} onChange={(newEase) => onChange({ ...easing, ease: newEase })} />
+            <EaseTextInput label={label} ease={easing.ease} onChange={(newEase) => onChange({ ...easing, ease: newEase })} />
           </>
         ) : isSimpleSpring ? (
           <>
@@ -148,7 +148,7 @@ function parseEase(str: string): [number, number, number, number] | null {
   return null;
 }
 
-function EaseTextInput({ ease, onChange }: { ease: [number, number, number, number]; onChange: (ease: [number, number, number, number]) => void }) {
+function EaseTextInput({ ease, onChange, label }: { ease: [number, number, number, number]; onChange: (ease: [number, number, number, number]) => void; label: string }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
 
@@ -173,6 +173,7 @@ function EaseTextInput({ ease, onChange }: { ease: [number, number, number, numb
     <div className="dialkit-labeled-control">
       <span className="dialkit-labeled-control-label">Ease</span>
       <input
+        aria-label={`${label} easing`}
         type="text"
         className="dialkit-text-input"
         value={editing ? draft : formatEase(ease)}

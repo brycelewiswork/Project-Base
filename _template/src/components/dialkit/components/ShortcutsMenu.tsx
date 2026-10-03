@@ -97,6 +97,8 @@ export function ShortcutsMenu({ panelId }: ShortcutsMenuProps) {
         className="dialkit-shortcuts-trigger"
         onClick={toggle}
         title="Keyboard shortcuts"
+        aria-label="Keyboard shortcuts"
+        aria-expanded={isOpen}
         whileTap={{ scale: 0.9 }}
         transition={{ type: 'spring', visualDuration: 0.15, bounce: 0.3 }}
       >

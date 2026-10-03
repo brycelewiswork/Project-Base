@@ -342,6 +342,7 @@ Apply these values as the new defaults in the useDialKit call.`;
         className="dialkit-toolbar-add"
         onClick={handleAddPreset}
         title="Add preset"
+        aria-label="Add preset"
         whileTap={{ scale: 0.9 }}
         transition={{ type: 'spring', visualDuration: 0.15, bounce: 0.3 }}
       >

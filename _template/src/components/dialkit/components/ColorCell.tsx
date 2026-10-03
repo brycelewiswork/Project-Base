@@ -25,17 +25,20 @@ interface ColorCellProps {
    */
   onColorAndOpacityChange?: (hex: string, opacity: number) => void;
   swatchSize?: number;
+  /** Accessible name stem, e.g. "Stop 2 color" → "Stop 2 color hex" / "… opacity". */
+  ariaLabel?: string;
   /** Extra wrapper styles (e.g. `flex: 1` when the cell shares a row). */
   style?: CSSProperties;
 }
 
-export function ColorCell({ color, onColorChange, opacity, onOpacityChange, onColorAndOpacityChange, swatchSize = 18, style }: ColorCellProps) {
+export function ColorCell({ color, onColorChange, opacity, onOpacityChange, onColorAndOpacityChange, swatchSize = 18, style, ariaLabel = 'Color' }: ColorCellProps) {
   // Show the 6-digit RGB only — no leading `#`, and never the alpha byte (opacity is
   // its own field / the split chip). Edits keep whatever opacity the color carried.
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, ...FIELD, padding: '0 4px', ...style }}>
       <ColorField value={color} onChange={onColorChange} opacity={opacity} onOpacityChange={onOpacityChange} onColorAndOpacityChange={onColorAndOpacityChange} size={swatchSize} />
       <input
+        aria-label={`${ariaLabel} hex`}
         value={hex6(color).replace(/^#/, '')}
         spellCheck={false}
         onChange={(e) => onColorChange(withAlphaOf(e.target.value, color))}
@@ -55,7 +58,7 @@ export function ColorCell({ color, onColorChange, opacity, onOpacityChange, onCo
       {opacity != null && onOpacityChange && (
         <>
           <span style={{ width: 1, height: 16, background: 'var(--dial-border)', flexShrink: 0 }} />
-          <ScrubNumber value={opacity} min={0} max={100} suffix="%" style={{ width: 44, flexShrink: 0 }} onChange={onOpacityChange} />
+          <ScrubNumber ariaLabel={`${ariaLabel} opacity`} value={opacity} min={0} max={100} suffix="%" style={{ width: 44, flexShrink: 0 }} onChange={onOpacityChange} />
         </>
       )}
     </div>
