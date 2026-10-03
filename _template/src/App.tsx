@@ -108,15 +108,46 @@ function SideNav() {
   const [open, setOpen] = useState(false)
   const [componentsOpen, setComponentsOpen] = useState(componentsActive)
   const ref = useRef<HTMLDivElement>(null)
+  const dotRef = useRef<HTMLButtonElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+  // Where focus lands after the next open/close. The dot unmounts as the panel
+  // replaces it, so a keyboard open has to move focus into the menu, and a close
+  // from inside has to hand it back to the dot — otherwise it falls to <body>.
+  const focusAfter = useRef<"menu" | "dot" | null>(null)
+
+  useEffect(() => {
+    if (open && focusAfter.current === "menu") {
+      listRef.current?.querySelector<HTMLElement>("a, button")?.focus()
+    } else if (!open && focusAfter.current === "dot") {
+      dotRef.current?.focus()
+    }
+    focusAfter.current = null
+  }, [open])
+
+  // Close from inside the menu; only reclaim focus if it was actually in the menu,
+  // so a mouse hover-open never pulls focus away from a page input.
+  const closeFromInside = () => {
+    if (ref.current?.contains(document.activeElement)) focusAfter.current = "dot"
+    setOpen(false)
+  }
 
   useEffect(() => {
     if (!open) return
     const onDown = (e: PointerEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return
+      closeFromInside()
+      setComponentsOpen(componentsActive)
+    }
     document.addEventListener("pointerdown", onDown)
-    return () => document.removeEventListener("pointerdown", onDown)
-  }, [open])
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("pointerdown", onDown)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [open, componentsActive])
 
   return (
     <div
@@ -142,7 +173,10 @@ function SideNav() {
       <motion.div
         layout
         transition={{ type: "spring", ...SPRING_FAST.snappy }}
-        className="cursor-pointer overflow-hidden backdrop-blur-lg"
+        // Focus shows as an outline OUTSIDE the dot, against the page (4.08:1 light /
+        // 4.11:1 dark). An inset ring on the dot's mid-gray fill measured 2.96 / 1.92:1.
+        // This element isn't clip-pathed, so the outline survives and follows the radius.
+        className="cursor-pointer overflow-hidden backdrop-blur-lg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
         animate={{
           backgroundColor: open ? "var(--surface-secondary)" : "oklch(0.710 0 0 / 40%)",
           borderRadius: open ? 18 : 999,
@@ -153,10 +187,26 @@ function SideNav() {
             : "0 0 0 0 transparent, 0 0 0 0 transparent, 0 0 0 0 transparent",
         }}
       >
+        {!open && (
+          // The whole site navigation sits behind this dot, so it has to be reachable
+          // from the keyboard. Its click bubbles to the wrapper's onClick, which opens
+          // the menu — this only records that focus should follow into it.
+          <button
+            ref={dotRef}
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded={false}
+            aria-controls="site-nav"
+            onClick={() => { focusAfter.current = "menu" }}
+            className="block size-8 cursor-pointer rounded-full outline-none"
+          />
+        )}
         <AnimatePresence>
           {open && (
             <Squircle
               as={motion.nav}
+              id="site-nav"
+              aria-label="Site"
               cornerRadius={SQUIRCLE_RADIUS["2xl"]}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -170,19 +220,21 @@ function SideNav() {
               {/* The links scroll; the theme toggle below stays pinned.
                   `min-h-0` is what allows this flex child to shrink past its
                   content height — without it the column just overflows again. */}
-              <div className="min-h-0 overflow-y-auto overscroll-contain">
+              <div ref={listRef} className="min-h-0 overflow-y-auto overscroll-contain">
               {TOP_LEVEL_ROUTES.map((r) => (
                 <NavLink
                   key={r.path}
                   to={r.path}
                   label={r.label}
                   icon={r.icon}
-                  onNavigate={() => setOpen(false)}
+                  onNavigate={closeFromInside}
                 />
               ))}
 
               {/* Components dropdown */}
               <button
+                type="button"
+                aria-expanded={componentsOpen}
                 onClick={() => setComponentsOpen((v) => !v)}
                 className={`flex items-center gap-2.5 px-4 py-2.5 text-sm rounded-xl transition-colors w-full text-left cursor-pointer ${
                   componentsActive && !componentsOpen
@@ -216,7 +268,7 @@ function SideNav() {
                         label={r.label}
                         icon={r.icon}
                         indent
-                        onNavigate={() => setOpen(false)}
+                        onNavigate={closeFromInside}
                       />
                     ))}
                   </motion.div>

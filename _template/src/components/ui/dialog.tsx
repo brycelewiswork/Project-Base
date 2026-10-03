@@ -336,15 +336,16 @@ function DialogClose({ className, children, disabled }: DialogCloseProps) {
       type='button'
       aria-label='Close dialog'
       className={cn(
-        'absolute top-4 right-4 rounded-xs opacity-70 transition-opacity',
-        'hover:opacity-100 focus:ring-2 focus:outline-hidden',
-        'focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+        // p-1 makes the target 24px (was the 16px icon alone); top/right-3 keeps the
+        // icon exactly where it sat at top/right-4.
+        'absolute top-3 right-3 rounded-md p-1 opacity-70 transition-opacity',
+        'hover:opacity-100 outline-none focus-visible:opacity-100',
+        'focus-visible:inset-ring-2 focus-visible:inset-ring-ring disabled:pointer-events-none',
         className
       )}
       disabled={disabled}
     >
       {children || <IconX className='h-4 w-4' />}
-      <span className='sr-only'>Close</span>
     </button>
   );
 }

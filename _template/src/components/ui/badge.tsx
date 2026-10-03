@@ -11,7 +11,7 @@ const badgeVariants = cva(
   // leaving rectangular-edge artifacts at the corners. Use `inset-ring-*`
   // (inset box-shadow) instead — it renders inside the box and survives
   // the clip. Mirrors the same convention enforced on Button and Card.
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl inset-ring-1 inset-ring-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:inset-ring-ring focus-visible:ring-3 focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:inset-ring-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl inset-ring-1 inset-ring-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:inset-ring-2 focus-visible:inset-ring-ring has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:inset-ring-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const badgeVariants = cva(
         secondary:
           "bg-surface-tertiary text-label [a]:hover:bg-surface-tertiary/80",
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+          "bg-destructive/10 text-destructive dark:bg-destructive/20 dark: [a]:hover:bg-destructive/20",
         outline:
           "inset-ring-stroke-faint text-label [a]:hover:bg-surface-tertiary [a]:hover:text-label-secondary",
         ghost:

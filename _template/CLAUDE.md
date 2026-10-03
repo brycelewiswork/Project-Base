@@ -418,7 +418,14 @@ import { buildShadow } from "@/components/squircle"
 #### Other notes
 
 - Outset Tailwind `ring-*` is implemented as `box-shadow: 0 0 0 1px` and will be clipped away by the squircle. Use `inset-ring-*` instead — inset shadows render inside the box and survive the clip. Card already does this.
-- Focus rings (`focus-visible:ring-*`) are clipped the same way. Acceptable since the ring follows the squircle outline tightly; if a component needs an unclipped focus ring, wrap it in `<SquircleShadow>` (or any non-clipped outer) and let the ring sit on the wrapper.
+- **Focus rings must be inset.** corner-smoothing sets `clip-path` on the element itself, so an outset
+  `focus-visible:ring-*`, an `outline` and `ring-offset` are not trimmed to the squircle — they are removed
+  entirely, leaving keyboard users no indicator. Use `focus-visible:inset-ring-2 focus-visible:inset-ring-ring`,
+  which paints inside the box and follows the squircle (Button, Select, Toggle, Tabs, Badge all do). When the
+  clip is on a *parent* (an accordion card around its trigger), put the ring on the clipped parent with
+  `has-focus-visible:inset-ring-2 has-focus-visible:inset-ring-ring`. On a translucent or mid-gray fill where
+  the ring can't reach 3:1, move it outside instead — an `outline` with an offset on a non-clipped element
+  (the nav dot does this). `--ring` is tuned to clear 3:1 against the page, cards and filled buttons.
 - Avoid animating `border-radius` directly on a squircled element; it fights the clip-path.
 - `backdrop-filter` (used by `<LinearBlur>`/`<RadialBlur>`) does not see through a parent that has `filter:` or `clip-path:` set — the parent isolates the backdrop. If a progressive blur is nested inside a squircled Card, the blur will see only the Card's contents, not what's underneath the page. Place the blur OUTSIDE squircled elements (or apply the squircle to a wrapper) when you want the full backdrop.
 

@@ -126,9 +126,9 @@ export function Accordion({
             onClick={() => setExpanded(isOpen ? null : it.value)}
             aria-expanded={isOpen}
             className={cn(
-              "flex w-full items-center justify-between gap-3 text-left text-label transition-colors",
+              "flex w-full items-center justify-between gap-3 text-left text-label transition-colors outline-none",
               isFlat
-                ? "py-3 hover:text-label-secondary"
+                ? "rounded-md py-3 hover:text-label-secondary focus-visible:inset-ring-2 focus-visible:inset-ring-ring"
                 : "px-4 py-3 hover:bg-fill-quaternary",
             )}
           >
@@ -185,7 +185,7 @@ export function Accordion({
             key={String(it.value)}
             as="div"
             cornerRadius={SQUIRCLE_RADIUS.lg}
-            className="overflow-hidden rounded-lg bg-surface-secondary inset-ring-1 inset-ring-stroke-faint/60"
+            className="overflow-hidden rounded-lg bg-surface-secondary inset-ring-1 inset-ring-stroke-faint/60 has-focus-visible:inset-ring-2 has-focus-visible:inset-ring-ring"
           >
             {trigger}
             {body}
