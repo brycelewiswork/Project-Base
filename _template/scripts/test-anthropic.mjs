@@ -23,11 +23,16 @@ if (!apiKey) {
   process.exit(1)
 }
 
+// Mirrors CLAUDE_MODEL in src/lib/anthropic.ts. Deliberately duplicated rather
+// than imported: that module builds its client from `window.location.origin`, so
+// it cannot load in Node. Change both together.
+const CLAUDE_MODEL = "claude-sonnet-5-5"
+
 const client = new Anthropic({ apiKey })
 
 try {
   const res = await client.messages.create({
-    model: "claude-opus-4-8",
+    model: CLAUDE_MODEL,
     max_tokens: 64,
     messages: [{ role: "user", content: "Reply with exactly one word: pong" }],
   })

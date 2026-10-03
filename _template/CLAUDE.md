@@ -131,7 +131,7 @@ import { anthropic, CLAUDE_MODEL, streamText } from "@/lib/anthropic"
 
 // one-shot
 const res = await anthropic.messages.create({
-  model: CLAUDE_MODEL,            // claude-opus-4-8
+  model: CLAUDE_MODEL,            // claude-sonnet-5-5
   max_tokens: 1024,
   messages: [{ role: "user", content: "..." }],
 })
@@ -144,7 +144,9 @@ for await (const chunk of streamText("Write a haiku about squircles")) {
 
 `anthropic` is the full SDK — use it directly for tool use, images, multi-turn,
 or adaptive thinking (`thinking: { type: "adaptive" }`) on complex tasks. Default
-to **streaming** for long outputs. Model default is `claude-opus-4-8`.
+to **streaming** for long outputs. Model default is `claude-sonnet-5-5` — picked for
+cost, since sketches make a lot of throwaway calls. Pass `model: "claude-opus-5-5"`
+per call when a sketch actually needs the reasoning.
 
 **Verify the key:** `pnpm test:anthropic` (one tiny live call, prints ✅/❌).
 `.env.example` documents the variable. Never prefix the key with `VITE_`.

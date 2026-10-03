@@ -18,8 +18,12 @@ export const anthropic = new Anthropic({
   dangerouslyAllowBrowser: true,
 })
 
-/** Default model — Opus 4.8 is the most capable. Pass a cheaper tier per call if needed. */
-export const CLAUDE_MODEL = "claude-opus-4-8"
+/**
+ * Default model — Sonnet 5.5, chosen for cost: sketches make a lot of throwaway
+ * calls and it is a fraction of Opus. Pass a more capable tier per call
+ * (`model: "claude-opus-5-5"`) when a sketch actually needs the reasoning.
+ */
+export const CLAUDE_MODEL = "claude-sonnet-5-5"
 
 /**
  * Stream a single-prompt completion, yielding text as it arrives — handy for
