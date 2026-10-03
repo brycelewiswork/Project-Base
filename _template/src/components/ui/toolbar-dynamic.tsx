@@ -60,12 +60,12 @@ export default function ToolbarDynamic() {
             <div className='overflow-hidden p-2'>
               {!isOpen ? (
                 <div className='flex space-x-2'>
-                  <Button disabled ariaLabel='IconUser profile'>
+                  <Button disabled ariaLabel='Profile'>
                     <IconUser className='h-5 w-5' />
                   </Button>
                   <Button
                     onClick={() => setIsOpen(true)}
-                    ariaLabel='IconSearch notes'
+                    ariaLabel='Search notes'
                   >
                     <IconSearch className='h-5 w-5' />
                   </Button>
@@ -79,7 +79,7 @@ export default function ToolbarDynamic() {
                     <input
                       className='h-9 w-full rounded-lg inset-ring-1 inset-ring-stroke-faint bg-transparent p-2 text-label placeholder-label-secondary focus:outline-hidden'
                       autoFocus
-                      placeholder='IconSearch notes'
+                      placeholder='Search notes'
                     />
                     <div className='absolute right-1 top-0 flex h-full items-center justify-center'></div>
                   </div>

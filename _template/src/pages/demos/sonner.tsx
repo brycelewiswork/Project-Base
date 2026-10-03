@@ -15,7 +15,7 @@ function SonnerDemo() {
       <div className="flex flex-wrap gap-gutter-2xs">
         <Button size="sm" onClick={() => toast("Hello, sketcher")}>Toast</Button>
         <Button size="sm" variant="outline" onClick={() => toast.success("Saved")}>Success</Button>
-        <Button size="sm" variant="outline" onClick={() => toast.error("Something broke")}>
+        <Button size="sm" variant="outline" onClick={() => toast.error("Couldn't save", { description: "Check your connection and try again." })}>
           Error
         </Button>
       </div>

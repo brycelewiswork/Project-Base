@@ -61,7 +61,7 @@ export function Colors() {
     const result = colors.importJson(text)
     e.target.value = ""
     if (!result) {
-      toast.error("Couldn't parse that file")
+      toast.error("Couldn't read that file", { description: "Import a JSON file exported from this page." })
       return
     }
     toast.success(

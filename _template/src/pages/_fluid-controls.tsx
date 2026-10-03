@@ -137,7 +137,7 @@ export function CopyButton({ getText, label = "Copy CSS" }: { getText: () => str
           toast.success("CSS copied to clipboard")
           setTimeout(() => setCopied(false), 1500)
         } catch {
-          toast.error("Couldn't access the clipboard")
+          toast.error("Couldn't access the clipboard", { description: "Allow clipboard access for this site, then try again." })
         }
       }}
     >
