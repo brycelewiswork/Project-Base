@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import {
   motion,
   type Transition,
+  useReducedMotion,
 } from 'motion/react';
 import { EASE } from '@/lib/motion';
 
@@ -20,6 +21,11 @@ export function BorderTrail({
   onAnimationComplete,
   style,
 }: BorderTrailProps) {
+  // offsetDistance isn't a transform, so the root <MotionConfig reducedMotion> leaves
+  // it looping. The trail is decoration only, so under reduced motion it isn't drawn.
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return null;
+
   const defaultTransition: Transition = {
     repeat: Infinity,
     duration: 5,

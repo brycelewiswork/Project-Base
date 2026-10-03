@@ -1,6 +1,7 @@
 import React, { useMemo, type JSX } from 'react';
 import {
   motion,
+  useReducedMotion,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { EASE } from '@/lib/motion'
@@ -24,6 +25,9 @@ function TextShimmerComponent({
     Component as keyof JSX.IntrinsicElements
   );
 
+  // backgroundPosition isn't a transform, so the root <MotionConfig reducedMotion>
+  // leaves this loop running. Under reduced motion the text renders static.
+  const reduceMotion = useReducedMotion();
   const dynamicSpread = useMemo(() => {
     return children.length * spread;
   }, [children, spread]);
@@ -37,13 +41,13 @@ function TextShimmerComponent({
         'dark:[--base-color:#71717a] dark:[--base-gradient-color:#ffffff] dark:[--bg:linear-gradient(90deg,#0000_calc(50%-var(--spread)),var(--base-gradient-color),#0000_calc(50%+var(--spread)))]',
         className
       )}
-      initial={{ backgroundPosition: '100% center' }}
-      animate={{ backgroundPosition: '0% center' }}
-      transition={{
-        repeat: Infinity,
-        duration,
-        ease: EASE.linear,
-      }}
+      initial={reduceMotion ? false : { backgroundPosition: '100% center' }}
+      animate={{ backgroundPosition: reduceMotion ? '100% center' : '0% center' }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { repeat: Infinity, duration, ease: EASE.linear }
+      }
       style={
         {
           '--spread': `${dynamicSpread}px`,

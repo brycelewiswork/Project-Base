@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import {
   useMotionValue,
+  useReducedMotion,
   animate,
   motion,
 } from 'motion/react';
@@ -32,8 +33,15 @@ export function InfiniteSlider({
   const translation = useMotionValue(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [key, setKey] = useState(0);
+  // animate() below is imperative, so the root <MotionConfig reducedMotion> never
+  // reaches it — check the preference here and leave the strip still.
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) {
+      translation.set(0);
+      return;
+    }
     let controls;
     const size = direction === 'horizontal' ? width : height;
     const contentSize = size + gap;
@@ -79,6 +87,7 @@ export function InfiniteSlider({
     isTransitioning,
     direction,
     reverse,
+    reduceMotion,
   ]);
 
   const hoverProps = speedOnHover
@@ -109,7 +118,12 @@ export function InfiniteSlider({
         {...hoverProps}
       >
         {children}
-        {children}
+        {/* Second copy only makes the loop seamless. `inert` keeps it out of the
+            accessibility tree and the tab order, so items aren't read or tabbed twice.
+            `contents` leaves the flex layout untouched. */}
+        <div className='contents' inert>
+          {children}
+        </div>
       </motion.div>
     </div>
   );

@@ -3,6 +3,7 @@ import {
   motion,
   type Transition,
   type Variants,
+  useReducedMotion,
 } from 'motion/react';
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -110,6 +111,20 @@ function Dialog({
       dialogRef.current.showModal();
     }
   }, [isOpen]);
+
+  // close() is what restores focus to the trigger, and it otherwise runs only from
+  // onAnimationComplete('exit'). When there is no exit animation to wait for —
+  // reduced motion, or variants with no `exit` (the defaults have none) — that
+  // callback isn't guaranteed, and AnimatePresence would pull the open <dialog> out
+  // of the DOM without close(): out of the top layer, focus never returned. So close
+  // the native dialog straight away in those cases. AnimatePresence keeps the element
+  // mounted until after this effect, so the ref is still live.
+  const reduceMotion = useReducedMotion();
+  useEffect(() => {
+    if (!isOpen && (reduceMotion || !variants.exit) && dialogRef.current?.open) {
+      dialogRef.current.close();
+    }
+  }, [isOpen, reduceMotion, variants]);
 
   const handleTrigger = () => {
     setIsOpen(true);

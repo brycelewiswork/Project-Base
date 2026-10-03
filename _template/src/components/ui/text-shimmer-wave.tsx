@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
 import {
   motion,
+  useReducedMotion,
   type Transition,
 } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -33,6 +34,9 @@ export function TextShimmerWave({
   rotateYDistance = 10,
   transition,
 }: TextShimmerWaveProps) {
+  // The loop animates `color` as well as transforms; the root <MotionConfig
+  // reducedMotion> only strips the transforms, so the color wave would keep cycling.
+  const reduceMotion = useReducedMotion();
   const MotionComponent = motion.create(
     Component as keyof JSX.IntrinsicElements
   );
@@ -47,22 +51,25 @@ export function TextShimmerWave({
       )}
       style={{ color: 'var(--base-color)' }}
     >
+      {/* Read the text once, whole — the per-character spans below are presentation. */}
+      <span className='sr-only'>{children}</span>
       {children.split('').map((char, i) => {
         const delay = (i * duration * (1 / spread)) / children.length;
 
         return (
           <motion.span
             key={i}
+            aria-hidden='true'
             className={cn(
               'inline-block whitespace-pre [transform-style:preserve-3d]'
             )}
-            initial={{
+            initial={reduceMotion ? false : {
               translateZ: 0,
               scale: 1,
               rotateY: 0,
               color: 'var(--base-color)',
             }}
-            animate={{
+            animate={reduceMotion ? undefined : {
               translateZ: [0, zDistance, 0],
               translateX: [0, xDistance, 0],
               translateY: [0, yDistance, 0],

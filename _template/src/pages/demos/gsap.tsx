@@ -7,14 +7,37 @@ import type { DemoEntry } from "./types"
 
 function GsapDemo() {
   const boxes = useRef<Array<HTMLDivElement | null>>([])
+  const mm = useRef<gsap.MatchMedia | null>(null)
+  // GSAP reads neither <MotionConfig reducedMotion> nor the CSS media query, so every
+  // GSAP animation needs its own check. gsap.matchMedia() is the canonical one: it
+  // picks a branch per preference and reverts cleanly. Revert the previous context
+  // before each replay so listeners don't pile up.
   const play = () => {
-    gsap.fromTo(
-      boxes.current,
-      { scale: 0.6, opacity: 0.2 },
-      { scale: 1, opacity: 1, duration: 0.6, stagger: 0.05, ease: GSAP_EASE.bounce },
+    mm.current?.revert()
+    mm.current = gsap.matchMedia()
+    mm.current.add(
+      {
+        full: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (ctx) => {
+        if (ctx.conditions?.reduced) {
+          // Opacity only — no scale, no overshoot.
+          gsap.fromTo(boxes.current, { opacity: 0.2 }, { opacity: 1, duration: 0.2 })
+          return
+        }
+        gsap.fromTo(
+          boxes.current,
+          { scale: 0.6, opacity: 0.2 },
+          { scale: 1, opacity: 1, duration: 0.6, stagger: 0.05, ease: GSAP_EASE.bounce },
+        )
+      },
     )
   }
-  useEffect(() => { play() }, [])
+  useEffect(() => {
+    play()
+    return () => mm.current?.revert()
+  }, [])
   return (
     <DemoSection title="GSAP" lib="gsap" docsUrl="https://gsap.com/docs/v3/">
       <p className="text-body text-label-secondary">

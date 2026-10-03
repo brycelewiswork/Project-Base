@@ -1155,7 +1155,9 @@
     @apply border-stroke-faint outline-ring/50;
     }
   body {
-    @apply bg-surface text-label;
+    /* antialiased: macOS renders text heavier than designed without it. Once, here —
+       never per component. */
+    @apply bg-surface text-label antialiased;
     font-family: var(--font-body);
     font-size: var(--type-step-0);
     line-height: var(--type-lh-body);
@@ -1239,4 +1241,21 @@
 @keyframes digit-fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* Reduced motion — the CSS half. <MotionConfig reducedMotion="user"> in main.tsx
+   covers declarative motion; this covers CSS keyframes (skeleton pulse, the
+   digit-* glyphs above, tw-animate, dialkit) and transitions.
+   0.01ms rather than `animation: none` on purpose: animated-number removes its exit
+   glyph on `animationend`, and `none` never fires the event, so digits would stick.
+   Infinite loops run once and stop — autoplay ends, which is the point. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

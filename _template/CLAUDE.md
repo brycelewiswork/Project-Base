@@ -60,7 +60,7 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
 - Tailwind CSS **v4** via `@tailwindcss/vite` (no PostCSS / no `tailwind.config.js` — config lives in `src/index.css` under `@theme`)
 - shadcn/ui (base / nova preset, neutral palette) — components live in `src/components/ui/`. shadcn v4+ uses **Base UI** (`@base-ui/react`) as its headless primitive layer (replacing Radix from earlier versions). Button and Badge already use Base UI; future `pnpm dlx shadcn add` components will too. Base UI is a dependency of shadcn, not something we manage directly.
 - motion (formerly framer-motion) — import from `motion/react` for React APIs, `motion/dom` for the Motion One-style vanilla API
-- GSAP for timeline/stagger animations
+- GSAP for timeline/stagger animations — GSAP reads neither `MotionConfig` nor the CSS media query, so wrap every GSAP animation in `gsap.matchMedia()` with a reduced-motion branch ([src/pages/demos/gsap.tsx](src/pages/demos/gsap.tsx) is the pattern)
 - React Router v7
 - Zustand for state — stores in `src/store/`
 - Sonner for toasts (mounted in `src/main.tsx`)
@@ -321,6 +321,20 @@ have it working or when something feels janky (verification **Tier 3**).
 - Pages: `src/pages/<PageName>.tsx`, registered in `src/routes.tsx`
 - Add shadcn components with: `pnpm dlx shadcn@latest add <name>` — pnpm auto-installs peers, so the visx peer conflict that needed `--legacy-peer-deps` on npm resolves on its own
 - Don't add a `tailwind.config.js` — Tailwind v4 uses CSS-first config in `src/index.css`
+
+### Reduced motion is handled at the root — know what it misses
+
+`<MotionConfig reducedMotion="user">` in `main.tsx` strips **transform and layout** animation from every
+declarative `<motion.*>`, and a `prefers-reduced-motion` block at the end of `index.css` stops CSS keyframes and
+transitions. Neither reaches four things — each one checks the preference itself:
+
+- **Imperative motion** — `animate(...)`, `useAnimate`: `useReducedMotion()` and don't start the loop ([infinite-slider](src/components/ui/infinite-slider.tsx)).
+- **Non-transform loops** — `opacity`, `color`, `backgroundPosition`, `offsetDistance`: `useReducedMotion()` and render still ([text-shimmer](src/components/ui/text-shimmer.tsx), [glow-effect](src/components/ui/glow-effect.tsx)).
+- **Timers that swap content** — `setInterval` autoplay: don't start it ([text-loop](src/components/ui/text-loop.tsx)).
+- **GSAP** — `gsap.matchMedia()` (see Stack).
+
+The CSS block uses a 0.01ms duration, not `animation: none`, so `animationend`/`transitionend` still fire —
+animated-number removes its exit glyphs on `animationend`.
 
 ### After adding a new shadcn component
 

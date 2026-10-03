@@ -150,7 +150,7 @@ export function AccordionPage() {
             { interaction: "Tab", behavior: "Move focus between accordion triggers." },
             { interaction: "aria-expanded", behavior: "Set automatically on each trigger button." },
             { interaction: "Body region", behavior: "Mounted only while expanded — screen readers skip closed bodies." },
-            { interaction: "Reduced motion", behavior: "Honor the user's prefers-reduced-motion via Motion's MotionConfig if you wrap the page." },
+            { interaction: "Reduced motion", behavior: "Handled app-wide: <MotionConfig reducedMotion=\"user\"> in main.tsx drops the height spring to an instant change." },
           ]}
         />
       </DocSection>

@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import {
   motion,
   type Transition,
+  useReducedMotion,
 } from 'motion/react';
 import { EASE } from '@/lib/motion';
 
@@ -40,6 +41,9 @@ export function GlowEffect({
   scale = 1,
   duration = 5,
 }: GlowEffectProps) {
+  // Several modes loop opacity/background, which the root <MotionConfig reducedMotion>
+  // doesn't stop. Under reduced motion fall back to the component's own `static` mode.
+  const reduceMotion = useReducedMotion();
   const BASE_TRANSITION = {
     repeat: Infinity,
     duration: duration,
@@ -142,7 +146,7 @@ export function GlowEffect({
           backfaceVisibility: 'hidden',
         } as React.CSSProperties
       }
-      animate={animations[mode]}
+      animate={reduceMotion ? animations.static : animations[mode]}
       className={cn(
         'pointer-events-none absolute inset-0 h-full w-full',
         'scale-[var(--scale)] transform-gpu',
