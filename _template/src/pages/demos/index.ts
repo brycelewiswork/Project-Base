@@ -19,6 +19,7 @@ import skeleton from "./skeleton"
 import pretext from "./pretext"
 import htmlInCanvas from "./html-in-canvas"
 import shaders from "./shaders"
+import vgpu from "./vgpu"
 import colorEditor from "./color-editor"
 import dialkit from "./dialkit"
 import agentation from "./agentation"
@@ -53,6 +54,7 @@ export const DEMOS: DemoEntry[] = [
   pretext,
   htmlInCanvas,
   shaders,
+  vgpu,
   colorEditor,
   dialkit,
   agentation,

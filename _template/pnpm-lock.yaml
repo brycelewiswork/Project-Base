@@ -119,6 +119,9 @@ importers:
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
+      vgpu:
+        specifier: ^0.5.0
+        version: 0.5.0(three@0.184.0)
       zustand:
         specifier: ^5.0.14
         version: 5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -565,6 +568,10 @@ packages:
   '@mediapipe/tasks-vision@0.10.17':
     resolution: {integrity: sha512-CZWV/q6TTe8ta61cZXjfnnHsfWIdFhms03M9T7Cnd5y2mdpylJM0rF1qRq+wsQVRMLz1OYPVEBU9ph2Bx8cxrg==}
 
+  '@modelcontextprotocol/core@2.0.0':
+    resolution: {integrity: sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==}
+    engines: {node: '>=20'}
+
   '@modelcontextprotocol/sdk@1.29.0':
     resolution: {integrity: sha512-zo37mZA9hJWpULgkRpowewez1y6ML5GsXJPY8FI0tBBCd77HEvza4jDqRKOXgHNn867PVGCyTdzqpz0izu5ZjQ==}
     engines: {node: '>=18'}
@@ -574,6 +581,10 @@ packages:
     peerDependenciesMeta:
       '@cfworker/json-schema':
         optional: true
+
+  '@modelcontextprotocol/server@2.0.0':
+    resolution: {integrity: sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==}
+    engines: {node: '>=20'}
 
   '@monogrid/gainmap-js@3.4.0':
     resolution: {integrity: sha512-2Z0FATFHaoYJ8b+Y4y4Hgfn3FRFwuU5zRrk+9dFWp4uGAdHGqVEdP7HP+gLA3X469KXHmfupJaUbKo1b/aDKIg==}
@@ -1416,6 +1427,26 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
 
+  '@vgpu/adapter-mock@0.5.0':
+    resolution: {integrity: sha512-YtgXOFn1qI+8oTJenG2wWbQPA28V0CfE5UJs5Xqbt6qyR/xaZ5LHH2XWTwFcjnqn2b1xQCyTatJCMyyOdweUnw==}
+
+  '@vgpu/adapter-node@0.5.0':
+    resolution: {integrity: sha512-lgzqFcLDejwRgwlaNStzkwLNU9b4aN2OoPpWqT1UyPmK521BSw2OIQKzAuDIkzNlREla6KNC12G6bthhOzZKzw==}
+
+  '@vgpu/core@0.5.0':
+    resolution: {integrity: sha512-z80DHRHViv6+FKKkPzggEtT1ZZs/WCKRQbzJuwYdA135DZaSbCMoRK4anhM+I/nOHuDpf7H3xjkwE6rfolWZUw==}
+
+  '@vgpu/wgsl-std@0.5.0':
+    resolution: {integrity: sha512-NjMyJxwy4evFNCSqFQy4EqAbZ7iU+NUyJYyG9tLUhbdDLzBmfZlk1S3PyRZ9olBFFfEiVW2JNVw10maPKLEs1A==}
+
+  '@vgpu/wgsl@0.5.0':
+    resolution: {integrity: sha512-PDlDJem7J28C9bk+vPy2kYZEoW8+nYIx2oN4nu7/WF2V7ETx32BtmWcawwMbhiu/CVsobFafML0h0eqLRBNa3Q==}
+    peerDependencies:
+      '@vgpu/adapter-node': '>=0.1.6 <1.0.0 || ^0.5.0-rc.0'
+    peerDependenciesMeta:
+      '@vgpu/adapter-node':
+        optional: true
+
   '@visx/curve@4.0.0':
     resolution: {integrity: sha512-bXrOSd2BzVCxR7kBE7gPTSU4plxzYN75w7erdHYabwn3vzP+xFk1o0gg3NOHEPJzt5tXqf0Ecm5YqHACOnipTA==}
 
@@ -1455,6 +1486,9 @@ packages:
         optional: true
       babel-plugin-react-compiler:
         optional: true
+
+  '@webgpu/types@0.1.74':
+    resolution: {integrity: sha512-lgiI4hbuLcI9unnm2cL/tvCaQU45dp0xcLWJh5uB/9MBGvIA4F8XIk7nSiBeg+K4xWGYwgZKn80LmERI5CxoTA==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -2639,6 +2673,10 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
+  pixelmatch@7.2.0:
+    resolution: {integrity: sha512-xhcb4yHu9sM/G7foGzoLtXYcC0zHEaOXXjRKhGup0fw78Nf2Tkiapv4EQyMzrbcmQPsllAI7DbFY2UT7PlI9Pg==}
+    hasBin: true
+
   pkce-challenge@5.0.1:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
@@ -2646,6 +2684,10 @@ packages:
   pkg-up@3.1.0:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
+
+  pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
 
   postcss-selector-parser@7.1.4:
     resolution: {integrity: sha512-HeP7D2wyhkR+XaK6v4W8oRF62Dsz4flyuczALJp61GckGm42u1saSSJ/0auvcBqxs3jMRFEcPK34At/0JBKdOg==}
@@ -3122,6 +3164,15 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
+  vgpu@0.5.0:
+    resolution: {integrity: sha512-isQfMHRTysYFfT8UWTzqQI/ROw2L7lVkj7xoUJlvIF6FjYxBNS/YNG7qp3tZ7ZvZZ3uwYjso+geQv/bEq5Hl3w==}
+    hasBin: true
+    peerDependencies:
+      three: '>=0.180.0 <0.200.0'
+    peerDependenciesMeta:
+      three:
+        optional: true
+
   victory-vendor@37.3.6:
     resolution: {integrity: sha512-SbPDPdDBYp+5MJHhBCAyI7wKM3d5ivekigc2Dk2s7pgbZ9wIgIBYGVw4zGHBml/qTFbexrofXW6Gu4noGxrOwQ==}
 
@@ -3178,6 +3229,12 @@ packages:
   webgl-sdf-generator@1.1.1:
     resolution: {integrity: sha512-9Z0JcMTFxeE+b2x1LJTdnaT8rT8aEp7MVxkNwoycNmJWwPdzoXzMh0BjJSh/AEFP+KPYZUli814h8bJZFIZ2jA==}
 
+  webgpu@0.4.0:
+    resolution: {integrity: sha512-F5pimn3Aoi0zWjuRdiVs5TnrUwSzD2lESBohsIUsqyitWkGRQlXU2fhV6ycXlQTa1bvAf3sjqiUpBEpmSQ5ptA==}
+
+  wgpu-matrix@3.4.2:
+    resolution: {integrity: sha512-IfZFbG7olEYBD76VCZy2TzqM57GKy3LT++AZh37tMHPPByO6R2h61zXGBZFNPi2IzxNivNi8y5dvze5PjaczjA==}
+
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
@@ -3213,6 +3270,9 @@ packages:
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.6.5:
+    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
   zustand@4.5.7:
     resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
@@ -3643,6 +3703,10 @@ snapshots:
 
   '@mediapipe/tasks-vision@0.10.17': {}
 
+  '@modelcontextprotocol/core@2.0.0':
+    dependencies:
+      zod: 4.6.5
+
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:
       '@hono/node-server': 1.19.14(hono@4.12.25)
@@ -3664,6 +3728,11 @@ snapshots:
       zod-to-json-schema: 3.25.2(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
+
+  '@modelcontextprotocol/server@2.0.0':
+    dependencies:
+      '@modelcontextprotocol/core': 2.0.0
+      zod: 4.6.5
 
   '@monogrid/gainmap-js@3.4.0(three@0.184.0)':
     dependencies:
@@ -4287,6 +4356,33 @@ snapshots:
       '@use-gesture/core': 10.3.1
       react: 19.2.7
 
+  '@vgpu/adapter-mock@0.5.0(@vgpu/adapter-node@0.5.0)':
+    dependencies:
+      '@vgpu/core': 0.5.0(@vgpu/adapter-node@0.5.0)
+    transitivePeerDependencies:
+      - '@vgpu/adapter-node'
+
+  '@vgpu/adapter-node@0.5.0':
+    dependencies:
+      '@vgpu/core': 0.5.0(@vgpu/adapter-node@0.5.0)
+      webgpu: 0.4.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vgpu/core@0.5.0(@vgpu/adapter-node@0.5.0)':
+    dependencies:
+      '@vgpu/wgsl': 0.5.0(@vgpu/adapter-node@0.5.0)
+    transitivePeerDependencies:
+      - '@vgpu/adapter-node'
+
+  '@vgpu/wgsl-std@0.5.0': {}
+
+  '@vgpu/wgsl@0.5.0(@vgpu/adapter-node@0.5.0)':
+    dependencies:
+      '@vgpu/wgsl-std': 0.5.0
+    optionalDependencies:
+      '@vgpu/adapter-node': 0.5.0
+
   '@visx/curve@4.0.0':
     dependencies:
       '@visx/vendor': 4.0.0
@@ -4343,6 +4439,8 @@ snapshots:
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.16(@types/node@24.12.4)(esbuild@0.27.7)(jiti@2.7.0)
+
+  '@webgpu/types@0.1.74': {}
 
   accepts@2.0.0:
     dependencies:
@@ -5383,11 +5481,17 @@ snapshots:
 
   picomatch@4.0.4: {}
 
+  pixelmatch@7.2.0:
+    dependencies:
+      pngjs: 7.0.0
+
   pkce-challenge@5.0.1: {}
 
   pkg-up@3.1.0:
     dependencies:
       find-up: 3.0.0
+
+  pngjs@7.0.0: {}
 
   postcss-selector-parser@7.1.4:
     dependencies:
@@ -5916,6 +6020,24 @@ snapshots:
 
   vary@1.1.2: {}
 
+  vgpu@0.5.0(three@0.184.0):
+    dependencies:
+      '@modelcontextprotocol/server': 2.0.0
+      '@vgpu/adapter-mock': 0.5.0(@vgpu/adapter-node@0.5.0)
+      '@vgpu/adapter-node': 0.5.0
+      '@vgpu/core': 0.5.0(@vgpu/adapter-node@0.5.0)
+      '@vgpu/wgsl': 0.5.0(@vgpu/adapter-node@0.5.0)
+      '@vgpu/wgsl-std': 0.5.0
+      '@webgpu/types': 0.1.74
+      pixelmatch: 7.2.0
+      pngjs: 7.0.0
+      wgpu-matrix: 3.4.2
+      zod: 4.6.5
+    optionalDependencies:
+      three: 0.184.0
+    transitivePeerDependencies:
+      - supports-color
+
   victory-vendor@37.3.6:
     dependencies:
       '@types/d3-array': 3.2.2
@@ -5952,6 +6074,15 @@ snapshots:
 
   webgl-sdf-generator@1.1.1: {}
 
+  webgpu@0.4.0:
+    dependencies:
+      '@webgpu/types': 0.1.74
+      debug: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
+
+  wgpu-matrix@3.4.2: {}
+
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
@@ -5980,6 +6111,8 @@ snapshots:
       zod: 3.25.76
 
   zod@3.25.76: {}
+
+  zod@4.6.5: {}
 
   zustand@4.5.7(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7):
     dependencies:

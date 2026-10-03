@@ -150,6 +150,7 @@ pnpm build            # TypeScript check + production build
 pnpm typecheck        # tsc -b --noEmit — the source of truth for type errors
 pnpm lint             # oxlint
 pnpm check:vendored   # Verify the foundational-file inventory
+pnpm check:shaders    # Validate every .wgsl against a real WebGPU device (pnpm build does NOT)
 pnpm preview          # Serve production build locally
 pnpm test:anthropic   # One live call to check ANTHROPIC_API_KEY (see root README)
 ```

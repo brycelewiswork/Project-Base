@@ -2,11 +2,17 @@
 # field and not .npmrc).
 
 # Allow these packages to run install/build scripts — esbuild + SWC link the
-# native binaries Vite needs; msw is a transitive dep.
+# native binaries Vite needs; msw is a transitive dep. The two vgpu entries pull
+# Dawn's native WebGPU bindings, which are what make headless Node rendering
+# work (`npx vgpu doctor`, `vgpu check --require-validation`, pixel readback in
+# tests). Browser-only sketches don't need them — flip both to false if the
+# native install ever becomes a nuisance; nothing in the browser path breaks.
 allowBuilds:
   '@swc/core': true
+  '@vgpu/adapter-node': true
   esbuild: true
   msw: true
+  webgpu: true
 
 # TypeScript is our type-check/build compiler and we want new releases without
 # waiting out the global minimumReleaseAge cooldown. Exclude the `typescript`

@@ -118,6 +118,7 @@ browser bundle or git — `.env.local` is gitignored.
 - **Zustand** — lightweight state
 - **Sonner** — toasts
 - **@tabler/icons-react** — icons
+- **vgpu** — WebGPU/WGSL, the same shader in the browser and headless Node
 
 See `_template/README.md` for the full inventory (charts, shaders, dialkit,
 color extraction, and more) and `_template/CLAUDE.md` for conventions.

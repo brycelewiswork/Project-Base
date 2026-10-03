@@ -82,6 +82,7 @@ Treat it as part of "done" — finished work leaves an up-to-date `_preview.png`
   - **The watch loop:** when the user says *"start the watch loop"* (or similar), call `agentation_watch_annotations` repeatedly; for each annotation acknowledge → make the fix → `agentation_resolve` with a one-line summary. Use `agentation_reply` for clarifying questions instead of switching to chat. Markers clear on the user's screen as you resolve.
   - **Desktop only** — no mobile/phone support; the phone-LAN dev loop and the agentation loop are separate channels. No iframes / shadow DOM. Annotations default to 7-day localStorage; MCP-synced ones persist indefinitely.
 - **Perf HUD** (custom, dev-only, in [src/components/ui/perf-hud.tsx](src/components/ui/perf-hud.tsx)) — frame-timing meter mounted bottom-left in `main.tsx` (gated by `import.meta.env.DEV`). Shows smoothed **fps**, the **worst** frame in the trailing second (the jank detector — one 60ms frame reads as a visible hitch even when average fps looks fine), and main-thread **blocks** (>50ms long tasks). Drag a heavy control / sweep a shader param and watch `worst` spike red. Zero-dep, throttled to ~4Hz so it never causes the jank it measures. `Alt+P` hides it; click the pill for a sparkline. Live section on `/demos`. This is the everyday, in-loop responsiveness check; for CI-grade frame budgets reach for Playwright (see the reach-for table).
+- **vgpu** (`vgpu`, vercel-labs) — WebGPU with one small API that runs the *same* shader in the browser, in headless Node, and in a test. `init()` → `surface(gpu, canvas, { dpr: [1, 2] })` → `effect(gpu, source)` for fullscreen fragment work (`draw(gpu)` for meshes/instancing/MRT/depth), then `frameLoop(gpu, (frame) => frame.pass(surface, effect))`. **No global uniforms** — time comes from `clock(gpu).time` and resolution from `surface.texelSize`/`target.size`; every WGSL binding is written by its declared name via `set()` (struct members nest), and a binding you never set fails loudly with `VGPU-R1-BINDING-NEVER-SET`. Write only what changed inside the loop; size-class values belong in `onResize`. Shaders live in their own `.wgsl` files and can `import`/`export` between each other and from `@vgpu/wgsl-std/*` (Voronoi, Perlin, simplex, fBM — a transitive dep, no second install); the Vite loader (`wgslVitePlugin()`, wired in `vite.config.ts`) resolves that graph at build time and hands `effect()` one finished shader, typed by `src/wgsl-env.d.ts`. **The default export of a `.wgsl` import is a `ShaderSource` object, not a string** — pass it straight to `effect()`. Teardown matters: `loop.stop()` + `gpu.dispose()` in the effect cleanup, or strict mode's double-mount leaks a device per remount. Live demo + the React canvas pattern on `/demos`; the GPU work sits in a plain function ([src/pages/demos/vgpu-voronoi.ts](src/pages/demos/vgpu-voronoi.ts)) with the component owning only the canvas. **`pnpm check:shaders` is the validation gate** — see Commands. Headless rendering (`vgpu doctor`, pixel readback for assertions) works because the Dawn native bindings are enabled in `pnpm-workspace.yaml` → `allowBuilds`; flip `@vgpu/adapter-node` + `webgpu` to `false` there if you only ever need the browser.
 - **next-themes** — light/dark mode provider (wraps the app in `main.tsx`). FOUC prevention script in `index.html`.
 - **react-use-measure** — `useMeasure()` hook for reading element dimensions. Used by Motion page demos.
 - **Pretext** (`@chenglou/pretext`) — Cheng Lou's pure-JS multiline text measurement & layout engine. Computes paragraph heights, line counts, and tight widths from canvas font metrics with **zero DOM reflow**. Live walkthrough on `/demos` (Pretext section), full `<Accordion>` component docs at `/components/accordion`. Hooks, primitive, and component shipped:
@@ -279,12 +280,17 @@ inputs (see Performance below) — if it janks, change the strategy, don't lower
 | Text, editable labels, accessible/structured low-count markup | **DOM** | plain React |
 | Crisp vectors, lines, icons, foreground geometry, drag handles, hit targets | **SVG** | React SVG / visx |
 | Medium raster compositing, text-to-canvas, simple procedural, export passes | **Canvas 2D** | `<canvas>` |
-| Dense pixels, shaders, image processing, high-res procedural, big particle fields, heavy animated backgrounds | **WebGL / WebGPU** | three · r3f · drei · postprocessing · paper-shaders · use-shader-fx |
+| Dense pixels, shaders, image processing, high-res procedural, big particle fields, heavy animated backgrounds | **WebGL / WebGPU** | **vgpu** (raw WGSL, headless-verifiable) · three · r3f · drei · postprocessing · paper-shaders · use-shader-fx |
 
 - **Mix layers by semantics** — a dense shader *background*, an SVG/DOM *foreground* + *editing handles*, and an *export composite* can each use different tech. A dense raster background does **not** justify rasterizing low-count text or vector foreground.
 - **Heavy per-pixel work** (shader-like, noise/texture, filter, halftone, mesh, image processing) → evaluate **WebGL/WebGPU before** settling on CPU Canvas 2D. Don't keep Canvas 2D "by default" and then make it look fast by downsampling or testing a tiny input.
 - Don't force WebGL just because a sketch is visually rich, and don't keep Canvas 2D just because the primitive is text/vector — decide from the Perf HUD's worst frame at the heaviest real values.
 - **Editing handles** (drag a gradient stop, a focus point) are textless DOM/SVG overlays bound to state and **excluded from any export** (see DESIGN.md → canvas is output only).
+- **Within WebGL/WebGPU, pick by how much control the output needs.** `paper-shaders` / `use-shader-fx` for a
+  preset-shaped effect you tune by props. **r3f + drei** when there is a *scene* — meshes, camera, lights, post FX.
+  **vgpu** when the output *is* the shader: fullscreen fragment work, custom multi-pass, image processing, anything
+  where you are writing WGSL anyway. Its distinguishing property is that the same shader runs headless, so a visual
+  claim can be backed by pixels read in Node (`pnpm check:shaders`, then a render-and-read script) instead of by eye.
 - Text/vector output stays native — never render text into an offscreen canvas and upscale it.
 
 ## Performance — keeping the canvas smooth
@@ -424,8 +430,17 @@ pnpm build            # tsc -b && vite build
 pnpm typecheck        # tsc -b --noEmit — TypeScript 7 native, the source of truth
 pnpm lint             # oxlint
 pnpm check:vendored   # verify the foundational-file inventory (Tier 4 gate)
+pnpm check:shaders    # validate every .wgsl against a real WebGPU device
 pnpm preview          # serve the production build
 ```
+
+**`pnpm check:shaders` is the WGSL gate — `pnpm build` is not.** Neither `wgslVitePlugin()` nor `vite build`
+validates WGSL: the loader resolves the import graph with `validate: false`, and a leaf `.wgsl` with no imports never
+reaches the resolver at all. A broken shader therefore builds clean, exits 0, and fails at runtime as a black canvas.
+`check:shaders` ([scripts/check-shaders.mjs](scripts/check-shaders.mjs)) walks `src/`, runs
+`vgpu check <file> --require-validation` on each shader — resolving the same graph the loader does and compiling it on
+a real device — and prints the reflected bindings, so a renamed uniform surfaces here rather than silently. It passes
+trivially when a sketch has no shaders. Run it after touching any `.wgsl`.
 
 **TypeScript 7 (the native Go compiler) is the one and only TypeScript.** It's `typescript@7`
 (stable), so plain `tsc` — used by `typecheck` and `build` — is the native compiler and the source of
