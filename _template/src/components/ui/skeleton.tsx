@@ -26,7 +26,7 @@ function SkeletonText({ lines = 3, className }: { lines?: number; className?: st
 }
 
 function SkeletonHeading({ className }: { className?: string }) {
-  return <Skeleton className={cn("h-5 w-40 rounded-md", className)} />
+  return <Skeleton className={cn("h-5 w-40 rounded-md max-w-full", className)} />
 }
 
 function SkeletonAvatar({ size = "md", className }: { size?: "sm" | "md" | "lg"; className?: string }) {

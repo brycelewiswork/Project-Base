@@ -22,7 +22,7 @@ export function BadgePage() {
       />
 
       {/* ── Preview ── */}
-      <DocSection title="Preview" description="Row of badges in each variant">
+      <DocSection bare title="Preview" description="Row of badges in each variant">
         <DocPreview className="gap-inline-xs">
           <Badge>Default</Badge>
           <Badge variant="secondary">Secondary</Badge>
@@ -32,8 +32,8 @@ export function BadgePage() {
       </DocSection>
 
       {/* ── Examples ── */}
-      <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-gutter-m">
+      <DocSection bare title="Examples" description="Interactive demos showing different configurations">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample title="Default" value="variant=default" code='<Badge>Default</Badge>'>
             <div className="flex gap-inline-2xs">
               <Badge>Active</Badge>

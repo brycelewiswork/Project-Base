@@ -57,9 +57,9 @@ function PretextChatDemo() {
           left = vanilla <code>max-width</code> &nbsp;·&nbsp; right = <code>&lt;TightText&gt;</code>
         </span>
       </div>
-      <div className="grid gap-gutter-s sm:grid-cols-2">
+      <div className="grid gap-gutter-s sm:grid-cols-2 [&>*]:min-w-0">
         {(["vanilla", "tight"] as const).map((mode) => (
-          <div key={mode} className="flex flex-col gap-stack-2xs rounded-xl bg-fill-secondary p-inset-xs">
+          <div key={mode} className="flex flex-col gap-stack-2xs overflow-x-auto rounded-xl bg-fill-secondary p-inset-xs">
             {CHAT_MESSAGES.map((m, i) => {
               const mine = m.from === "me"
               const inner =
@@ -127,7 +127,7 @@ function PretextHeightProbeDemo() {
           onChange={(e) => setText(e.target.value)}
           className="h-32 flex-1 resize-none rounded-md bg-fill-secondary px-inset-xs py-inset-2xs text-body text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"
         />
-        <div className="flex flex-col gap-stack-2xs">
+        <div className="flex min-w-0 max-w-full flex-col gap-stack-2xs overflow-x-auto">
           <div
             className="rounded-md bg-surface p-inset-xs text-body text-label inset-ring-1 inset-ring-stroke-faint"
             style={{ width, whiteSpace: "pre-wrap" }}

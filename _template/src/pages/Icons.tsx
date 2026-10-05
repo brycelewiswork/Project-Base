@@ -153,7 +153,7 @@ export function Icons() {
   return (
     <div className="min-h-svh bg-surface text-label">
       <PageShell className="space-y-0! flex flex-col gap-stack-l">
-        <header className="flex items-start justify-between gap-inline-m">
+        <header className="flex flex-wrap items-start justify-between gap-inline-m gap-y-stack-s">
           <div className="max-w-xl">
             <PageHeader
               title="Icons"

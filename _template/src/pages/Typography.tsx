@@ -188,7 +188,7 @@ export function Typography() {
 
   return (
     <PageShell>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4 gap-y-stack-s">
         <PageHeader
           title="Type"
           description="Fluid modular scale (Utopia clamp). Type your own specimen and read the whole scale live; switch units, or drop to the table to add/remove steps and the graph to see the clamp."

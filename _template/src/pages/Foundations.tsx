@@ -121,7 +121,7 @@ export function Foundations() {
 
   return (
     <PageShell>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4 gap-y-stack-s">
         <PageHeader
           title="Foundations"
           description="The six values the whole fluid system derives from. Set them once here; type, space, grid, and clamp all read them."

@@ -136,7 +136,7 @@ export function Spacing() {
 
   return (
     <PageShell>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4 gap-y-stack-s">
         <PageHeader
           title="Space"
           description="Fluid t-shirt scale (Utopia clamp), aliased to role-based semantic tokens. Each step is an editable multiple of the base."
@@ -165,7 +165,7 @@ export function Spacing() {
           <span className="text-caption text-label-secondary">larger</span>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 overflow-x-auto">
           {desc.map((s, i) => {
             const isBase = s.key === "s"
             const isLargest = i === 0 && !isBase
@@ -203,9 +203,9 @@ export function Spacing() {
                   )}
                 </div>
                 <div className="h-5 shrink-0 rounded-sm bg-blue-500/70" style={{ width: Math.max(px, 2) }} />
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 flex-wrap gap-x-2">
                   <span className="font-mono text-[10px] text-label">{px.toFixed(1)}px</span>
-                  <span className="ml-2 font-mono text-[10px] text-label-secondary">{s.minPx}→{s.maxPx}px</span>
+                  <span className="font-mono text-[10px] text-label-secondary">{s.minPx}→{s.maxPx}px</span>
                 </div>
               </div>
             )
@@ -290,7 +290,7 @@ export function Spacing() {
         description="Built from the role utilities — resize the window to watch padding and gaps flow."
         bare
       >
-        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS["2xl"]} shadow="md"
+        <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS["2xl"]} shadow="md" shadowClassName="block w-full"
           className="rounded-2xl bg-surface p-inset-l">
           <div className="flex flex-col gap-stack-m">
             <Squircle as="div" cornerRadius={SQUIRCLE_RADIUS.xl} shadow="xs"

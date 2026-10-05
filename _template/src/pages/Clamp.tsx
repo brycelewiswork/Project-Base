@@ -22,7 +22,7 @@ export function Clamp() {
 
   return (
     <PageShell>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4 gap-y-stack-s">
         <PageHeader
           title="Clamp"
           description="A general fluid-value generator. Interpolate any CSS length across your foundation viewport (root = 16px)."

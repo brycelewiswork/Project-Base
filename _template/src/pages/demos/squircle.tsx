@@ -47,14 +47,14 @@ function ShadowDirectional() {
       <span className="text-xs font-medium text-label-secondary">
         Directional via <code>buildShadow({"{}"})</code>
       </span>
-      <div className="flex items-center gap-inline-m">
+      <div className="flex flex-wrap items-center gap-inline-m">
         <Card shadow={shadow} className="w-48">
           <CardHeader>
             <CardTitle className="font-mono text-sm">{direction}°</CardTitle>
             <CardDescription className="text-xs">elev {elevation}</CardDescription>
           </CardHeader>
         </Card>
-        <div className="flex flex-1 flex-col gap-stack-2xs">
+        <div className="flex min-w-40 flex-1 flex-col gap-stack-2xs">
           <label className="flex items-center gap-inline-xs text-sm">
             <span className="w-16 text-label-secondary">direction</span>
             <Slider

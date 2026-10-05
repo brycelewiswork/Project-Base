@@ -83,7 +83,9 @@ function TextReflowSection() {
         </Link>
         .
       </div>
-      <div className="grid gap-gutter-xs">
+      {/* Each row renders at a real breakpoint width (up to desktop), so on a phone it
+          scrolls inside this box rather than widening the page. */}
+      <div className="grid gap-gutter-xs overflow-x-auto">
         {reflows.map((r) => (
           <div key={r.label} className="flex items-baseline gap-inline-s">
             <div className="w-32 shrink-0">
@@ -99,7 +101,7 @@ function TextReflowSection() {
               {REFLOW_SAMPLE}
             </div>
             <div className="shrink-0 font-mono text-body text-label-tertiary tabular-nums">
-              {r.lineCount} lines · {r.height}px
+              {r.lineCount} lines · {Math.round(r.height)}px
             </div>
           </div>
         ))}
@@ -159,6 +161,7 @@ export function Breakpoints() {
 
       {/* ── Scale ── */}
       <Section title="Scale" description="Mobile-first: styles apply from the breakpoint width and up" noPadding>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-surface-tertiary text-left text-xs text-label-secondary">
@@ -194,6 +197,7 @@ export function Breakpoints() {
               ))}
             </tbody>
           </table>
+          </div>
       </Section>
 
       {/* ── Reflow Demo ── */}
@@ -229,7 +233,7 @@ export function Breakpoints() {
           {CONTAINERS.map((c) => {
             const pct = (c.px / 1280) * 100
             return (
-              <div key={c.name} className="flex items-center gap-inline-s">
+              <div key={c.name} className="flex flex-wrap items-center gap-x-inline-s gap-y-stack-3xs">
                 <div className="w-24 shrink-0 text-right">
                   <div className="font-mono text-xs font-semibold text-label">{c.name}</div>
                   <div className="font-mono text-[10px] text-label-secondary">{c.px}px</div>
@@ -241,7 +245,7 @@ export function Breakpoints() {
                     style={{ width: `${Math.min(pct, 100)}%` }}
                   />
                 </div>
-                <div className="w-40 shrink-0 text-xs text-label-secondary">{c.use}</div>
+                <div className="basis-full text-xs text-label-secondary sm:w-40 sm:shrink-0 sm:basis-auto">{c.use}</div>
               </div>
             )
           })}
@@ -260,8 +264,8 @@ export function Breakpoints() {
             { pattern: "flex-col sm:flex-row", desc: "Stack on mobile, horizontal on wider screens" },
             { pattern: "max-w-4xl mx-auto px-6", desc: "Centered content container with side padding" },
           ].map((p) => (
-            <div key={p.pattern} className="flex items-start gap-inline-s">
-              <code className="shrink-0 rounded bg-fill-secondary px-inset-2xs py-inset-3xs font-mono text-[11px] text-label">
+            <div key={p.pattern} className="flex flex-col gap-stack-3xs sm:flex-row sm:items-start sm:gap-inline-s">
+              <code className="w-fit shrink-0 rounded bg-fill-secondary px-inset-2xs py-inset-3xs font-mono text-[11px] text-label">
                 {p.pattern}
               </code>
               <span className="text-xs text-label-secondary pt-0.5">{p.desc}</span>

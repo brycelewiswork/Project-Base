@@ -10,7 +10,6 @@ function ShadersDemo() {
     <DemoSection
       title="Shaders"
       lib="@paper-design/shaders-react · @react-three/fiber + drei + postprocessing"
-      version="five-tier toolkit"
       docsUrl="https://shaders.paper.design/"
     >
       <p className="text-sm text-label-secondary">

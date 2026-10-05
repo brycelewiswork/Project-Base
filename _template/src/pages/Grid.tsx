@@ -72,7 +72,7 @@ export function Grid() {
 
   return (
     <PageShell>
-      <header className="flex items-start justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4 gap-y-stack-s">
         <PageHeader
           title="Grid"
           description="A fixed-column design grid with fluid gutters and edge margins, centered in a max-width container — one grid, no breakpoints."

@@ -38,7 +38,7 @@ export function ButtonPage() {
       />
 
       {/* ── Preview ── */}
-      <DocSection title="Preview" description="Primary buttons in a row — the most common configuration">
+      <DocSection bare title="Preview" description="Primary buttons in a row — the most common configuration">
         <DocPreview>
           <div className="flex items-center gap-inline-xs">
             <Button onClick={() => setClickCount((c) => c + 1)}>
@@ -65,12 +65,12 @@ export function ButtonPage() {
       </DocSection>
 
       {/* ── Examples ── */}
-      <DocSection title="Examples" description="All variants and sizes, interactive">
+      <DocSection bare title="Examples" description="All variants and sizes, interactive">
         {/* -- Variants -- */}
-        <h3 className="text-xs font-medium text-label-secondary">
+        <h3 className="text-sm font-semibold text-label-secondary">
           Variants
         </h3>
-        <div className="grid grid-cols-2 gap-gutter-m">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample
             title="Default (primary)"
             value="variant=default"
@@ -139,10 +139,10 @@ export function ButtonPage() {
         </div>
 
         {/* -- Sizes -- */}
-        <h3 className="mt-stack-l text-xs font-medium text-label-secondary">
+        <h3 className="mt-stack-l text-sm font-semibold text-label-secondary">
           Sizes
         </h3>
-        <div className="grid grid-cols-2 gap-gutter-m">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample
             title="Extra small"
             value="size=xs"
@@ -215,10 +215,10 @@ export function ButtonPage() {
         </div>
 
         {/* -- States -- */}
-        <h3 className="mt-stack-l text-xs font-medium text-label-secondary">
+        <h3 className="mt-stack-l text-sm font-semibold text-label-secondary">
           States
         </h3>
-        <div className="grid grid-cols-2 gap-gutter-m">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample
             title="Disabled"
             value="disabled=true"

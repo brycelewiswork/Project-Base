@@ -43,8 +43,8 @@ function GsapDemo() {
       <p className="text-body text-label-secondary">
         Timeline + stagger for high-fidelity orchestration.
       </p>
-      <div className="flex items-end gap-inline-s">
-        <div className="flex gap-inline-2xs">
+      <div className="flex flex-wrap items-end gap-inline-s">
+        <div className="flex flex-wrap gap-inline-2xs">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}

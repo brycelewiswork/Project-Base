@@ -57,7 +57,13 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
   );
-  const [rootCollapsed, setRootCollapsed] = useState(!(mode === 'inline' || defaultOpen));
+  // Below the bottom-sheet breakpoint an open panel is a modal sheet over the page, so
+  // panels start collapsed (the FAB) on phones even when defaultOpen is set. Decided
+  // once at mount so a resize never springs panels open or shut.
+  const [openOnMount] = useState(
+    () => defaultOpen && !(typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches),
+  );
+  const [rootCollapsed, setRootCollapsed] = useState(!(mode === 'inline' || openOnMount));
 
   // Subscribe to global panel changes
   useEffect(() => {
@@ -84,14 +90,14 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
   }, []);
 
   useEffect(() => {
-    const fallbackOpen = inline || defaultOpen;
+    const fallbackOpen = inline || openOnMount;
     const nextStates = new Map<string, boolean>();
     for (const panel of panels) {
       nextStates.set(panel.id, panelOpenStatesRef.current.get(panel.id) ?? fallbackOpen);
     }
     panelOpenStatesRef.current = nextStates;
     rootOpenRef.current = Array.from(nextStates.values()).some(Boolean);
-  }, [defaultOpen, inline, panels]);
+  }, [openOnMount, inline, panels]);
 
   // Watch for panel open/close — snap to corner on open, restore drag position on close
   useEffect(() => {
@@ -170,7 +176,7 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
 
   const handlePanelOpenChange = useCallback((panelId: string, open: boolean) => {
     panelOpenStatesRef.current.set(panelId, open);
-    const fallbackOpen = inline || defaultOpen;
+    const fallbackOpen = inline || openOnMount;
     const nextRootOpen = panels.some((panel) => (
       panelOpenStatesRef.current.get(panel.id) ?? fallbackOpen
     ));
@@ -178,7 +184,7 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
     if (rootOpenRef.current === nextRootOpen) return;
     rootOpenRef.current = nextRootOpen;
     onOpenChange?.(nextRootOpen);
-  }, [defaultOpen, inline, onOpenChange, panels]);
+  }, [openOnMount, inline, onOpenChange, panels]);
 
   const handleRootOpenChange = useCallback((open: boolean) => {
     if (rootOpenRef.current === open) return;
@@ -233,7 +239,7 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
           <div className="dialkit-panel-wrapper">
             <Folder
               title="DialKit"
-              defaultOpen={inline || defaultOpen}
+              defaultOpen={inline || openOnMount}
               isRoot={true}
               inline={inline}
               onOpenChange={handleRootOpenChange}
@@ -254,7 +260,7 @@ function DialRootInner({ position = 'top-right', defaultOpen = true, mode = 'pop
             <Panel
               key={panel.id}
               panel={panel}
-              defaultOpen={inline || defaultOpen}
+              defaultOpen={inline || openOnMount}
               inline={inline}
               onOpenChange={(open) => handlePanelOpenChange(panel.id, open)}
             />

@@ -90,7 +90,7 @@ export function DocCard({
 
 export function DocPreview({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <DocCard className={cn("p-inset-l flex items-center justify-center", className)}>
+    <DocCard className={cn("p-inset-l flex flex-wrap items-center justify-center gap-inline-xs [&>div]:flex-wrap", className)}>
       {children}
     </DocCard>
   )
@@ -112,14 +112,16 @@ export function DocExample({
   children: React.ReactNode
 }) {
   return (
-    <DocCard className="p-inset-s space-y-stack-s">
-      <div className="flex items-baseline justify-between">
-        <span className="text-body font-semibold text-label">{title}</span>
+    <DocCard className="p-inset-s space-y-stack-s [&>div]:flex-wrap">
+      {/* Title sits a step below the section heading (it matched it at 18px/600), and the
+          row wraps with a gap so a long title never runs into its value. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-inline-s gap-y-stack-3xs">
+        <span className="text-sm font-medium text-label">{title}</span>
         {value && <span className="font-mono text-xs text-label-secondary tabular-nums">{value}</span>}
       </div>
       {children}
       {code && (
-        <code className="block text-[11px] font-mono text-label-secondary">{code}</code>
+        <code className="block whitespace-pre-wrap [overflow-wrap:anywhere] text-[11px] font-mono text-label-secondary">{code}</code>
       )}
     </DocCard>
   )
@@ -245,7 +247,7 @@ export type GuidelineDef = {
 
 export function DocGuidelines({ items }: { items: GuidelineDef[] }) {
   return (
-    <div className="grid grid-cols-2 gap-gutter-s">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))] gap-gutter-s">
       {items.map((g, i) => (
         <DocCard key={i} className="p-inset-s space-y-stack-2xs">
           <span
@@ -285,7 +287,7 @@ export function DocSource({ source }: { source: SourceDef }) {
       ] as const).map(([label, value]) => (
         <div key={label} className="flex items-baseline gap-inline-xs">
           <span className="text-xs text-label-secondary w-16 shrink-0">{label}</span>
-          <code className="text-xs font-mono text-label">{value}</code>
+          <code className="min-w-0 text-xs font-mono text-label [overflow-wrap:anywhere]">{value}</code>
         </div>
       ))}
     </DocCard>

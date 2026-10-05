@@ -31,7 +31,7 @@ export function CardPage() {
       />
 
       {/* ── Preview ── */}
-      <DocSection title="Preview" description="Card with header, content, and footer">
+      <DocSection bare title="Preview" description="Card with header, content, and footer">
         <DocPreview>
           <Card className="w-full max-w-sm" shadow="md">
             <CardHeader>
@@ -52,8 +52,8 @@ export function CardPage() {
       </DocSection>
 
       {/* ── Examples ── */}
-      <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-gutter-m">
+      <DocSection bare title="Examples" description="Interactive demos showing different configurations">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample title="Default size" value='size="default"' code='<Card>…</Card>'>
             <Card>
               <CardHeader>

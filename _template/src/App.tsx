@@ -175,8 +175,10 @@ function SideNav() {
         transition={{ type: "spring", ...SPRING_FAST.snappy }}
         // Focus shows as an outline OUTSIDE the dot, against the page (4.08:1 light /
         // 4.11:1 dark). An inset ring on the dot's mid-gray fill measured 2.96 / 1.92:1.
+        // Scoped to the dot's own button (`>button`) — focus on a link inside the open
+        // panel must not ring the whole panel.
         // This element isn't clip-pathed, so the outline survives and follows the radius.
-        className="cursor-pointer overflow-hidden backdrop-blur-lg has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+        className="cursor-pointer overflow-hidden backdrop-blur-lg has-[>button:focus-visible]:outline-2 has-[>button:focus-visible]:outline-offset-2 has-[>button:focus-visible]:outline-ring"
         animate={{
           backgroundColor: open ? "var(--surface-secondary)" : "oklch(0.710 0 0 / 40%)",
           borderRadius: open ? 18 : 999,
@@ -214,8 +216,10 @@ function SideNav() {
               transition={{ duration: 0.15, delay: 0.05 }}
               // Capped to the viewport so the menu can never grow past it —
               // it's centred, so an uncapped menu clips off *both* ends and the
-              // items there become unreachable.
-              className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl max-h-[calc(100svh-2rem)]"
+              // items there become unreachable. 9rem (not 2) keeps ~72px clear at
+              // the bottom, where the dev toolbar and dialkit's button sit — at 2rem
+              // the theme toggle ended up underneath them.
+              className="flex flex-col py-2 px-2 min-w-[160px] rounded-2xl max-h-[calc(100svh-9rem)]"
             >
               {/* The links scroll; the theme toggle below stays pinned.
                   `min-h-0` is what allows this flex child to shrink past its

@@ -28,7 +28,7 @@ export function SliderPage() {
       />
 
       {/* ── Preview ── */}
-      <DocSection title="Preview" description="Default single-value slider at 40%">
+      <DocSection bare title="Preview" description="Default single-value slider at 40%">
         <DocPreview className="flex-col gap-stack-m w-full">
           <div className="w-full max-w-sm">
             <Slider value={single} onValueChange={setSingle} />
@@ -75,8 +75,8 @@ export function SliderPage() {
       </DocSection>
 
       {/* ── Examples ── */}
-      <DocSection title="Examples" description="Interactive demos showing different configurations">
-        <div className="grid grid-cols-2 gap-gutter-m">
+      <DocSection bare title="Examples" description="Interactive demos showing different configurations">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(17rem,100%),1fr))] gap-gutter-m">
           <DocExample title="Single value" value={`${single[0]}`} code={`<Slider value={[${single[0]}]} />`}>
             <Slider min={0} max={100} value={single} onValueChange={setSingle} />
           </DocExample>

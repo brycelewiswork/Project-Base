@@ -33,7 +33,7 @@ function SkeletonDemo() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-gutter-s">
+      <div className="grid gap-gutter-s sm:grid-cols-2">
         <div>
           <div className="text-[10px] text-label-secondary font-mono mb-stack-2xs">
             {loaded ? "Loaded" : "SkeletonCard"}

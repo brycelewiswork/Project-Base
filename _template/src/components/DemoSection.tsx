@@ -19,7 +19,7 @@ export function DemoSection({ title, lib, version, docsUrl, bare, children }: De
       <div className="flex items-center gap-inline-xs">
         <div className="flex min-w-0 flex-wrap items-baseline gap-gutter-xs">
           <SectionHeader title={title} />
-          <Badge variant="secondary" className="font-mono">
+          <Badge variant="secondary" className="h-auto min-w-0 max-w-full shrink py-0.5 whitespace-normal font-mono [overflow-wrap:anywhere]">
             {lib}
             {version ? `@${version}` : null}
           </Badge>
@@ -41,7 +41,7 @@ export function DemoSection({ title, lib, version, docsUrl, bare, children }: De
       {bare ? (
         <div className="flex flex-col gap-stack-s">{children}</div>
       ) : (
-        <SectionCard className="space-y-stack-s [&>p]:max-w-prose [&>p]:text-pretty">
+        <SectionCard className="space-y-stack-s [&>p]:max-w-prose [&>p]:text-pretty [&>p]:break-words">
           {children}
         </SectionCard>
       )}

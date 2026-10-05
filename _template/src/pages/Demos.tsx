@@ -14,7 +14,7 @@ export function Demos() {
           <div className="text-xs font-medium text-label-secondary">Stack at a glance</div>
           <div className="grid grid-cols-2 gap-x-inline-m gap-y-stack-3xs text-sm sm:grid-cols-3">
             {DEMOS.map((d) => (
-              <div key={d.lib} className="flex items-baseline gap-inline-2xs">
+              <div key={d.lib} className="flex min-w-0 flex-col sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-inline-2xs">
                 <span className="font-medium">{d.lib}</span>
                 <span className="text-xs text-label-secondary">{d.role}</span>
               </div>

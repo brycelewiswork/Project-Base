@@ -227,7 +227,7 @@ export function Motion() {
 
       {GROUPS.map((g) => (
         <Section key={g.title} title={g.title} description={g.desc}>
-          <div className="grid grid-cols-2 gap-x-inline-m gap-y-stack-l lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-inline-m gap-y-stack-l min-[22rem]:grid-cols-2 lg:grid-cols-3">
             {g.presets.map((p) => (
               <PresetCard key={p.name} preset={p} />
             ))}

@@ -73,12 +73,12 @@ export function Colors() {
   return (
     <PageShell className="space-y-0! flex flex-col gap-stack-l">
       {/* ── Header ── */}
-      <header className="flex items-start justify-between gap-inline-s">
+      <header className="flex flex-wrap items-start justify-between gap-inline-s gap-y-stack-s">
         <PageHeader
           title="Color"
           description="Click any token to edit. Confirm to apply — overrides persist locally per mode. Reset reverts to base."
         />
-        <div className="flex gap-inline-2xs shrink-0">
+        <div className="flex flex-wrap gap-inline-2xs">
           <input
             ref={fileRef}
             type="file"
@@ -131,9 +131,10 @@ export function Colors() {
 
       {/* ── Read-only reference: primitives, ramps, in-context demo ── */}
       <Section title="Neutral Scale" description="11-step achromatic ramp — static reference, not editable">
-        <div className="flex gap-inline-2xs">
+        {/* Two rows of six on a phone — eleven columns can't hold the "0.145" labels. */}
+        <div className="grid grid-cols-6 gap-inline-2xs sm:grid-cols-11">
           {NEUTRAL_STEPS.map(({ step, l }) => (
-            <div key={step} className="flex-1 text-center">
+            <div key={step} className="min-w-0 text-center">
               <div
                 className="aspect-square rounded-lg border border-stroke-faint"
                 style={{ backgroundColor: `oklch(${l} 0 0)` }}

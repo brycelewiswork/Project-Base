@@ -12,7 +12,7 @@ function TabsDemo() {
         <code>line</code> (an underline carries the active state).
       </p>
 
-      <div className="grid gap-gutter-l sm:grid-cols-2">
+      <div className="grid gap-gutter-l sm:grid-cols-2 [&>*]:min-w-0">
         {/* default — segmented */}
         <div className="space-y-stack-2xs">
           <div className="font-mono text-[10px] text-label-secondary">variant=&quot;default&quot;</div>

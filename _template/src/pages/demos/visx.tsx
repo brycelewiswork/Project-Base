@@ -16,7 +16,7 @@ function VisxDemo() {
       <p className="text-body text-label-secondary">
         Low-level SVG primitives for custom visuals Recharts can't express — radial arcs, bespoke gauges, data-art.
       </p>
-      <div className="flex items-center gap-inline-m">
+      <div className="flex flex-wrap items-center gap-inline-m">
         <svg width={size} height={size} className="overflow-visible">
           <Group top={size / 2} left={size / 2}>
             {rings.map((ring, i) => {
