@@ -144,7 +144,7 @@ export function PerfHud() {
         bottom: 12,
         zIndex: 2147483000,
         fontFamily: mono,
-        fontSize: 11,
+        fontSize: 'var(--text-micro)',
         lineHeight: 1.3,
         color: "#f5f5f7",
         userSelect: "none",
@@ -228,7 +228,7 @@ export function PerfHud() {
               {display.blocks}
             </span>
           </div>
-          <p style={{ margin: "8px 0 0", color: "#8e8e93", fontSize: 10 }}>
+          <p style={{ margin: "8px 0 0", color: "#8e8e93", fontSize: 'var(--text-micro)' }}>
             Drag a control and watch <b style={{ color: "#f5f5f7" }}>worst</b>.
             Green &lt;{JANK_AMBER_MS} · amber &lt;{JANK_RED_MS} · red = visible
             hitch. Alt+P hides.

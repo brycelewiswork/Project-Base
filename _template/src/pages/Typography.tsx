@@ -461,7 +461,7 @@ function ScaleGraph({ steps, cfg, unit }: { steps: TypeStep[]; cfg: FluidConfig;
 function TypeSpecimen() {
   return (
     <div>
-      <div className="mb-inset-s font-mono text-[10px] tracking-[0.14em] text-label-tertiary">
+      <div className="mb-inset-s font-mono text-micro tracking-[0.14em] text-label-tertiary">
         Live preview
       </div>
       {/* Framed like a real page so the scale reads in context, not as a list. */}
@@ -471,7 +471,7 @@ function TypeSpecimen() {
           <span className="size-2.5 rounded-full bg-fill-secondary" />
           <span className="size-2.5 rounded-full bg-fill-secondary" />
           <span className="size-2.5 rounded-full bg-fill-secondary" />
-          <span className="ml-inset-s font-mono text-[11px] text-label-tertiary">project-base.sketch</span>
+          <span className="ml-inset-s font-mono text-micro text-label-tertiary">project-base.sketch</span>
         </div>
 
         <article className="mx-auto max-w-[68ch] px-[var(--space-m-l)] py-[var(--space-l-xl)]">
@@ -550,7 +550,7 @@ function ScaleVisualiser({
       {/* Full-bleed rows so the highlighted base band and off-edge samples reach the card edges. */}
       <div className="-mx-inset-l -mb-inset-l">
         {/* Column header: the role utility replaces the old Semantic roles table. */}
-        <div className="flex items-center gap-inline-l px-inset-l pb-inset-2xs text-[10px] font-medium tracking-[0.12em] text-label-tertiary">
+        <div className="flex items-center gap-inline-l px-inset-l pb-inset-2xs text-micro font-medium tracking-[0.12em] text-label-tertiary">
           <div className="w-20 shrink-0">Size</div>
           <div className="w-36 shrink-0">Role utility</div>
           <div className="min-w-0 flex-1">Specimen</div>

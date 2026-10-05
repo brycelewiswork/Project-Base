@@ -22,7 +22,7 @@ function BlurStage({
       }}
     >
       {children}
-      <span className="pointer-events-none absolute bottom-1 left-2 font-mono text-[10px] text-label/60 mix-blend-difference">
+      <span className="pointer-events-none absolute bottom-1 left-2 font-mono text-micro text-label/60 mix-blend-difference">
         {label}
       </span>
     </div>

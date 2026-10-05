@@ -70,7 +70,7 @@ export function Clamp() {
           <div className="flex items-center gap-3">
             <div className="h-8 rounded-md bg-blue-500/70 transition-none" style={{ width: Math.max(resolved, 2) }} />
             <span className="font-mono text-caption font-semibold tabular-nums text-label">{resolved.toFixed(1)}px</span>
-            <span className="font-mono text-[10px] text-label-secondary">
+            <span className="font-mono text-micro text-label-secondary">
               at <span className="text-label">{width}px</span>
               {" · "}
               {resolved <= Math.min(minPx, maxPx) + 0.01 ? "clamped to min" : resolved >= Math.max(minPx, maxPx) - 0.01 ? "clamped to max" : "fluid"}

@@ -50,7 +50,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
           const v = (values[c.key] as number) ?? c.min
           return (
             <div key={c.key} className="grid grid-cols-[6.5rem_1fr_3rem] items-center gap-3">
-              <span className="text-[11px] font-mono text-label-secondary">{c.label}</span>
+              <span className="text-micro font-mono text-label-secondary">{c.label}</span>
               <Slider
                 min={c.min}
                 max={c.max}
@@ -61,7 +61,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
                   set(c.key, next)
                 }}
               />
-              <span className="text-[11px] font-mono tabular-nums text-label-secondary text-right">
+              <span className="text-micro font-mono tabular-nums text-label-secondary text-right">
                 {typeof v === "number" ? Number(v).toFixed(2) : ""}
               </span>
             </div>
@@ -71,7 +71,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
           const v = (values[c.key] as string) ?? "#ffffff"
           return (
             <div key={c.key} className="grid grid-cols-[6.5rem_1fr_3rem] items-center gap-3">
-              <span className="text-[11px] font-mono text-label-secondary">{c.label}</span>
+              <span className="text-micro font-mono text-label-secondary">{c.label}</span>
               <div className="flex items-center gap-2">
                 <input
                   aria-label={c.label}
@@ -81,7 +81,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
                   className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent p-0"
                   style={{ appearance: "none" }}
                 />
-                <span className="text-[11px] font-mono tabular-nums text-label-secondary">
+                <span className="text-micro font-mono tabular-nums text-label-secondary">
                   {v}
                 </span>
               </div>
@@ -93,14 +93,14 @@ export function ShaderControls<T extends Record<string, unknown>>({
           const v = values[c.key] as number | string
           return (
             <div key={c.key} className="grid grid-cols-[6.5rem_1fr] items-center gap-3">
-              <span className="text-[11px] font-mono text-label-secondary">{c.label}</span>
+              <span className="text-micro font-mono text-label-secondary">{c.label}</span>
               <select
                 value={String(v)}
                 onChange={(e) => {
                   const opt = c.options.find((o) => String(o.value) === e.target.value)
                   set(c.key, opt?.value ?? e.target.value)
                 }}
-                className="h-7 rounded-md bg-surface inset-ring-1 inset-ring-stroke-faint px-2 text-[11px] font-mono text-label"
+                className="h-7 rounded-md bg-surface inset-ring-1 inset-ring-stroke-faint px-2 text-micro font-mono text-label"
               >
                 {c.options.map((o) => (
                   <option key={String(o.value)} value={String(o.value)}>
@@ -115,7 +115,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
         const v = Boolean(values[c.key])
         return (
           <label key={c.key} className="grid grid-cols-[6.5rem_1fr] items-center gap-3 cursor-pointer">
-            <span className="text-[11px] font-mono text-label-secondary">{c.label}</span>
+            <span className="text-micro font-mono text-label-secondary">{c.label}</span>
             <input
               type="checkbox"
               checked={v}

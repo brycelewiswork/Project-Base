@@ -34,7 +34,7 @@ function HarmonyChip({ label, hex }: { label: string; hex: string }) {
     <div className="flex items-center gap-inline-2xs rounded-md border border-stroke-faint/60 p-inset-2xs text-xs">
       <span className="size-6 rounded-sm" style={{ backgroundColor: hex }} />
       <div className="flex flex-col">
-        <span className="text-[10px] text-label-secondary">{label}</span>
+        <span className="text-micro text-label-secondary">{label}</span>
         <span className="font-mono">{hex}</span>
       </div>
     </div>
@@ -150,7 +150,7 @@ function ColorFromImageDemo() {
                 key={role}
                 type="button"
                 onClick={() => sw && setUserPickedHex(sw.color.hex())}
-                className="flex flex-col items-center gap-stack-3xs rounded-md border border-stroke-faint/60 p-inset-2xs text-[10px] transition-colors hover:bg-surface-tertiary/40 disabled:opacity-40"
+                className="flex flex-col items-center gap-stack-3xs rounded-md border border-stroke-faint/60 p-inset-2xs text-micro transition-colors hover:bg-surface-tertiary/40 disabled:opacity-40"
                 disabled={!sw}
               >
                 <div className="size-10 rounded-md" style={{ backgroundColor: sw?.color.hex() ?? "transparent" }} />

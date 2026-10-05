@@ -36,7 +36,7 @@ function StepRange({ label, minKey, maxKey, keys, onMin, onMax, minPx, maxPx }: 
         <StepSelect value={minKey} keys={keys} onChange={onMin} />
         <IconArrowRight size={15} className="shrink-0 text-label-secondary" />
         <StepSelect value={maxKey} keys={keys} onChange={onMax} />
-        <span className="ml-1 font-mono text-[10px] text-label-tertiary">@min → @max</span>
+        <span className="ml-1 font-mono text-micro text-label-tertiary">@min → @max</span>
       </div>
     </div>
   )
@@ -103,7 +103,7 @@ export function Grid() {
           <div className="py-inset-s" style={{ paddingInline: grid.margin.value }}>
             <div style={{ display: "grid", gridTemplateColumns: grid.fixedTemplateColumns, gap: grid.gutter.value }}>
               {Array.from({ length: columns }, (_, i) => (
-                <div key={i} className="flex h-20 items-center justify-center rounded-md bg-blue-500/15 text-[10px] font-mono text-blue-600">
+                <div key={i} className="flex h-20 items-center justify-center rounded-md bg-blue-500/15 text-micro font-mono text-blue-600">
                   {i + 1}
                 </div>
               ))}

@@ -139,8 +139,8 @@ export function Colors() {
                 className="aspect-square rounded-lg border border-stroke-faint"
                 style={{ backgroundColor: `oklch(${l} 0 0)` }}
               />
-              <div className="mt-1.5 font-mono text-[10px] text-label-secondary">{step}</div>
-              <div className="font-mono text-[10px] text-label-secondary">{l}</div>
+              <div className="mt-1.5 font-mono text-micro text-label-secondary">{step}</div>
+              <div className="font-mono text-micro text-label-secondary">{l}</div>
             </div>
           ))}
         </div>
@@ -148,7 +148,7 @@ export function Colors() {
 
       <Section title="Black & White Opacity" description="Pure black/white at 30 opacity stops — reference only">
         <div>
-          <div className="font-mono text-[11px] text-label mb-1.5">Black</div>
+          <div className="font-mono text-micro text-label mb-1.5">Black</div>
           <div className="flex gap-px rounded-lg overflow-hidden border border-stroke-faint">
             {OPACITY_STEPS.map((p) => (
               <div
@@ -166,7 +166,7 @@ export function Colors() {
           </div>
         </div>
         <div className="mt-stack-s">
-          <div className="font-mono text-[11px] text-label mb-1.5">White</div>
+          <div className="font-mono text-micro text-label mb-1.5">White</div>
           <div className="flex gap-px rounded-lg overflow-hidden border border-stroke-faint">
             {OPACITY_STEPS.map((p) => (
               <div
@@ -191,7 +191,7 @@ export function Colors() {
         <div className="space-y-stack-m">
           {ACCENT_HUES.map((hue) => (
             <div key={hue}>
-              <div className="font-mono text-[11px] text-label mb-1.5 capitalize">{hue}</div>
+              <div className="font-mono text-micro text-label mb-1.5 capitalize">{hue}</div>
               <div className="flex gap-px">
                 {ACCENT_STEPS.map((step) => (
                   <div
@@ -344,7 +344,7 @@ function SwatchRow({
 
       <div className="mt-stack-2xs flex items-start justify-between gap-inline-2xs">
         <div className="space-y-0.5 min-w-0">
-          <div className="font-mono text-[11px] text-label truncate flex items-center gap-inline-3xs">
+          <div className="font-mono text-micro text-label truncate flex items-center gap-inline-3xs">
             {token.cssVar.slice(2)}
             {edited && (
               <span title="Edited in this mode" className="inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
@@ -353,8 +353,8 @@ function SwatchRow({
               <span title={`Edited in ${mode === "dark" ? "light" : "dark"} mode`} className="inline-block h-1.5 w-1.5 rounded-full bg-label-tertiary shrink-0" />
             )}
           </div>
-          <div className="font-mono text-[11px] text-label-secondary truncate">{token.utility}</div>
-          <div className="font-mono text-[10px] text-label-secondary truncate">{value}</div>
+          <div className="font-mono text-micro text-label-secondary truncate">{token.utility}</div>
+          <div className="font-mono text-micro text-label-secondary truncate">{value}</div>
         </div>
         {edited && (
           <button

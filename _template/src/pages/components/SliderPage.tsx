@@ -45,7 +45,7 @@ export function SliderPage() {
           <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Track</span>
-              <span className="font-mono text-[11px] text-label-secondary">bg-fill-tertiary</span>
+              <span className="font-mono text-micro text-label-secondary">bg-fill-tertiary</span>
             </div>
             <div className="h-1.5 rounded-full bg-fill-tertiary" />
           </div>
@@ -53,7 +53,7 @@ export function SliderPage() {
           <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Indicator (active fill)</span>
-              <span className="font-mono text-[11px] text-label-secondary">bg-blue-500</span>
+              <span className="font-mono text-micro text-label-secondary">bg-blue-500</span>
             </div>
             <div className="h-1.5 rounded-full bg-fill-tertiary overflow-hidden">
               <div className="h-full w-2/5 bg-blue-500 rounded-full" />
@@ -63,7 +63,7 @@ export function SliderPage() {
           <div className="space-y-stack-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs text-label-secondary">Thumb</span>
-              <span className="font-mono text-[11px] text-label-secondary">bg-blue-500, shadow-xs, ring-blue-500/30</span>
+              <span className="font-mono text-micro text-label-secondary">bg-blue-500, shadow-xs, ring-blue-500/30</span>
             </div>
             <div className="flex items-center">
               <div className="h-1.5 w-2/5 rounded-full bg-blue-500" />

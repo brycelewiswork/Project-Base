@@ -82,7 +82,7 @@ export function Inputs() {
               ].map(([want, reach, why]) => (
                 <tr key={want} className="border-b border-stroke-faint/60 last:border-0">
                   <td className="py-2 pr-inset-s align-top">{want}</td>
-                  <td className="py-2 pr-inset-s align-top font-mono text-[11px] text-label">{reach}</td>
+                  <td className="py-2 pr-inset-s align-top font-mono text-micro text-label">{reach}</td>
                   <td className="py-2 align-top">{why}</td>
                 </tr>
               ))}
@@ -402,7 +402,7 @@ function DialkitCatalog() {
           <tbody className="text-label-secondary">
             {CONTROL_CATALOG.map(([type, forWhat, notes]) => (
               <tr key={type} className="border-b border-stroke-faint/60 last:border-0">
-                <td className="py-2 pr-inset-s align-top font-mono text-[11px] text-label whitespace-nowrap">{type}</td>
+                <td className="py-2 pr-inset-s align-top font-mono text-micro text-label whitespace-nowrap">{type}</td>
                 <td className="py-2 pr-inset-s align-top">{forWhat}</td>
                 <td className="py-2 align-top">{notes}</td>
               </tr>
@@ -438,7 +438,7 @@ function DialkitCatalog() {
       </div>
 
       <details className="group">
-        <summary className="cursor-pointer font-mono text-[11px] text-label-tertiary hover:text-label-secondary">
+        <summary className="cursor-pointer font-mono text-micro text-label-tertiary hover:text-label-secondary">
           Resolved values — should never show a raw config object
         </summary>
         <pre className="mt-stack-2xs overflow-auto rounded-lg bg-surface-tertiary p-inset-s text-caption leading-relaxed text-label-secondary">
@@ -456,7 +456,7 @@ function Row({ children }: { children: React.ReactNode }) {
 }
 
 function Readout({ children }: { children: React.ReactNode }) {
-  return <span className="font-mono text-[11px] text-label-tertiary">{children}</span>
+  return <span className="font-mono text-micro text-label-tertiary">{children}</span>
 }
 
 function Note({ children }: { children: React.ReactNode }) {
@@ -465,7 +465,7 @@ function Note({ children }: { children: React.ReactNode }) {
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code className="mx-0.5 rounded bg-fill-quaternary px-1 py-px font-mono text-[11px] text-label">
+    <code className="mx-0.5 rounded bg-fill-quaternary px-1 py-px font-mono text-micro text-label">
       {children}
     </code>
   )
@@ -473,7 +473,7 @@ function Code({ children }: { children: React.ReactNode }) {
 
 function Snippet({ children }: { children: string }) {
   return (
-    <pre className="overflow-x-auto rounded-lg bg-surface-tertiary p-inset-s font-mono text-[11px] leading-relaxed text-label-secondary">
+    <pre className="overflow-x-auto rounded-lg bg-surface-tertiary p-inset-s font-mono text-micro leading-relaxed text-label-secondary">
       {children}
     </pre>
   )

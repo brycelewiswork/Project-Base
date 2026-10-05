@@ -22,7 +22,7 @@ function ShadersDemo() {
       <div className="grid grid-cols-1 gap-gutter-m sm:grid-cols-2">
         <div className="space-y-stack-2xs">
           <div className="text-xs font-medium text-label">Aurora pill</div>
-          <div className="text-[11px] text-label-secondary">PulsingBorder + DotGrid backdrop + glass pill</div>
+          <div className="text-micro text-label-secondary">PulsingBorder + DotGrid backdrop + glass pill</div>
           <Squircle
             as="div"
             cornerRadius={SQUIRCLE_RADIUS.xl}
@@ -63,7 +63,7 @@ function ShadersDemo() {
 
         <div className="space-y-stack-2xs">
           <div className="text-xs font-medium text-label">Dot-grid bloom</div>
-          <div className="text-[11px] text-label-secondary">MeshGradient bloom over DotGrid</div>
+          <div className="text-micro text-label-secondary">MeshGradient bloom over DotGrid</div>
           <Squircle
             as="div"
             cornerRadius={SQUIRCLE_RADIUS.xl}

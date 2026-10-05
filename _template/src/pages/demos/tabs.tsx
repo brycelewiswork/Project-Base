@@ -15,7 +15,7 @@ function TabsDemo() {
       <div className="grid gap-gutter-l sm:grid-cols-2 [&>*]:min-w-0">
         {/* default — segmented */}
         <div className="space-y-stack-2xs">
-          <div className="font-mono text-[10px] text-label-secondary">variant=&quot;default&quot;</div>
+          <div className="font-mono text-micro text-label-secondary">variant=&quot;default&quot;</div>
           <Tabs defaultValue="overview">
             <TabsList>
               <TabsTrigger value="overview"><IconLayoutList /> Overview</TabsTrigger>
@@ -36,7 +36,7 @@ function TabsDemo() {
 
         {/* line — underline */}
         <div className="space-y-stack-2xs">
-          <div className="font-mono text-[10px] text-label-secondary">variant=&quot;line&quot;</div>
+          <div className="font-mono text-micro text-label-secondary">variant=&quot;line&quot;</div>
           <Tabs defaultValue="account">
             <TabsList variant="line">
               <TabsTrigger value="account">Account</TabsTrigger>

@@ -50,7 +50,7 @@ function StepButton({ kind, onClick, disabled, title }: {
 /** Utopia-style step badge (a filled circle with the step key). */
 function StepBadge({ children }: { children: string }) {
   return (
-    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-label/85 px-1.5 font-mono text-[10px] font-semibold text-surface">
+    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-label/85 px-1.5 font-mono text-micro font-semibold text-surface">
       {children}
     </span>
   )
@@ -69,7 +69,7 @@ function PairRow({ tokenKey, minPx, maxPx, scale, onRemove }: {
         <StepBadge>{hi}</StepBadge>
       </div>
       <div className="min-w-0 flex-1">
-        <div className="mb-1.5 flex items-center justify-between font-mono text-[10px] text-label-secondary">
+        <div className="mb-1.5 flex items-center justify-between font-mono text-micro text-label-secondary">
           <span>{minPx}px</span>
           <span>{maxPx}px</span>
         </div>
@@ -182,10 +182,10 @@ export function Spacing() {
                 </div>
                 <div className="w-16 shrink-0">
                   {isBase ? (
-                    <span className="block text-right font-mono text-[11px] text-label-secondary">×1 base</span>
+                    <span className="block text-right font-mono text-micro text-label-secondary">×1 base</span>
                   ) : (
                     <div className="flex items-center justify-end gap-0.5">
-                      <span className="font-mono text-[11px] text-label-secondary">×</span>
+                      <span className="font-mono text-micro text-label-secondary">×</span>
                       <input
                         type="number"
                         value={s.mult}
@@ -197,15 +197,15 @@ export function Spacing() {
                           if (!Number.isNaN(n)) setMultiplier(s.key, n)
                         }}
                         aria-label={`${s.key} multiplier`}
-                        className="w-12 rounded-md bg-surface px-1 py-0.5 text-right font-mono text-[11px] tabular-nums text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus-visible:inset-ring-stroke-strong"
+                        className="w-12 rounded-md bg-surface px-1 py-0.5 text-right font-mono text-micro tabular-nums text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus-visible:inset-ring-stroke-strong"
                       />
                     </div>
                   )}
                 </div>
                 <div className="h-5 shrink-0 rounded-sm bg-blue-500/70" style={{ width: Math.max(px, 2) }} />
                 <div className="flex min-w-0 flex-1 flex-wrap gap-x-2">
-                  <span className="font-mono text-[10px] text-label">{px.toFixed(1)}px</span>
-                  <span className="font-mono text-[10px] text-label-secondary">{s.minPx}→{s.maxPx}px</span>
+                  <span className="font-mono text-micro text-label">{px.toFixed(1)}px</span>
+                  <span className="font-mono text-micro text-label-secondary">{s.minPx}→{s.maxPx}px</span>
                 </div>
               </div>
             )
@@ -275,7 +275,7 @@ export function Spacing() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {keys.map((size) => (
-                <span key={size} className="rounded-md bg-fill-quinary px-2 py-1 font-mono text-[10px] text-label-secondary">
+                <span key={size} className="rounded-md bg-fill-quinary px-2 py-1 font-mono text-micro text-label-secondary">
                   {role}-{size}
                 </span>
               ))}

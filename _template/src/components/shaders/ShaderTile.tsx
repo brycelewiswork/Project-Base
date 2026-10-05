@@ -54,7 +54,7 @@ export function ShaderTile<T extends Record<string, unknown>>({
         <div className="min-w-0">
           <div className="text-xs font-medium text-label">{title}</div>
           {caption ? (
-            <div className="text-[11px] text-label-secondary truncate">{caption}</div>
+            <div className="text-micro text-label-secondary truncate">{caption}</div>
           ) : null}
         </div>
       </div>

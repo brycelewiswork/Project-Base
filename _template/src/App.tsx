@@ -152,7 +152,7 @@ function SideNav() {
   return (
     <div
       ref={ref}
-      className="fixed right-4 top-1/2 -translate-y-1/2 z-nav"
+      className={`fixed ${open ? "right-2" : "-right-2"} top-1/2 -translate-y-1/2 z-nav sm:right-4`}
       onPointerEnter={(e) => {
         if (e.pointerType !== "mouse") return
         setOpen(true)

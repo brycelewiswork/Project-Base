@@ -522,7 +522,7 @@ function NumberBox({
         spellCheck={false}
       />
       {spec.suffix && (
-        <span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-label-secondary">{spec.suffix}</span>
+        <span className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-micro text-label-secondary">{spec.suffix}</span>
       )}
     </div>
   )

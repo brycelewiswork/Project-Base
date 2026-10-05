@@ -164,7 +164,7 @@ export function RampStudio() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             spellCheck={false}
-            className="h-7 w-28 rounded-md bg-surface-secondary px-2 font-mono text-[11px] text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus:inset-ring-stroke-strong"
+            className="h-7 w-28 rounded-md bg-surface-secondary px-2 font-mono text-micro text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none focus:inset-ring-stroke-strong"
           />
         </Field>
 
@@ -214,7 +214,7 @@ export function RampStudio() {
                   onChange={(e) => setInput(e.target.value)}
                   spellCheck={false}
                   className={cn(
-                    "h-7 w-44 rounded-md bg-surface-secondary px-2 font-mono text-[11px] text-label inset-ring-1 focus:outline-none",
+                    "h-7 w-44 rounded-md bg-surface-secondary px-2 font-mono text-micro text-label inset-ring-1 focus:outline-none",
                     parsedInput ? "inset-ring-stroke-faint focus:inset-ring-stroke-strong" : "inset-ring-destructive/50",
                   )}
                 />
@@ -224,7 +224,7 @@ export function RampStudio() {
               <select
                 value={String(anchor)}
                 onChange={(e) => setAnchor(e.target.value === "auto" ? "auto" : (Number(e.target.value) as AnchorStep))}
-                className="h-7 rounded-md bg-surface-secondary px-2 font-mono text-[11px] text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none"
+                className="h-7 rounded-md bg-surface-secondary px-2 font-mono text-micro text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none"
               >
                 {ANCHORS.map((a) => (
                   <option key={String(a)} value={String(a)}>{a}</option>
@@ -279,7 +279,7 @@ export function RampStudio() {
           <select
             value={gamut}
             onChange={(e) => setGamut(e.target.value as Gamut | "none")}
-            className="h-7 rounded-md bg-surface-secondary px-2 font-mono text-[11px] text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none"
+            className="h-7 rounded-md bg-surface-secondary px-2 font-mono text-micro text-label inset-ring-1 inset-ring-stroke-faint focus:outline-none"
           >
             <option value="none">none (matches Apple)</option>
             <option value="srgb">sRGB</option>
@@ -290,7 +290,7 @@ export function RampStudio() {
 
       {/* ── Preview ── */}
       {!ramp || !hex ? (
-        <div className="rounded-xl bg-surface-tertiary p-inset-m text-center font-mono text-[11px] text-label-secondary">
+        <div className="rounded-xl bg-surface-tertiary p-inset-m text-center font-mono text-micro text-label-secondary">
           Not a color CSS understands — try a hex, rgb(), hsl(), or oklch() value.
         </div>
       ) : (
@@ -311,16 +311,16 @@ export function RampStudio() {
                   title={`${slug}-${step} · ${oklchCss(color)}`}
                 >
                   <span
-                    className="font-mono text-[10px] tabular-nums"
+                    className="font-mono text-micro tabular-nums"
                     style={{ color: readableOn(color) === "black" ? "#000" : "#fff", opacity: 0.7 }}
                   >
                     {step}
                   </span>
                 </div>
-                <div className="mt-1 text-center font-mono text-[9px] text-label-secondary truncate">
+                <div className="mt-1 text-center font-mono text-micro text-label-secondary truncate">
                   {hex[step]}
                 </div>
-                <div className="text-center font-mono text-[9px] text-label-tertiary truncate">
+                <div className="text-center font-mono text-micro text-label-tertiary truncate">
                   {color.l.toFixed(2)}·{color.c.toFixed(2)}
                 </div>
               </div>
@@ -328,7 +328,7 @@ export function RampStudio() {
           </div>
 
           {/* ── Readout ── */}
-          <div className="flex flex-wrap items-center gap-x-inline-s gap-y-1 font-mono text-[10px] text-label-secondary">
+          <div className="flex flex-wrap items-center gap-x-inline-s gap-y-1 font-mono text-micro text-label-secondary">
             <span>
               anchor {ramp.anchorStep} · oklch({ramp.anchor.l.toFixed(3)} {ramp.anchor.c.toFixed(3)}{" "}
               {(ramp.anchor.h ?? 0).toFixed(2)})
@@ -348,7 +348,7 @@ export function RampStudio() {
           {ramp.notes.map((note) => (
             <div
               key={note}
-              className="flex items-start gap-inline-2xs rounded-lg bg-fill-quaternary p-inset-2xs text-[11px] text-label-secondary"
+              className="flex items-start gap-inline-2xs rounded-lg bg-fill-quaternary p-inset-2xs text-micro text-label-secondary"
             >
               <IconAlertTriangle size={13} stroke={2} className="mt-px shrink-0 text-label-tertiary" />
               <span>{note}</span>
@@ -372,7 +372,7 @@ export function RampStudio() {
             <Button variant="outline" size="sm" onClick={handleDownloadTokens}>
               <IconDownload size={14} stroke={2} /> Design tokens (JSON)
             </Button>
-            <span className="font-mono text-[10px] text-label-tertiary">
+            <span className="font-mono text-micro text-label-tertiary">
               Figma is sRGB — exports are gamut-mapped hex, the OKLCH is kept as metadata.
             </span>
           </div>
@@ -385,7 +385,7 @@ export function RampStudio() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="font-mono text-[10px] text-label-secondary">{label}</span>
+      <span className="font-mono text-micro text-label-secondary">{label}</span>
       {children}
     </label>
   )

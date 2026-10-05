@@ -112,7 +112,7 @@ function TextReflowSection() {
 
 function ActiveBadge() {
   return (
-    <span className="ml-inline-2xs inline-block rounded-full bg-green-500 px-1.5 py-0.5 text-[9px] font-bold text-white-100 leading-none">
+    <span className="ml-inline-2xs inline-block rounded-full bg-green-500 px-1.5 py-0.5 text-micro font-bold text-white-100 leading-none">
       ACTIVE
     </span>
   )
@@ -146,7 +146,7 @@ export function Breakpoints() {
                   className="absolute top-0 bottom-0 border-l border-stroke-strong"
                   style={{ left: `${pct}%` }}
                 >
-                  <span className="absolute -top-0.5 left-1 text-[9px] font-mono text-label-secondary">
+                  <span className="absolute -top-0.5 left-1 text-micro font-mono text-label-secondary">
                     {bp.abbr}
                   </span>
                 </div>
@@ -236,7 +236,7 @@ export function Breakpoints() {
               <div key={c.name} className="flex flex-wrap items-center gap-x-inline-s gap-y-stack-3xs">
                 <div className="w-24 shrink-0 text-right">
                   <div className="font-mono text-xs font-semibold text-label">{c.name}</div>
-                  <div className="font-mono text-[10px] text-label-secondary">{c.px}px</div>
+                  <div className="font-mono text-micro text-label-secondary">{c.px}px</div>
                 </div>
                 <div className="flex-1 relative h-5">
                   <div className="absolute inset-0 rounded bg-fill-secondary" />
@@ -265,7 +265,7 @@ export function Breakpoints() {
             { pattern: "max-w-4xl mx-auto px-6", desc: "Centered content container with side padding" },
           ].map((p) => (
             <div key={p.pattern} className="flex flex-col gap-stack-3xs sm:flex-row sm:items-start sm:gap-inline-s">
-              <code className="w-fit shrink-0 rounded bg-fill-secondary px-inset-2xs py-inset-3xs font-mono text-[11px] text-label">
+              <code className="w-fit shrink-0 rounded bg-fill-secondary px-inset-2xs py-inset-3xs font-mono text-micro text-label">
                 {p.pattern}
               </code>
               <span className="text-xs text-label-secondary pt-0.5">{p.desc}</span>

@@ -121,7 +121,7 @@ export function DocExample({
       </div>
       {children}
       {code && (
-        <code className="block whitespace-pre-wrap [overflow-wrap:anywhere] text-[11px] font-mono text-label-secondary">{code}</code>
+        <code className="block whitespace-pre-wrap [overflow-wrap:anywhere] text-micro font-mono text-label-secondary">{code}</code>
       )}
     </DocCard>
   )
@@ -160,8 +160,8 @@ export function DocPropsTable({ props }: { props: PropDef[] }) {
               )}
             >
               <td className="px-inset-s py-2.5 font-mono text-xs font-medium text-label">{row.prop}</td>
-              <td className="px-inset-s py-2.5 font-mono text-[11px] text-label-secondary">{row.type}</td>
-              <td className="px-inset-s py-2.5 font-mono text-[11px] text-label-secondary">{row.default}</td>
+              <td className="px-inset-s py-2.5 font-mono text-micro text-label-secondary">{row.type}</td>
+              <td className="px-inset-s py-2.5 font-mono text-micro text-label-secondary">{row.default}</td>
               <td className="px-inset-s py-2.5 text-xs text-label-secondary">{row.description}</td>
             </tr>
           ))}
@@ -191,7 +191,7 @@ export function DocTokens({ tokens }: { tokens: TokenDef[] }) {
             style={{ backgroundColor: t.swatch }}
           />
           <span className="text-xs font-medium text-label flex-1">{t.role}</span>
-          <span className="font-mono text-[11px] text-label-secondary">{t.utility}</span>
+          <span className="font-mono text-micro text-label-secondary">{t.utility}</span>
         </div>
       ))}
     </DocCard>

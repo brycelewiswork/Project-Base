@@ -15,7 +15,7 @@ const buttonVariants = cva(
   // outset `ring-*`: corner-smoothing sets clip-path on this element, which removes
   // everything painted outside it — an outset focus ring disappears entirely. An inset
   // ring renders inside the box and follows the squircle. See _template/CLAUDE.md.
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg inset-ring-1 inset-ring-transparent text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow,scale] outline-none select-none focus-visible:inset-ring-2 focus-visible:inset-ring-ring active:not-aria-[haspopup]:scale-[0.96] disabled:pointer-events-none disabled:opacity-50 aria-invalid:inset-ring-destructive dark:aria-invalid:inset-ring-destructive/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-lg inset-ring-1 inset-ring-transparent text-control font-medium whitespace-nowrap transition-[color,background-color,box-shadow,scale] outline-none select-none focus-visible:inset-ring-2 focus-visible:inset-ring-ring active:not-aria-[haspopup]:scale-[0.96] disabled:pointer-events-none disabled:opacity-50 aria-invalid:inset-ring-destructive dark:aria-invalid:inset-ring-destructive/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -33,8 +33,8 @@ const buttonVariants = cva(
       size: {
         default:
           "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-control-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-control-sm in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         icon: "size-8",
         "icon-xs":

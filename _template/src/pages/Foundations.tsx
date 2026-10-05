@@ -174,9 +174,9 @@ export function Foundations() {
             <div className="space-y-1">
               {[...typeSteps].reverse().map((s) => (
                 <div key={s.step} className="flex items-baseline gap-3 border-b border-stroke-faint/40 py-1.5">
-                  <span className="w-16 shrink-0 font-mono text-[10px] text-label-secondary">{roleForStep(s.step)}</span>
+                  <span className="w-16 shrink-0 font-mono text-micro text-label-secondary">{roleForStep(s.step)}</span>
                   <span className="min-w-0 flex-1 truncate text-label" style={{ fontSize: s.css }}>Ag</span>
-                  <span className="shrink-0 font-mono text-[10px] text-label-secondary tabular-nums">
+                  <span className="shrink-0 font-mono text-micro text-label-secondary tabular-nums">
                     {resolveClamp(s, vw).toFixed(0)}px
                   </span>
                 </div>
@@ -195,9 +195,9 @@ export function Foundations() {
                 const px = resolveClamp(s, vw)
                 return (
                   <div key={s.key} className="flex items-center gap-3">
-                    <span className="w-8 shrink-0 text-right font-mono text-[10px] text-label-secondary">{s.key}</span>
+                    <span className="w-8 shrink-0 text-right font-mono text-micro text-label-secondary">{s.key}</span>
                     <div className="h-4 shrink-0 rounded-sm bg-blue-500/70" style={{ width: Math.max(px, 2) }} />
-                    <span className="font-mono text-[10px] text-label-secondary tabular-nums">{px.toFixed(0)}px</span>
+                    <span className="font-mono text-micro text-label-secondary tabular-nums">{px.toFixed(0)}px</span>
                   </div>
                 )
               })}

@@ -135,7 +135,7 @@ function MotionPrimitivesDemo() {
             "text-shimmer", "text-shimmer-wave", "tilt", "toolbar-dynamic",
             "toolbar-expandable", "transition-panel",
           ].map((name) => (
-            <Badge key={name} variant="outline" className="font-mono text-[10px]">
+            <Badge key={name} variant="outline" className="font-mono text-micro">
               {name}
             </Badge>
           ))}

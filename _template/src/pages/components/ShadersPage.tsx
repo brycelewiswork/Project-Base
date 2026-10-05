@@ -727,9 +727,9 @@ export function ShadersPage() {
             </div>
             <p className="text-[13px] text-label-secondary">
               Pre-built fluid sims, noise textures, FBO blending, and morph particles as React hooks.
-              Each hook returns <code className="font-mono text-[11px]">[update, setParams, texture]</code> ready to wire into any material's uniforms.
+              Each hook returns <code className="font-mono text-micro">[update, setParams, texture]</code> ready to wire into any material's uniforms.
             </p>
-            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-[11px] font-mono text-label">
+            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-micro font-mono text-label">
 {`const [updateFluid, setFluid, fluidTex] = useFluid({ size: 512, dpr: 1 })
 useFrame(({ gl, scene, camera }) => {
   const tex = updateFluid(gl)
@@ -750,7 +750,7 @@ useFrame(({ gl, scene, camera }) => {
             <p className="text-[13px] text-label-secondary">
               Write node-graph shaders in TypeScript that compile to both WebGL <em>and</em> WebGPU. Stable in three r184. Renderer-agnostic, automatic optimization.
             </p>
-            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-[11px] font-mono text-label">
+            <pre className="overflow-x-auto rounded-md bg-fill-quaternary p-inset-xs text-micro font-mono text-label">
 {`import { mix, time, uv, vec3 } from 'three/tsl'
 import { MeshBasicNodeMaterial } from 'three/webgpu'
 

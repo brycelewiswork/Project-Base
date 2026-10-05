@@ -173,7 +173,7 @@ function PresetCard({ preset }: { preset: Preset }) {
       <div className="flex items-center justify-between">
         <div>
           <div className="text-xs font-medium text-label">{preset.name}</div>
-          <div className="text-[10px] text-label-secondary font-mono">{preset.params}</div>
+          <div className="text-micro text-label-secondary font-mono">{preset.params}</div>
         </div>
         <button
           onClick={() => setKey((k) => k + 1)}
@@ -204,7 +204,7 @@ function DurationBar({ name, value }: { name: string; value: number }) {
     <div className="flex items-center gap-inline-xs">
       <div className="w-16 shrink-0">
         <div className="text-xs font-medium text-label">{name}</div>
-        <div className="text-[10px] text-label-secondary font-mono">{value}s</div>
+        <div className="text-micro text-label-secondary font-mono">{value}s</div>
       </div>
       <div ref={ref} className="relative h-5 flex-1">
         <div className="absolute inset-x-2.5 top-1/2 h-px bg-stroke-faint" />

@@ -282,7 +282,7 @@ function ExampleTile({
 
       <span
         className={cn(
-          "pointer-events-none absolute bottom-2 left-3 font-mono text-[10px] tracking-wide",
+          "pointer-events-none absolute bottom-2 left-3 font-mono text-micro tracking-wide",
           labelText,
         )}
       >

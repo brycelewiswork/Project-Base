@@ -35,7 +35,7 @@ function SkeletonDemo() {
 
       <div className="grid gap-gutter-s sm:grid-cols-2">
         <div>
-          <div className="text-[10px] text-label-secondary font-mono mb-stack-2xs">
+          <div className="text-micro text-label-secondary font-mono mb-stack-2xs">
             {loaded ? "Loaded" : "SkeletonCard"}
           </div>
           {loaded ? (
@@ -68,18 +68,18 @@ function SkeletonDemo() {
 
         <div className="space-y-stack-s">
           <div>
-            <div className="text-[10px] text-label-secondary font-mono mb-stack-2xs">Primitives</div>
+            <div className="text-micro text-label-secondary font-mono mb-stack-2xs">Primitives</div>
             <div className="rounded-xl border border-stroke-faint bg-surface-secondary p-inset-s space-y-stack-s">
               <div className="space-y-stack-3xs">
-                <div className="text-[9px] text-label-secondary font-mono">SkeletonHeading</div>
+                <div className="text-micro text-label-secondary font-mono">SkeletonHeading</div>
                 <SkeletonHeading />
               </div>
               <div className="space-y-stack-3xs">
-                <div className="text-[9px] text-label-secondary font-mono">SkeletonText lines=3</div>
+                <div className="text-micro text-label-secondary font-mono">SkeletonText lines=3</div>
                 <SkeletonText lines={3} />
               </div>
               <div className="space-y-stack-3xs">
-                <div className="text-[9px] text-label-secondary font-mono">SkeletonAvatar sm / md / lg</div>
+                <div className="text-micro text-label-secondary font-mono">SkeletonAvatar sm / md / lg</div>
                 <div className="flex items-center gap-inline-xs">
                   <SkeletonAvatar size="sm" />
                   <SkeletonAvatar size="md" />
@@ -87,7 +87,7 @@ function SkeletonDemo() {
                 </div>
               </div>
               <div className="space-y-stack-3xs">
-                <div className="text-[9px] text-label-secondary font-mono">SkeletonImage</div>
+                <div className="text-micro text-label-secondary font-mono">SkeletonImage</div>
                 <SkeletonImage />
               </div>
             </div>
