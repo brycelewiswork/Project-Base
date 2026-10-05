@@ -4,7 +4,22 @@
     {
       "name": "template",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--dir", "_template", "dev"],
+      "runtimeArgs": [
+        "--dir",
+        "_template",
+        "dev"
+      ],
+      "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "japan-vacation",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--dir",
+        "../japan-vacation",
+        "dev"
+      ],
       "port": 5173,
       "autoPort": true
     }
