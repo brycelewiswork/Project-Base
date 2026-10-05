@@ -56,7 +56,7 @@ function UnitToggle({ value, onChange }: { value: Unit; onChange: (u: Unit) => v
       className="bg-surface-tertiary p-[3px]"
     >
       {UNITS.map((u) => (
-        <ToggleGroupItem key={u} value={u} className="px-inset-xs font-mono uppercase">
+        <ToggleGroupItem key={u} value={u} className="px-inset-xs font-mono">
           {u}
         </ToggleGroupItem>
       ))}
@@ -149,7 +149,7 @@ function FontCombobox({
           <Command shouldFilter={false}>
             <CommandInput value={query} onValueChange={setQuery} placeholder="Search fonts…" />
             <CommandList>
-              <CommandEmpty>No font found.</CommandEmpty>
+              <CommandEmpty>No fonts match “{query}”.</CommandEmpty>
               {filtered.map((f) => (
                 <FontOption
                   key={f}
@@ -461,7 +461,7 @@ function ScaleGraph({ steps, cfg, unit }: { steps: TypeStep[]; cfg: FluidConfig;
 function TypeSpecimen() {
   return (
     <div>
-      <div className="mb-inset-s font-mono text-[10px] uppercase tracking-[0.14em] text-label-tertiary">
+      <div className="mb-inset-s font-mono text-[10px] tracking-[0.14em] text-label-tertiary">
         Live preview
       </div>
       {/* Framed like a real page so the scale reads in context, not as a list. */}
@@ -475,7 +475,7 @@ function TypeSpecimen() {
         </div>
 
         <article className="mx-auto max-w-[68ch] px-[var(--space-m-l)] py-[var(--space-l-xl)]">
-          <p className="text-eyebrow font-semibold uppercase tracking-[0.14em] text-blue-500">Field Notes</p>
+          <p className="text-eyebrow font-semibold tracking-[0.14em] text-blue-600 dark:text-blue-500">Field Notes</p>
           <h1 className="mt-stack-2xs text-display text-balance text-label">Designing a type scale you can feel</h1>
           <p className="mt-stack-s text-caption text-label-secondary">Bryce Lewis · Project-Base · 4 min read</p>
 
@@ -550,7 +550,7 @@ function ScaleVisualiser({
       {/* Full-bleed rows so the highlighted base band and off-edge samples reach the card edges. */}
       <div className="-mx-inset-l -mb-inset-l">
         {/* Column header: the role utility replaces the old Semantic roles table. */}
-        <div className="flex items-center gap-inline-l px-inset-l pb-inset-2xs text-[10px] font-medium uppercase tracking-[0.12em] text-label-tertiary">
+        <div className="flex items-center gap-inline-l px-inset-l pb-inset-2xs text-[10px] font-medium tracking-[0.12em] text-label-tertiary">
           <div className="w-20 shrink-0">Size</div>
           <div className="w-36 shrink-0">Role utility</div>
           <div className="min-w-0 flex-1">Specimen</div>

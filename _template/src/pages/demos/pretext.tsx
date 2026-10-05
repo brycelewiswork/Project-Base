@@ -121,6 +121,7 @@ function PretextHeightProbeDemo() {
       </div>
       <div className="flex flex-col gap-stack-xs sm:flex-row sm:items-start">
         <textarea
+          aria-label="Text to measure"
           ref={probeRef}
           value={text}
           onChange={(e) => setText(e.target.value)}

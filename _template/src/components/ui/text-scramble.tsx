@@ -81,7 +81,9 @@ export function TextScramble({
 
   return (
     <MotionComponent className={className} {...props}>
-      {displayText}
+      {/* Mid-scramble frames are random characters; read the final text once instead. */}
+      <span className='sr-only'>{children}</span>
+      <span aria-hidden='true'>{displayText}</span>
     </MotionComponent>
   );
 }

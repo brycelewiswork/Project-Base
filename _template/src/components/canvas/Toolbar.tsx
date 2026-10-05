@@ -105,6 +105,7 @@ export function Toolbar({
         type="button"
         onClick={onZoomReset}
         title="Reset to 100%"
+        aria-label={`${Math.round(zoom * 100)}% — reset zoom to 100%`}
         className="h-8 min-w-[54px] px-1.5 rounded-lg text-xs font-medium text-label hover:bg-fill-quaternary tabular-nums cursor-pointer transition-colors"
       >
         {Math.round(zoom * 100)}%

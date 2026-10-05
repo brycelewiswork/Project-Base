@@ -250,8 +250,8 @@ export function DocGuidelines({ items }: { items: GuidelineDef[] }) {
         <DocCard key={i} className="p-inset-s space-y-stack-2xs">
           <span
             className={cn(
-              "text-xs font-bold uppercase",
-              g.type === "do" ? "text-green-500" : "text-red-500",
+              "text-xs font-bold",
+              g.type === "do" ? "text-green-700 dark:text-green-500" : "text-red-600 dark:text-red-500",
             )}
           >
             {g.type === "do" ? "Do" : "Don't"}

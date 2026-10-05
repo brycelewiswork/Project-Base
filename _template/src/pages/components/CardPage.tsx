@@ -106,7 +106,7 @@ export function CardPage() {
                 <CardTitle>With action</CardTitle>
                 <CardDescription>Header action slot</CardDescription>
                 <CardAction>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" aria-label="More options">
                     <IconDotsVertical className="size-4" />
                   </Button>
                 </CardAction>

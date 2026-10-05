@@ -17,8 +17,8 @@ export function PageShell({ children, className }: { children: React.ReactNode; 
 export function PageHeader({ title, description }: { title: string; description: string }) {
   return (
     <div>
-      <h1 className="text-h3 text-label">{title}</h1>
-      <p className="text-body text-label-secondary mt-stack-3xs">{description}</p>
+      <h1 className="text-h3 text-label text-balance">{title}</h1>
+      <p className="text-body text-label-secondary mt-stack-3xs max-w-prose text-pretty">{description}</p>
     </div>
   )
 }

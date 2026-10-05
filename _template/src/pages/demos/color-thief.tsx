@@ -108,7 +108,7 @@ function ColorFromImageDemo() {
             src={src}
             alt="Source"
             crossOrigin="anonymous"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
           />
           {dominant ? (
             <LinearBlur side="bottom" strength={28} falloffPercentage={70} tint={dominant.hex()} />

@@ -41,7 +41,7 @@ export function DemoSection({ title, lib, version, docsUrl, bare, children }: De
       {bare ? (
         <div className="flex flex-col gap-stack-s">{children}</div>
       ) : (
-        <SectionCard className="space-y-stack-s">
+        <SectionCard className="space-y-stack-s [&>p]:max-w-prose [&>p]:text-pretty">
           {children}
         </SectionCard>
       )}

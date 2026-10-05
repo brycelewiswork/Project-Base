@@ -74,6 +74,7 @@ export function ShaderControls<T extends Record<string, unknown>>({
               <span className="text-[11px] font-mono text-label-secondary">{c.label}</span>
               <div className="flex items-center gap-2">
                 <input
+                  aria-label={c.label}
                   type="color"
                   value={normalizeForInput(v)}
                   onChange={(e) => set(c.key, e.target.value)}

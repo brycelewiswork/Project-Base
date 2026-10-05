@@ -74,7 +74,7 @@ export const ROUTES: RouteEntry[] = [
   { path: "/",            label: "Home",    icon: IconHome,            Component: Home },
   { path: "/demos",       label: "Demos",   icon: IconSparkles,        system: true, Component: Demos },
   { path: "/colors",      label: "Color",   icon: IconPalette,         system: true, Component: Colors },
-  { path: "/foundations", label: "Fluid",   icon: IconStack2,          system: true, Component: Foundations },
+  { path: "/foundations", label: "Foundations", icon: IconStack2,          system: true, Component: Foundations },
   { path: "/typography",  label: "Type",    icon: IconTypography,      system: true, Component: Typography },
   { path: "/motion",      label: "Motion",  icon: IconBounceRight,     system: true, Component: Motion },
   { path: "/spacing",     label: "Space",   icon: IconSpacingVertical, system: true, Component: Spacing },

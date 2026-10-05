@@ -246,15 +246,16 @@ function TabsDemo() {
 }
 
 function CommandDemo() {
+  const [query, setQuery] = useState("")
   return (
     <Section
       title="Command"
       description="Filterable action list, built on cmdk. Inline here; wrap it in a Dialog for a ⌘K palette."
     >
       <Command className="max-w-sm inset-ring-1 inset-ring-stroke-faint">
-        <CommandInput placeholder="Type to filter…" />
+        <CommandInput value={query} onValueChange={setQuery} placeholder="Type to filter…" />
         <CommandList>
-          <CommandEmpty>Nothing matches.</CommandEmpty>
+          <CommandEmpty>No commands match “{query}”.</CommandEmpty>
           <CommandGroup heading="Pages">
             <CommandItem><IconFile size={15} stroke={2} /> Colors <CommandShortcut>⌘1</CommandShortcut></CommandItem>
             <CommandItem><IconSearch size={15} stroke={2} /> Icons <CommandShortcut>⌘2</CommandShortcut></CommandItem>

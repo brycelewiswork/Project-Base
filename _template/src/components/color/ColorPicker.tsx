@@ -363,6 +363,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose
       : oklchCss(o)
     return (
       <NumericText
+        label={mode === "hex" ? "Hex" : "OKLCH"}
         initial={initial}
         flex
         commit={(raw) => onTextChange(raw)}
@@ -384,7 +385,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose
       if (!next) return
       onComponents(next.h ?? h, next.s ?? 0, next.v ?? 0)
     }
-    return <NumberTriple a={{ value: r, min: 0, max: 255 }} b={{ value: g, min: 0, max: 255 }} c={{ value: b, min: 0, max: 255 }} onChange={apply} onClose={onClose} />
+    return <NumberTriple a={{ value: r, min: 0, max: 255, label: "Red" }} b={{ value: g, min: 0, max: 255, label: "Green" }} c={{ value: b, min: 0, max: 255, label: "Blue" }} onChange={apply} onClose={onClose} />
   }
 
   if (mode === "hsl") {
@@ -397,7 +398,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose
       if (!next) return
       onComponents(next.h ?? nh, next.s ?? 0, next.v ?? 0)
     }
-    return <NumberTriple a={{ value: H, min: 0, max: 360 }} b={{ value: S, min: 0, max: 100 }} c={{ value: L, min: 0, max: 100 }} onChange={apply} onClose={onClose} />
+    return <NumberTriple a={{ value: H, min: 0, max: 360, label: "Hue" }} b={{ value: S, min: 0, max: 100, label: "Saturation" }} c={{ value: L, min: 0, max: 100, label: "Lightness" }} onChange={apply} onClose={onClose} />
   }
 
   if (mode === "okl") {
@@ -410,7 +411,7 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose
       const hsv = oklchToHsv({ mode: "oklch", l: clampRange(nl, 0, 100) / 100, c: Math.max(0, nc) / 100, h: ((nh % 360) + 360) % 360, alpha: a })
       onComponents(hsv.h, hsv.s, hsv.v)
     }
-    return <NumberTriple a={{ value: L, min: 0, max: 100 }} b={{ value: C, min: 0, max: 100 }} c={{ value: H, min: 0, max: 360 }} onChange={apply} onClose={onClose} />
+    return <NumberTriple a={{ value: L, min: 0, max: 100, label: "Lightness" }} b={{ value: C, min: 0, max: 100, label: "Chroma" }} c={{ value: H, min: 0, max: 360, label: "Hue" }} onChange={apply} onClose={onClose} />
   }
 
   // hsb — HSV directly
@@ -419,16 +420,16 @@ function ComponentInputs({ mode, h, s, v, a, onComponents, onTextChange, onClose
   const V = Math.round(v * 100)
   return (
     <NumberTriple
-      a={{ value: H, min: 0, max: 360 }}
-      b={{ value: S, min: 0, max: 100 }}
-      c={{ value: V, min: 0, max: 100 }}
+      a={{ value: H, min: 0, max: 360, label: "Hue" }}
+      b={{ value: S, min: 0, max: 100, label: "Saturation" }}
+      c={{ value: V, min: 0, max: 100, label: "Brightness" }}
       onChange={(nh, ns, nv) => onComponents(((nh % 360) + 360) % 360, clampRange(ns, 0, 100) / 100, clampRange(nv, 0, 100) / 100)}
       onClose={onClose}
     />
   )
 }
 
-type NumberSpec = { value: number; min: number; max: number; suffix?: string }
+type NumberSpec = { value: number; min: number; max: number; suffix?: string; label?: string }
 
 function NumberTriple({
   a, b, c, onChange, onClose,
@@ -495,6 +496,7 @@ function NumberBox({
   return (
     <div className="relative flex-1 min-w-0 h-full focus-within:bg-fill-tertiary transition-colors">
       <input
+        aria-label={spec.label}
         ref={inputRef}
         value={text}
         inputMode="numeric"
@@ -527,8 +529,9 @@ function NumberBox({
 }
 
 function NumericText({
-  initial, flex, commit, onClose, typingRef,
+  initial, flex, commit, onClose, typingRef, label,
 }: {
+  label: string
   initial: string
   flex?: boolean
   commit: (raw: string) => boolean
@@ -542,6 +545,7 @@ function NumericText({
   }, [initial])
   return (
     <input
+      aria-label={label}
       value={text}
       onFocus={(e) => { focused.current = true; typingRef.current = true; const el = e.currentTarget; setTimeout(() => { if (document.activeElement === el) el.select() }, 0) }}
       onChange={(e) => setText(e.target.value)}
@@ -560,7 +564,7 @@ function AlphaInput({ value, onChange }: { value: number; onChange: (n: number) 
   return (
     <div className="shrink-0 w-[48px] h-full">
       <NumberBox
-        spec={{ value: Math.round(value * 100), min: 0, max: 100, suffix: "%" }}
+        spec={{ value: Math.round(value * 100), min: 0, max: 100, suffix: "%", label: "Opacity" }}
         onChange={(n) => onChange(clampRange(n, 0, 100) / 100)}
         onClose={() => {}}
       />

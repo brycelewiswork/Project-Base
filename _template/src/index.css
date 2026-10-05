@@ -564,7 +564,9 @@
     --surface-secondary: oklch(1 0 0);
     --surface-tertiary: oklch(0.973 0 0);
     --label: oklch(0.336 0.005 107);
-    --label-secondary: oklch(0.359 0.012 286 / 60%);
+    /* Ink darkened (lightness only) so 60% still clears 4.5:1: 4.60 on page and card.
+       Was oklch(0.359 …) = 3.36:1. Dark mode already passed. */
+    --label-secondary: oklch(0.205 0.012 286 / 60%);
     --label-tertiary: oklch(0 0 0 / 25%);
     --stroke-faint: oklch(0.931 0 0);
     --stroke-strong: oklch(0.919 0.007 269);
@@ -578,7 +580,8 @@
     /* ── Independent tokens ── */
     --primary: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    /* 4.60:1 as button text on its own 10% tint (was 3.76:1). */
+    --destructive: oklch(0.506 0.245 27.325);
     /* 0.577: clears 3:1 against the page, cards AND inside a filled primary button
        (min 4.08:1). 0.708 measured 2.44:1 on the page. */
     --ring: oklch(0.577 0 0);

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 const toggleVariants = cva(
   // Semantic-token restyle: default text is muted, hover lifts it, and the
   // pressed/on state lifts onto a surface pill with a shadow (segmented feel).
-  "group/toggle inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap text-label-secondary transition-all outline-none hover:text-label focus-visible:inset-ring-2 focus-visible:inset-ring-ring disabled:pointer-events-none disabled:opacity-50 data-pressed:bg-surface-secondary data-pressed:text-label data-pressed:shadow-xs [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/toggle inline-flex items-center justify-center gap-1 rounded-md text-sm font-medium whitespace-nowrap text-label-secondary transition-[color,background-color,box-shadow] outline-none hover:text-label focus-visible:inset-ring-2 focus-visible:inset-ring-ring disabled:pointer-events-none disabled:opacity-50 data-pressed:bg-surface-secondary data-pressed:text-label data-pressed:shadow-xs [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {

@@ -77,6 +77,7 @@ export default function ToolbarDynamic() {
                   </Button>
                   <div className='relative w-full'>
                     <input
+                      aria-label='Search notes'
                       className='h-9 w-full rounded-lg inset-ring-1 inset-ring-stroke-faint bg-transparent p-2 text-label placeholder-label-secondary focus:outline-hidden'
                       autoFocus
                       placeholder='Search notes'

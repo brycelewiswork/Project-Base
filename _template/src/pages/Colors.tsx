@@ -106,11 +106,12 @@ export function Colors() {
         <Section key={section.id} title={section.title} description={section.description}>
           <div className={cn(
             "grid gap-gutter-s",
-            section.tokens.length <= 2 && "grid-cols-2",
-            section.tokens.length === 3 && "grid-cols-3",
-            section.tokens.length === 4 && "grid-cols-4",
-            section.tokens.length === 5 && "grid-cols-5",
-            section.tokens.length > 5 && "grid-cols-4",
+            // Two columns on a phone; the token-count layout once there's room for it.
+            "grid-cols-2",
+            section.tokens.length === 3 && "sm:grid-cols-3",
+            section.tokens.length === 4 && "sm:grid-cols-4",
+            section.tokens.length === 5 && "sm:grid-cols-5",
+            section.tokens.length > 5 && "sm:grid-cols-4",
           )}>
             {section.tokens.map((token) => (
               <SwatchRow

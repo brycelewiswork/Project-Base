@@ -44,7 +44,7 @@ export function FoundationRef({ cfg }: { cfg: FluidConfig }) {
       <span className="font-mono text-label">{cfg.viewport.min}→{cfg.viewport.max}px</span>, base{" "}
       <span className="font-mono text-label">{cfg.base.min}→{cfg.base.max}px</span>, ratio{" "}
       <span className="font-mono text-label">{cfg.ratio.min}→{cfg.ratio.max}</span>. Tune these on{" "}
-      <Link to="/foundations" className="text-blue-500 hover:underline">Foundations</Link>.
+      <Link to="/foundations" className="text-blue-600 dark:text-blue-500 hover:underline">Foundations</Link>.
     </div>
   )
 }
@@ -99,6 +99,7 @@ export function NumberSlider({
             </button>
           )}
           <input
+            aria-label={label}
             type="number"
             value={Number.isInteger(value) ? value : Number(value.toFixed(decimals))}
             min={min}

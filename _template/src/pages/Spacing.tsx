@@ -76,7 +76,7 @@ function PairRow({ tokenKey, minPx, maxPx, scale, onRemove }: {
         <FluidWedge minPx={minPx} maxPx={maxPx} scale={scale} />
       </div>
       {onRemove && (
-        <button onClick={onRemove} title="Remove pair" className="shrink-0 text-label-secondary transition-colors hover:text-label">
+        <button type="button" onClick={onRemove} title="Remove pair" aria-label="Remove pair" className="shrink-0 text-label-secondary transition-colors hover:text-label">
           <IconX size={14} stroke={2} />
         </button>
       )}

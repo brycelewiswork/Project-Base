@@ -32,7 +32,7 @@ const ITEMS = [
           className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
-          Edit Profile
+          Edit profile
         </button>
       </div>
     ),
@@ -89,7 +89,7 @@ const ITEMS = [
           className='relative h-8 w-full scale-100 select-none appearance-none items-center justify-center rounded-lg inset-ring-1 inset-ring-stroke-faint px-2 text-sm text-label-secondary transition-colors hover:bg-surface-tertiary hover:text-label focus-visible:ring-2 active:scale-[0.98]'
           type='button'
         >
-          View Transactions
+          View transactions
         </button>
       </div>
     ),

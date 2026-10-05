@@ -46,9 +46,9 @@ function VisxDemo() {
         </svg>
         <div className="space-y-stack-2xs text-sm">
           {[
-            { label: "Move", pct: 82, color: "text-red-500" },
-            { label: "Exercise", pct: 65, color: "text-green-500" },
-            { label: "Stand", pct: 45, color: "text-cyan-500" },
+            { label: "Move", pct: 82, color: "text-red-600 dark:text-red-500" },
+            { label: "Exercise", pct: 65, color: "text-green-700 dark:text-green-500" },
+            { label: "Stand", pct: 45, color: "text-cyan-700 dark:text-cyan-500" },
           ].map((r) => (
             <div key={r.label} className="flex items-baseline gap-inline-2xs">
               <span className={`font-semibold tabular-nums ${r.color}`}>{r.pct}%</span>

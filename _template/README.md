@@ -20,7 +20,7 @@ This template ships a complete design system with interactive documentation page
 | Page | URL | What it covers |
 |------|-----|----------------|
 | **Color** | `/colors` | Surfaces, labels, strokes, fills, accents (12 hues × 13 steps), black/white opacity scales, neutral scale — plus the **Ramp Studio** (below) |
-| **Fluid** | `/foundations` | The fluid system's root: viewport min/max, font-size min/max, type-scale ratios, and the detail ratio for the compressed small end. Type and space both derive from here |
+| **Foundations** | `/foundations` | The fluid system's root: viewport min/max, font-size min/max, type-scale ratios, and the detail ratio for the compressed small end. Type and space both derive from here |
 | **Type** | `/typography` | Full type studio — live specimen preview, table/graph views, any Google font for body and heading, per-step weights, line-height, tracking. Save persists; Copy CSS emits a self-contained block |
 | **Motion** | `/motion` | Spring presets, easing curves, duration tokens — each with an animated curve graph and replay |
 | **Space** | `/spacing` | Fluid Utopia-style space scale with editable per-step multipliers, one-up and custom pairs, role tokens (inset/stack/inline/gutter), live layout |

@@ -96,6 +96,10 @@ export function SlidingNumber({
 
   return (
     <div className='flex items-center'>
+      {/* Each digit column renders 0–9, so a screen reader would read every column.
+          Expose the value once and hide the columns. */}
+      <span className='sr-only'>{value}</span>
+      <span aria-hidden='true' className='contents'>
       {value < 0 && '-'}
       {integerDigits.map((_, index) => (
         <Digit
@@ -116,6 +120,7 @@ export function SlidingNumber({
           ))}
         </>
       )}
+      </span>
     </div>
   );
 }

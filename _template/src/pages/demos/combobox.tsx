@@ -13,6 +13,7 @@ const FRAMEWORKS = [
 function ComboboxDemo() {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
+  const [query, setQuery] = useState("")
   return (
     <DemoSection
       title="Combobox"
@@ -34,9 +35,9 @@ function ComboboxDemo() {
         </PopoverTrigger>
         <PopoverContent align="start" className="w-64 p-0">
           <Command>
-            <CommandInput placeholder="Search frameworks…" />
+            <CommandInput value={query} onValueChange={setQuery} placeholder="Search frameworks…" />
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandEmpty>No frameworks match “{query}”.</CommandEmpty>
               {FRAMEWORKS.map((f) => (
                 <CommandItem
                   key={f}

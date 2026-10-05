@@ -184,7 +184,14 @@ function MorphingPopoverContent({
     if (!context.isOpen) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') context.close();
+      if (event.key !== 'Escape') return;
+      context.close();
+      // Focus was inside the popover; hand it back to the trigger instead of <body>.
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLElement>(`[aria-controls="popover-content-${context.uniqueId}"]`)
+          ?.focus();
+      });
     };
 
     document.addEventListener('keydown', handleKeyDown);

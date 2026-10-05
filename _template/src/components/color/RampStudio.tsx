@@ -209,6 +209,7 @@ export function RampStudio() {
                   </Popover.Portal>
                 </Popover.Root>
                 <input
+                  aria-label="Color"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   spellCheck={false}

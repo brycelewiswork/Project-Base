@@ -171,6 +171,7 @@ function HtmlInCanvasDemo() {
               </CardHeader>
               <CardContent className="flex flex-col gap-stack-xs">
                 <input
+                  aria-label="Your name"
                   type="text"
                   placeholder="Your name"
                   className="w-full rounded-md bg-fill-secondary px-inset-xs py-inset-2xs text-sm text-label outline-none inset-ring-1 inset-ring-stroke-faint focus:inset-ring-stroke-strong"

@@ -160,7 +160,7 @@ export function ImagePickerControl({ label, value, defaultValue, onChange, help 
                   outlineOffset: -1,
                 }}
               >
-                <img src={src} draggable={false} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                <img src={src} draggable={false} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', outline: '1px solid var(--dial-border)', outlineOffset: -1 }} />
                 <button type="button" title="Remove" aria-label={`Remove image ${i + 1}`} onClick={() => removeAt(i)} style={removeOverlay}>
                   ✕
                 </button>
@@ -197,7 +197,7 @@ export function ImagePickerControl({ label, value, defaultValue, onChange, help 
                 }}
               >
                 <span style={{ color: 'var(--dial-text-tertiary)', fontSize: 13, lineHeight: 1, letterSpacing: '-2px', userSelect: 'none' }}>⣿</span>
-                <img src={src} draggable={false} alt="" style={{ width: 32, height: 32, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
+                <img src={src} draggable={false} alt="" style={{ width: 32, height: 32, borderRadius: 6, objectFit: 'cover', flexShrink: 0, outline: '1px solid var(--dial-border)', outlineOffset: -1 }} />
                 <span style={{ flex: 1, minWidth: 0, fontSize: 12, color: 'var(--dial-text-label)', fontVariantNumeric: 'tabular-nums' }}>
                   Image {i + 1}
                 </span>

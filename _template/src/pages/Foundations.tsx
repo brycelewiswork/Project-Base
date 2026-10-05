@@ -104,7 +104,7 @@ function FoundationGroup({ title, children }: { title: string; children: ReactNo
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <h3 className="text-eyebrow font-semibold uppercase tracking-wider text-label-secondary">{title}</h3>
+        <h3 className="text-eyebrow font-semibold text-label-secondary">{title}</h3>
         <div className="border-t border-stroke-faint" />
       </div>
       {children}
@@ -169,7 +169,7 @@ export function Foundations() {
           <div className="space-y-3">
             <div className="flex items-baseline justify-between">
               <h3 className="text-caption font-semibold text-label">Type scale</h3>
-              <Link to="/typography" className="text-caption text-blue-500 hover:underline">Type →</Link>
+              <Link to="/typography" className="text-caption text-blue-600 dark:text-blue-500 hover:underline">Type →</Link>
             </div>
             <div className="space-y-1">
               {[...typeSteps].reverse().map((s) => (
@@ -188,7 +188,7 @@ export function Foundations() {
           <div className="space-y-3">
             <div className="flex items-baseline justify-between">
               <h3 className="text-caption font-semibold text-label">Space scale</h3>
-              <Link to="/spacing" className="text-caption text-blue-500 hover:underline">Space →</Link>
+              <Link to="/spacing" className="text-caption text-blue-600 dark:text-blue-500 hover:underline">Space →</Link>
             </div>
             <div className="space-y-2 py-1.5">
               {space.singles.map((s) => {
@@ -206,8 +206,8 @@ export function Foundations() {
         </div>
 
         <p className="text-caption text-label-secondary">
-          Grid gutters draw from the space scale (<Link to="/grid" className="text-blue-500 hover:underline">Grid</Link>);
-          the <Link to="/clamp" className="text-blue-500 hover:underline">Clamp</Link> generator seeds from the viewport anchors.
+          Grid gutters draw from the space scale (<Link to="/grid" className="text-blue-600 dark:text-blue-500 hover:underline">Grid</Link>);
+          the <Link to="/clamp" className="text-blue-600 dark:text-blue-500 hover:underline">Clamp</Link> generator seeds from the viewport anchors.
         </p>
       </Section>
     </PageShell>

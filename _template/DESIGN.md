@@ -47,9 +47,10 @@ Rules that live above the token layer.
 
 - **Vertical rhythm beats horizontal density.** Stack first. Only break into
   columns when content genuinely benefits — never to fill width.
-- **Page width caps at `max-w-4xl`** for prose-heavy pages; visualizations
-  can extend wider but always with intentional bleed, not because they grew
-  there by accident.
+- **Page width caps at `max-w-4xl`**; visualizations can extend wider but
+  always with intentional bleed, not because they grew there by accident.
+  That is a page width, not a measure: running prose caps at `max-w-prose`
+  (65ch) inside it, or lines run past 100 characters.
 - **Cards earn their use.** A `<Section bare>` is the default; a `<SectionCard>`
   is for content that benefits from grouping or elevation. Don't wrap every
   block in a card.
@@ -281,6 +282,11 @@ Explicit list of looks to avoid, with the half-line reason.
 - **Animating into existence on scroll** for content that should just *be*
   there — InView is for reveals that earn the attention, not for "make the
   page feel alive."
+- **All-caps labels** — `uppercase` + wide tracking on eyebrows, badges,
+  chips, section labels or buttons is the stock AI tell. Write labels in
+  sentence case and leave them that way; drop the tracking too, since it only
+  existed to open up the caps. Data (hex codes, a text-case *option*) is
+  different.
 - **Tooltips as primary affordances** — if a thing needs a tooltip to be
   usable, label it.
 

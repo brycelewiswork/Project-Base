@@ -39,7 +39,7 @@ export function Clamp() {
           Across the foundation viewport{" "}
           <span className="font-mono text-label">{cfg.viewport.min}→{cfg.viewport.max}px</span>
           {" "}— tune the range on{" "}
-          <Link to="/foundations" className="text-blue-500 hover:underline">Foundations</Link>.
+          <Link to="/foundations" className="text-blue-600 dark:text-blue-500 hover:underline">Foundations</Link>.
         </div>
       </Section>
 

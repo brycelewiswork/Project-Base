@@ -67,7 +67,7 @@ export function ButtonPage() {
       {/* ── Examples ── */}
       <DocSection title="Examples" description="All variants and sizes, interactive">
         {/* -- Variants -- */}
-        <h3 className="text-xs font-medium text-label-secondary uppercase tracking-wider">
+        <h3 className="text-xs font-medium text-label-secondary">
           Variants
         </h3>
         <div className="grid grid-cols-2 gap-gutter-m">
@@ -139,7 +139,7 @@ export function ButtonPage() {
         </div>
 
         {/* -- Sizes -- */}
-        <h3 className="mt-stack-l text-xs font-medium text-label-secondary uppercase tracking-wider">
+        <h3 className="mt-stack-l text-xs font-medium text-label-secondary">
           Sizes
         </h3>
         <div className="grid grid-cols-2 gap-gutter-m">
@@ -190,7 +190,7 @@ export function ButtonPage() {
           <DocExample
             title="Icon buttons"
             value="size=icon"
-            code='<Button size="icon"><IconSettings /></Button>'
+            code='<Button size="icon" aria-label="Settings"><IconSettings /></Button>'
           >
             <div className="flex items-center gap-inline-xs">
               <Button size="icon-xs" aria-label="Add"><IconPlus /></Button>
@@ -203,7 +203,7 @@ export function ButtonPage() {
           <DocExample
             title="Icon (ghost)"
             value="size=icon, variant=ghost"
-            code='<Button size="icon" variant="ghost">...</Button>'
+            code='<Button size="icon" variant="ghost" aria-label="…">…</Button>'
           >
             <div className="flex items-center gap-inline-xs">
               <Button size="icon-xs" variant="ghost" aria-label="Add"><IconPlus /></Button>
@@ -215,7 +215,7 @@ export function ButtonPage() {
         </div>
 
         {/* -- States -- */}
-        <h3 className="mt-stack-l text-xs font-medium text-label-secondary uppercase tracking-wider">
+        <h3 className="mt-stack-l text-xs font-medium text-label-secondary">
           States
         </h3>
         <div className="grid grid-cols-2 gap-gutter-m">

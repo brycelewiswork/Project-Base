@@ -131,7 +131,7 @@ export function Breakpoints() {
       <Section title="Current Viewport" description="Resize your browser to see the active breakpoint change">
           <div className="flex items-baseline gap-inline-s">
             <span className="text-h1 text-label tabular-nums">{vw}px</span>
-            <span className="text-h5 text-blue-500 uppercase">{activeName}</span>
+            <span className="text-h5 text-blue-600 dark:text-blue-500">{activeName}</span>
           </div>
 
           {/* Visual bar showing position across breakpoints */}
@@ -217,10 +217,10 @@ export function Breakpoints() {
 
         <div className="flex items-center gap-inline-xs text-xs text-label-secondary">
           <span className="font-mono font-medium">Currently:</span>
-          <span className="sm:hidden font-medium text-blue-500">1 column (base)</span>
-          <span className="hidden sm:inline lg:hidden font-medium text-blue-500">2 columns (sm)</span>
-          <span className="hidden lg:inline xl:hidden font-medium text-blue-500">3 columns (lg)</span>
-          <span className="hidden xl:inline font-medium text-blue-500">4 columns (xl)</span>
+          <span className="sm:hidden font-medium text-blue-600 dark:text-blue-500">1 column (base)</span>
+          <span className="hidden sm:inline lg:hidden font-medium text-blue-600 dark:text-blue-500">2 columns (sm)</span>
+          <span className="hidden lg:inline xl:hidden font-medium text-blue-600 dark:text-blue-500">3 columns (lg)</span>
+          <span className="hidden xl:inline font-medium text-blue-600 dark:text-blue-500">4 columns (xl)</span>
         </div>
       </Section>
 
